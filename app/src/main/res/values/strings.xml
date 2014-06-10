@@ -3,6 +3,13 @@
 
     <string name="app_name">Saldo TUC</string>
     <string name="hello_world">Hello world!</string>
+    <string name="menu_card_add_label">Agregar tarjeta</string>
+    <string name="title_activity_card_add">Agregar tarjeta</string>
     <string name="action_settings">Settings</string>
+    <string name="name_hint">Nombre</string>
+    <string name="card_hint">Número TUC</string>
+    <string name="menu_send_label">Enviar</string>
+    <string name="card_add_error_title">Oops!</string>
+    <string name="card_add_error_message">Por favor, asegúrese de introducir un nombre y un número de tarjeta</string>
 
 </resources>
