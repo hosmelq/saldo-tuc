@@ -1,27 +1,36 @@
 package com.socialimprover.saldotuc.app;
 
 import android.app.AlertDialog;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.Spinner;
 
 
 public class CardAddActivity extends ActionBarActivity {
 
     protected EditText mName;
     protected EditText mCard;
+    protected EditText mPhone;
+    protected Spinner mHourSpinner;
+    protected Spinner mAmPmSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_add);
 
-        mName = (EditText)findViewById(R.id.nameField);
-        mCard = (EditText)findViewById(R.id.cardField);
+        mName = (EditText) findViewById(R.id.nameField);
+        mCard = (EditText) findViewById(R.id.cardField);
+        mPhone = (EditText) findViewById(R.id.phoneField);
+        mHourSpinner = (Spinner) findViewById(R.id.hour_spinner);
+        mAmPmSpinner = (Spinner) findViewById(R.id.ampm_spinner);
+
+        setHourAdapters();
     }
 
     @Override
@@ -41,12 +50,15 @@ public class CardAddActivity extends ActionBarActivity {
         if (id == R.id.action_send) {
             String name = mName.getText().toString().trim();
             String card = mCard.getText().toString().trim();
+            String phone = mPhone.getText().toString().trim();
+            String hour = mHourSpinner.getSelectedItem().toString();
+            String ampm = mAmPmSpinner.getSelectedItem().toString();
 
-            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(card)) {
+            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(card) || card.length() != 8) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.card_add_error_title)
-                    .setMessage(R.string.card_add_error_message)
-                    .setPositiveButton(android.R.string.ok, null);
+                        .setMessage(R.string.card_add_error_message)
+                        .setPositiveButton(android.R.string.ok, null);
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
@@ -54,5 +66,15 @@ public class CardAddActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setHourAdapters() {
+        ArrayAdapter<CharSequence> hourAdapter = ArrayAdapter.createFromResource(this, R.array.hours, android.R.layout.simple_spinner_item);
+        hourAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mHourSpinner.setAdapter(hourAdapter);
+
+        ArrayAdapter<CharSequence> amPmAdapter = ArrayAdapter.createFromResource(this, R.array.ampm, android.R.layout.simple_spinner_item);
+        amPmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mAmPmSpinner.setAdapter(amPmAdapter);
     }
 }
