@@ -15,7 +15,7 @@
     <string name="hour_label">Hora a notificar</string>
     <string name="verification_hint">Se enviará un único mensaje SMS para verificar este número de móvil.</string>
 
-    <string name="menu_send_label">Enviar</string>
+    <string name="menu_save_label">Guardar</string>
     <string name="card_add_error_title">Oops!</string>
     <string name="card_add_error_message">Por favor, asegúrese de introducir un nombre y un número de tarjeta valido</string>
 

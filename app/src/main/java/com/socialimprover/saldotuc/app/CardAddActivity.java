@@ -47,7 +47,7 @@ public class CardAddActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_send) {
+        if (id == R.id.action_save) {
             String name = mName.getText().toString().trim();
             String card = mCard.getText().toString().trim();
             String phone = mPhone.getText().toString().trim();
@@ -57,8 +57,8 @@ public class CardAddActivity extends ActionBarActivity {
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(card) || card.length() != 8) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.card_add_error_title)
-                        .setMessage(R.string.card_add_error_message)
-                        .setPositiveButton(android.R.string.ok, null);
+                    .setMessage(R.string.card_add_error_message)
+                    .setPositiveButton(android.R.string.ok, null);
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
