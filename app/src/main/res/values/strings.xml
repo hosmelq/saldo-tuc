@@ -18,6 +18,7 @@
     <string name="menu_save_label">Guardar</string>
     <string name="card_add_error_title">Oops!</string>
     <string name="card_add_error_message">Por favor, asegúrese de introducir un nombre y un número de tarjeta valido</string>
+    <string name="card_success">Tarjeta guardada</string>
 
     <string-array name="hours">
         <item>01</item>

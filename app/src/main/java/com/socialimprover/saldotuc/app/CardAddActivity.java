@@ -9,9 +9,12 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 
 public class CardAddActivity extends ActionBarActivity {
+
+    protected SaldoTucDataSource mDataSource;
 
     protected EditText mName;
     protected EditText mCard;
@@ -24,6 +27,8 @@ public class CardAddActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_add);
 
+        mDataSource = new SaldoTucDataSource(this);
+
         mName = (EditText) findViewById(R.id.nameField);
         mCard = (EditText) findViewById(R.id.cardField);
         mPhone = (EditText) findViewById(R.id.phoneField);
@@ -31,6 +36,18 @@ public class CardAddActivity extends ActionBarActivity {
         mAmPmSpinner = (Spinner) findViewById(R.id.ampm_spinner);
 
         setHourAdapters();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mDataSource.open();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mDataSource.close();
     }
 
     @Override
@@ -62,6 +79,18 @@ public class CardAddActivity extends ActionBarActivity {
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
+            } else {
+                Card newCard = new Card();
+                newCard.setName(name);
+                newCard.setCard(card);
+                newCard.setPhone(phone);
+                newCard.setHour(hour);
+                newCard.setAmpm(ampm);
+                mDataSource.insertCard(newCard);
+
+                Toast.makeText(this, R.string.card_success, Toast.LENGTH_LONG).show();
+
+                finish();
             }
         }
 
