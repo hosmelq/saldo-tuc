@@ -8,7 +8,7 @@ public class Card {
     private String phone;
     private String hour;
     private String ampm;
-    private Integer balance;
+    private String balance;
 
     public Integer getId() {
         return id;
@@ -58,11 +58,11 @@ public class Card {
         this.ampm = ampm;
     }
 
-    public Integer getBalance() {
+    public String getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(String balance) {
         this.balance = balance;
     }
 

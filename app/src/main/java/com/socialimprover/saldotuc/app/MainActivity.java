@@ -100,7 +100,7 @@ public class MainActivity extends ListActivity {
             card.setCard(cursor.getString(2));
 
             if ( ! cursor.isNull(6)) {
-                card.setBalance(cursor.getInt(6));
+                card.setBalance(cursor.getString(6));
             }
 
             cards.add(card);
