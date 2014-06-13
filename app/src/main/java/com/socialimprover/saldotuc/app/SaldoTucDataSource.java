@@ -5,16 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 public class SaldoTucDataSource {
 
     private SQLiteDatabase mDatabase; // The actual DB!
     private SaldoTucHelper mSaldoTucHelper; // Helper class for creating and opening the DB
-    private Context mContext;
 
     public SaldoTucDataSource(Context context) {
-        mContext = context;
-        mSaldoTucHelper = new SaldoTucHelper(mContext);
+        mSaldoTucHelper = new SaldoTucHelper(context);
     }
 
     /*
@@ -50,21 +49,35 @@ public class SaldoTucDataSource {
     }
 
     public Cursor selectAllCards() {
-        return mDatabase.rawQuery("SELECT * FROM cards", null);
+        return mDatabase.rawQuery("SELECT * FROM " + SaldoTucHelper.TABLE_CARDS, null);
     }
 
     public Cursor selectCard(Integer id) {
-        Cursor cursor = mDatabase.query(
+        return mDatabase.query(
             SaldoTucHelper.TABLE_CARDS, // table
-            new String[] { SaldoTucHelper.COLUMN_CARD, SaldoTucHelper.COLUMN_LAST_BALANCE, SaldoTucHelper.COLUMN_NAME }, // column names
+            new String[]{SaldoTucHelper.COLUMN_CARD, SaldoTucHelper.COLUMN_LAST_BALANCE, SaldoTucHelper.COLUMN_NAME}, // column names
             SaldoTucHelper.COLUMN_ID + " = ?", // where clause
-            new String[] { String.valueOf(id) }, // where params
+            new String[]{String.valueOf(id)}, // where params
             null, // groupby
             null, // having
             null  // orderby
         );
+    }
 
-        return cursor;
+    public int updateCard(Integer id, String balance) {
+        ContentValues values = new ContentValues();
+        values.put(SaldoTucHelper.COLUMN_LAST_BALANCE, balance);
+
+        return mDatabase.update(
+            SaldoTucHelper.TABLE_CARDS, // table
+            values, // values
+            SaldoTucHelper.COLUMN_ID + " = ?",   // where clause
+            new String[] { id.toString() } // where params
+        );
+
+//        String query = "UPDATE " + SaldoTucHelper.TABLE_CARDS + " SET " + SaldoTucHelper.COLUMN_LAST_BALANCE + " = \"" + balance + "\" WHERE " + SaldoTucHelper.COLUMN_ID + " = " + id;
+//        Log.e("TAG", query);
+//        mDatabase.rawQuery(query, null);
     }
 
 }

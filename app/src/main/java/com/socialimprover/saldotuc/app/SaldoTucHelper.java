@@ -34,7 +34,7 @@ public class SaldoTucHelper extends SQLiteOpenHelper {
             COLUMN_PHONE + " TEXT, " +
             COLUMN_HOUR + " TEXT, " +
             COLUMN_AMPM + " TEXT, " +
-            COLUMN_LAST_BALANCE + " INTEGER DEFAULT NULL)"
+            COLUMN_LAST_BALANCE + " TEXT DEFAULT NULL)"
         );
     }
 

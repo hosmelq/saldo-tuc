@@ -2,12 +2,21 @@ package com.socialimprover.saldotuc.app;
 
 public class Card {
 
+    private Integer id;
     private String name;
     private String card;
     private String phone;
     private String hour;
     private String ampm;
     private Integer balance;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

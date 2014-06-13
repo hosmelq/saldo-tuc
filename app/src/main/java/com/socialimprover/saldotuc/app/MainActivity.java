@@ -1,22 +1,35 @@
 package com.socialimprover.saldotuc.app;
 
+import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ListActivity {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     protected SaldoTucDataSource mDataSource;
-
-    private ListView mListView;
+    protected List<Card> mCards;
+    protected Card mCard;
+    protected View mCardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +37,6 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         mDataSource = new SaldoTucDataSource(this);
-        mListView = (ListView) findViewById(android.R.id.list);
     }
 
     @Override
@@ -64,6 +76,17 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        BalanceService service = new BalanceService();
+        Card card = mCards.get(position);
+        mCard = card;
+        mCardView = v;
+        service.loadBalance(card, mBalanceCallback);
+    }
+
     protected void updateList(Cursor cursor) {
         List<Card> cards = new ArrayList<Card>();
 
@@ -71,6 +94,8 @@ public class MainActivity extends ActionBarActivity {
 
         while( ! cursor.isAfterLast() ) {
             Card card = new Card();
+
+            card.setId(cursor.getInt(0));
             card.setName(cursor.getString(1));
             card.setCard(cursor.getString(2));
 
@@ -83,9 +108,29 @@ public class MainActivity extends ActionBarActivity {
             cursor.moveToNext();
         }
 
+        mCards = cards;
         CardAdapter adapter = new CardAdapter(this, cards);
 
-        mListView.setAdapter(adapter);
+        setListAdapter(adapter);
     }
+
+    protected Callback<Balance> mBalanceCallback = new Callback<Balance>() {
+        @Override
+        public void success(Balance balance, Response response) {
+            Pattern pattern = Pattern.compile("[0-9]+(?:\\.[0-9]*)?");
+            Matcher matcher = pattern.matcher(balance.Mensaje);
+
+            if (matcher.find()) {
+                String match = matcher.group(0);
+                mDataSource.updateCard(mCard.getId(), match);
+                ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + match);
+            }
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e(TAG, "Error: " + error.getMessage());
+        }
+    };
 
 }
