@@ -1,16 +1,17 @@
 package com.socialimprover.saldotuc.app;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +23,12 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends ActionBarActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
     protected SaldoTucDataSource mDataSource;
+    protected ListView mListView;
     protected List<Card> mCards;
     protected Card mCard;
     protected View mCardView;
@@ -34,7 +36,11 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
+
+        mListView = (ListView) findViewById(R.id.cardList);
+        mListView.setOnItemClickListener(mOnItemClickListener);
 
         mDataSource = new SaldoTucDataSource(this);
     }
@@ -76,17 +82,6 @@ public class MainActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        BalanceService service = new BalanceService();
-        Card card = mCards.get(position);
-        mCard = card;
-        mCardView = v;
-        service.loadBalance(card, mBalanceCallback);
-    }
-
     protected void updateList(Cursor cursor) {
         List<Card> cards = new ArrayList<Card>();
 
@@ -111,12 +106,27 @@ public class MainActivity extends ListActivity {
         mCards = cards;
         CardAdapter adapter = new CardAdapter(this, cards);
 
-        setListAdapter(adapter);
+        mListView.setAdapter(adapter);
     }
+
+    protected AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            setSupportProgressBarIndeterminateVisibility(true);
+
+            BalanceService service = new BalanceService();
+            Card card = mCards.get(position);
+            mCard = card;
+            mCardView = view;
+            service.loadBalance(card, mBalanceCallback);
+        }
+    };
 
     protected Callback<Balance> mBalanceCallback = new Callback<Balance>() {
         @Override
         public void success(Balance balance, Response response) {
+            setSupportProgressBarIndeterminateVisibility(false);
+
             Pattern pattern = Pattern.compile("[0-9]+(?:\\.[0-9]*)?");
             Matcher matcher = pattern.matcher(balance.Mensaje);
 
