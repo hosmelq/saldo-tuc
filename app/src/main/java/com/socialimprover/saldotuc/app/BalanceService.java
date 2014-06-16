@@ -1,7 +1,5 @@
 package com.socialimprover.saldotuc.app;
 
-import android.content.Context;
-
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.http.Field;
@@ -18,7 +16,7 @@ public class BalanceService {
         @POST("/datos/consulta.php")
         public void getBalanceAsync(
             @Field("_funcion") String _funcion,
-            @Field("_terminal") String _terminals,
+            @Field("_terminal") String _terminal,
             Callback<Balance> callback
         );
 

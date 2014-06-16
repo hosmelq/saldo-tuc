@@ -132,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
 
             if (matcher.find()) {
                 String match = matcher.group(0);
-                mDataSource.updateCard(mCard.getId(), match);
+                mDataSource.updateCardBalance(mCard.getId(), match);
                 ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + match);
             }
         }

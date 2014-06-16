@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.util.Log;
 
 public class SaldoTucDataSource {
 
@@ -64,7 +63,7 @@ public class SaldoTucDataSource {
         );
     }
 
-    public int updateCard(Integer id, String balance) {
+    public int updateCardBalance(Integer id, String balance) {
         ContentValues values = new ContentValues();
         values.put(SaldoTucHelper.COLUMN_LAST_BALANCE, balance);
 
