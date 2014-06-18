@@ -134,6 +134,24 @@ public class MainActivity extends ActionBarActivity {
                 String balance = matcher.group(0);
                 mDataSource.updateCardBalance(mCard.getId(), balance);
                 ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + balance);
+
+                Cursor cursor = mDataSource.selectCard(mCard.getId());
+                cursor.moveToFirst();
+                SaldoTucService service = new SaldoTucService();
+
+                Card card = new Card();
+                card.setCard(cursor.getString(2));
+                card.setPhone(cursor.getString(3));
+                card.setHour(cursor.getString(4));
+                card.setAmpm(cursor.getString(5));
+
+                service.storeCard(card, new Callback<Card>() {
+                    @Override
+                    public void success(Card card, Response response) {}
+
+                    @Override
+                    public void failure(RetrofitError error) {}
+                });
             }
         }
 

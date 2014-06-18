@@ -52,15 +52,7 @@ public class SaldoTucDataSource {
     }
 
     public Cursor selectCard(Integer id) {
-        return mDatabase.query(
-            SaldoTucHelper.TABLE_CARDS, // table
-            new String[]{SaldoTucHelper.COLUMN_CARD, SaldoTucHelper.COLUMN_LAST_BALANCE, SaldoTucHelper.COLUMN_NAME}, // column names
-            SaldoTucHelper.COLUMN_ID + " = ?", // where clause
-            new String[]{String.valueOf(id)}, // where params
-            null, // groupby
-            null, // having
-            null  // orderby
-        );
+        return mDatabase.rawQuery("SELECT * FROM " + SaldoTucHelper.TABLE_CARDS + " WHERE " + SaldoTucHelper.COLUMN_ID + " = " + id, null);
     }
 
     public int updateCardBalance(Integer id, String balance) {
