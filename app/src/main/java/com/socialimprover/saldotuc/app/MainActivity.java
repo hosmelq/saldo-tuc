@@ -114,7 +114,7 @@ public class MainActivity extends ActionBarActivity {
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             setSupportProgressBarIndeterminateVisibility(true);
 
-            BalanceService service = new BalanceService();
+            MpesoService service = new MpesoService();
             Card card = mCards.get(position);
             mCard = card;
             mCardView = view;
@@ -122,18 +122,18 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    protected Callback<Balance> mBalanceCallback = new Callback<Balance>() {
+    protected Callback<MpesoBalance> mBalanceCallback = new Callback<MpesoBalance>() {
         @Override
-        public void success(Balance balance, Response response) {
+        public void success(MpesoBalance mpesoBalance, Response response) {
             setSupportProgressBarIndeterminateVisibility(false);
 
             Pattern pattern = Pattern.compile("[0-9]+(?:\\.[0-9]*)?");
-            Matcher matcher = pattern.matcher(balance.Mensaje);
+            Matcher matcher = pattern.matcher(mpesoBalance.Mensaje);
 
             if (matcher.find()) {
-                String match = matcher.group(0);
-                mDataSource.updateCardBalance(mCard.getId(), match);
-                ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + match);
+                String balance = matcher.group(0);
+                mDataSource.updateCardBalance(mCard.getId(), balance);
+                ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + balance);
             }
         }
 

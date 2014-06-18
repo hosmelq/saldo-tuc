@@ -1,6 +1,6 @@
 package com.socialimprover.saldotuc.app;
 
-public class Balance {
+public class MpesoBalance {
 
     public String Error;
     public String Mensaje;

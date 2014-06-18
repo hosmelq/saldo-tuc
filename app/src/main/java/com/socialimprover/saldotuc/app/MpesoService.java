@@ -6,7 +6,7 @@ import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
 
-public class BalanceService {
+public class MpesoService {
 
     private static final String MPESO_URL = "https://mpeso.net/";
 
@@ -17,12 +17,12 @@ public class BalanceService {
         public void getBalanceAsync(
             @Field("_funcion") String _funcion,
             @Field("_terminal") String _terminal,
-            Callback<Balance> callback
+            Callback<MpesoBalance> callback
         );
 
     }
 
-    public void loadBalance(Card card, Callback<Balance> callback) {
+    public void loadBalance(Card card, Callback<MpesoBalance> callback) {
         RestAdapter restAdapter = new RestAdapter.Builder()
             .setLogLevel(RestAdapter.LogLevel.FULL)
             .setEndpoint(MPESO_URL)
