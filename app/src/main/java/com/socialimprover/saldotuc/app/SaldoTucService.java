@@ -11,8 +11,7 @@ public class SaldoTucService {
 
     protected SaldoTucServiceInterface mRestAdapter;
 
-//    protected static final String API_END_POINT = "http://mpeso.hosmelquintana.com/api/v1/";
-    protected static final String API_END_POINT = "http://192.241.186.89/api/v1/";
+    protected static final String API_END_POINT = "http://saldotuc.hosmelquintana.com/api/v1/";
 
     public SaldoTucService() {
         RestAdapter restAdapter = new RestAdapter.Builder()
