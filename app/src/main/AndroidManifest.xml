@@ -33,10 +33,6 @@
             android:label="@string/title_activity_phone_verification"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name=".PhoneVerificationActivit"
-            android:label="@string/title_activity_phone_verification" >
-        </activity>
     </application>
 
 </manifest>
