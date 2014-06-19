@@ -106,9 +106,14 @@ public class MainActivity extends ActionBarActivity {
         }
 
         mCards = cards;
-        CardAdapter adapter = new CardAdapter(this, cards);
 
-        mListView.setAdapter(adapter);
+        if (mListView.getAdapter() == null) {
+            CardAdapter adapter = new CardAdapter(this, cards);
+            mListView.setAdapter(adapter);
+        } else {
+            ( (CardAdapter) mListView.getAdapter()).refill(cards);
+        }
+
     }
 
     protected AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {

@@ -30,6 +30,7 @@ public class CardAdapter extends ArrayAdapter<Card> {
             holder.nameLabel = (TextView) convertView.findViewById(R.id.cardName);
             holder.numberLabel = (TextView) convertView.findViewById(R.id.cardNumber);
             holder.balanceLabel = (TextView) convertView.findViewById(R.id.cardBalance);
+            convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
@@ -51,5 +52,11 @@ public class CardAdapter extends ArrayAdapter<Card> {
         TextView nameLabel;
         TextView numberLabel;
         TextView balanceLabel;
+    }
+
+    public void refill(List<Card> cards) {
+        mCards.clear();
+        mCards.addAll(cards);
+        notifyDataSetChanged();
     }
 }
