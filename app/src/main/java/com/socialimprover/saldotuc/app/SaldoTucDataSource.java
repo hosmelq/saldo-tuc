@@ -48,7 +48,7 @@ public class SaldoTucDataSource {
     }
 
     public Cursor selectAllCards() {
-        return mDatabase.rawQuery("SELECT * FROM " + SaldoTucHelper.TABLE_CARDS, null);
+        return mDatabase.rawQuery("SELECT * FROM " + SaldoTucHelper.TABLE_CARDS + " ORDER BY " + SaldoTucHelper.COLUMN_NAME, null);
     }
 
     public Cursor selectCard(Integer id) {
