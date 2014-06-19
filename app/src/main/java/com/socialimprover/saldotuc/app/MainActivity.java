@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -127,7 +128,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void success(MpesoBalance mpesoBalance, Response response) {
             Pattern pattern = Pattern.compile("[0-9]+(?:\\.[0-9]*)?");
-            Matcher matcher = pattern.matcher(mpesoBalance.Mensaje);
+            Matcher matcher = pattern.matcher(Html.fromHtml(mpesoBalance.Mensaje).toString());
 
             if ( ! mpesoBalance.Error && matcher.find()) {
                 String balance = matcher.group(0);
