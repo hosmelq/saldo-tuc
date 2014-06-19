@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,12 +126,10 @@ public class MainActivity extends ActionBarActivity {
     protected Callback<MpesoBalance> mBalanceCallback = new Callback<MpesoBalance>() {
         @Override
         public void success(MpesoBalance mpesoBalance, Response response) {
-            setSupportProgressBarIndeterminateVisibility(false);
-
             Pattern pattern = Pattern.compile("[0-9]+(?:\\.[0-9]*)?");
             Matcher matcher = pattern.matcher(mpesoBalance.Mensaje);
 
-            if (matcher.find()) {
+            if ( ! mpesoBalance.Error && matcher.find()) {
                 String balance = matcher.group(0);
                 mDataSource.updateCardBalance(mCard.getId(), balance);
                 ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + balance);
@@ -147,18 +146,31 @@ public class MainActivity extends ActionBarActivity {
 
                 service.storeCard(card, new Callback<Card>() {
                     @Override
-                    public void success(Card card, Response response) {}
+                    public void success(Card card, Response response) {
+                        removeProgressBar();
+                    }
 
                     @Override
-                    public void failure(RetrofitError error) {}
+                    public void failure(RetrofitError error) {
+                        removeProgressBar();
+                        Log.e(TAG, "Error: " + error.getMessage());
+                    }
                 });
+            } else {
+                Toast.makeText(MainActivity.this, R.string.card_invalidad, Toast.LENGTH_LONG).show();
+                removeProgressBar();
             }
         }
 
         @Override
         public void failure(RetrofitError error) {
+            removeProgressBar();
             Log.e(TAG, "Error: " + error.getMessage());
         }
     };
+
+    private void removeProgressBar() {
+        setSupportProgressBarIndeterminateVisibility(false);
+    }
 
 }

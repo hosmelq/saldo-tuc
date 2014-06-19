@@ -2,7 +2,7 @@ package com.socialimprover.saldotuc.app;
 
 public class MpesoBalance {
 
-    public String Error;
+    public Boolean Error;
     public String Mensaje;
 
 }
