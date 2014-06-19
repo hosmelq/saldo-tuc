@@ -31,6 +31,14 @@ public class SaldoTucService {
         );
 
         @FormUrlEncoded
+        @POST("/cards/verify")
+        public void verifyCardAsync(
+            @Field("phone") String phone,
+            @Field("code") String code,
+            Callback<Card> callback
+        );
+
+        @FormUrlEncoded
         @POST("/records")
         public void storeBalanceAsync(
             @Field("balance") String balance,
@@ -48,6 +56,10 @@ public class SaldoTucService {
 
     public void storeCard(Card card, Callback<Card> callback) {
         mRestAdapter.storeCardAsync(card, callback);
+    }
+
+    public void verifyCard(String phone, String code, Callback<Card> callback) {
+        mRestAdapter.verifyCardAsync(phone, code, callback);
     }
 
     public void storeBalance(Card card, Callback<MpesoBalance> callback) {

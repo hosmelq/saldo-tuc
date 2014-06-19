@@ -22,11 +22,20 @@
         <activity
             android:name=".CardAddActivity"
             android:label="@string/title_activity_card_add"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
+        </activity>
+        <activity
+            android:name=".PhoneVerificationActivity"
+            android:label="@string/title_activity_phone_verification"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".PhoneVerificationActivit"
+            android:label="@string/title_activity_phone_verification" >
         </activity>
     </application>
 

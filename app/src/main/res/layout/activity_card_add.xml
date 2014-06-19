@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/name_label"
-        android:id="@+id/textView2"
+        android:id="@+id/nameLabel"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/nameField"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/nameLabel"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:inputType="text"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/card_label"
-        android:id="@+id/textView3"
+        android:id="@+id/cardLabel"
         android:layout_below="@+id/nameField"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -47,76 +47,84 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/cardField"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/cardLabel"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:maxLength="8"
         android:hint="@string/card_hint" />
 
-    <TextView
+    <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/card_checkbox_label"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/notification_label"
-        android:id="@+id/textView6"
+        android:id="@+id/notificationCheckBox"
         android:layout_below="@+id/cardField"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/phone_label"
-        android:id="@+id/textView4"
-        android:layout_below="@+id/textView6"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <EditText
+    <RelativeLayout
+        android:id="@+id/notificationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/phoneField"
-        android:layout_below="@+id/textView4"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:maxLength="8"
-        android:hint="@string/phone_hint" />
+        android:layout_below="@id/notificationCheckBox"
+        android:visibility="invisible" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/hour_label"
-        android:id="@+id/textView5"
-        android:layout_below="@+id/phoneField"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/phone_label"
+            android:id="@+id/phoneLabel"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
-    <Spinner
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/hour_spinner"
-        android:layout_below="@+id/textView5"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/ampm_spinner" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/phoneField"
+            android:layout_below="@+id/phoneLabel"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:maxLength="8"
+            android:hint="@string/phone_hint" />
 
-    <Spinner
-        android:layout_width="96dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/ampm_spinner"
-        android:layout_below="@+id/textView5"
-        android:layout_alignParentRight="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/hour_label"
+            android:id="@+id/hourLabel"
+            android:layout_below="@+id/phoneField"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/verification_hint"
-        android:id="@+id/textView"
-        android:layout_below="@+id/hour_spinner"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/hour_spinner"
+            android:layout_below="@+id/hourLabel"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/ampm_spinner" />
+
+        <Spinner
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/ampm_spinner"
+            android:layout_below="@+id/hourLabel"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/verification_hint"
+            android:id="@+id/textInfo"
+            android:layout_below="@+id/hour_spinner"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

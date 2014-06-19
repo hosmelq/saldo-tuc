@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_title">Oops!</string>
 
     <string name="app_name">Saldo TUC</string>
     <string name="menu_card_add_label">Agregar tarjeta</string>
     <string name="title_activity_card_add">Agregar tarjeta</string>
-
     <string name="name_label">Nombre</string>
     <string name="name_hint">Agrega un nombre</string>
     <string name="card_label">Número TUC</string>
     <string name="card_hint">E.j: 00000000</string>
-    <string name="notification_label">Notificaciones de saldo via SMS</string>
+    <string name="card_checkbox_label">Notificaciones de saldo via SMS</string>
     <string name="phone_label">Número de teléfono</string>
     <string name="phone_hint">Agrega un teléfono</string>
     <string name="hour_label">Hora a notificar</string>
     <string name="verification_hint">Se enviará un único mensaje SMS para verificar este número de móvil.</string>
-
     <string name="menu_save_label">Guardar</string>
-    <string name="card_add_error_title">Oops!</string>
     <string name="card_add_error_message">Por favor, asegúrese de introducir un nombre y un número de tarjeta valido</string>
+    <string name="card_add_phone_error_message">Número de teléfono inválido</string>
     <string name="card_success">Tarjeta guardada</string>
     <string name="card_invalidad">"No es un número de tarjeta TUC ó está inactivo"</string>
+    <string name="title_activity_phone_verification">Tu código</string>
+    <string name="menu_verification_label">Verificar</string>
+    <string name="code_verification_hint">Código</string>
+    <string name="verification_label">Hemos enviado un SMS con un código de activación a tu teléfono</string>
+    <string name="code_verification_error_message">Código inválido</string>
 
     <string-array name="hours">
         <item>1</item>
@@ -35,7 +39,6 @@
         <item>11</item>
         <item>12</item>
     </string-array>
-
     <string-array name="ampm">
         <item>a.m.</item>
         <item>p.m.</item>
