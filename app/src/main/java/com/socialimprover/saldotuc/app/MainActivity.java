@@ -146,11 +146,9 @@ public class MainActivity extends ActionBarActivity {
 
                 Card card = new Card();
                 card.setNumber(cursor.getString(2));
-                card.setPhone(cursor.getString(3));
-                card.setHour(cursor.getString(4));
-                card.setAmpm(cursor.getString(5));
+                card.setBalance(cursor.getString(6));
 
-                service.storeCard(card, new Callback<Card>() {
+                service.storeBalance(card, new Callback<Card>() {
                     @Override
                     public void success(Card card, Response response) {
                         removeProgressBar();
