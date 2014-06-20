@@ -1,6 +1,8 @@
 package com.socialimprover.saldotuc.app;
 
-public class Card {
+import java.io.Serializable;
+
+public class Card implements Serializable {
 
     private Integer id;
     private String name;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="error_title">Oops!</string>
 
+    <string name="error_title">Oops!</string>
     <string name="app_name">Saldo TUC</string>
     <string name="menu_card_add_label">Agregar tarjeta</string>
     <string name="title_activity_card_add">Agregar tarjeta</string>
@@ -43,5 +43,11 @@
         <item>a.m.</item>
         <item>p.m.</item>
     </string-array>
+    <string-array name="card_choices">
+        <item>Actualizar tarjeta</item>
+        <item>Eliminar tarjeta</item>
+    </string-array>
+
+    <string name="title_activity_card_update">Actualizar tarjeta</string>
 
 </resources>

@@ -1,5 +1,7 @@
 package com.socialimprover.saldotuc.app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -43,6 +45,7 @@ public class MainActivity extends ActionBarActivity {
 
         mListView = (ListView) findViewById(R.id.cardList);
         mListView.setOnItemClickListener(mOnItemClickListener);
+        mListView.setOnItemLongClickListener(mOnItemLongClickListener);
 
         mDataSource = new SaldoTucDataSource(this);
     }
@@ -95,6 +98,9 @@ public class MainActivity extends ActionBarActivity {
             card.setId(cursor.getInt(0));
             card.setName(cursor.getString(1));
             card.setNumber(cursor.getString(2));
+            card.setPhone(cursor.getString(3));
+            card.setHour(cursor.getString(4));
+            card.setAmpm(cursor.getString(5));
 
             if ( ! cursor.isNull(6)) {
                 card.setBalance(cursor.getString(6));
@@ -171,6 +177,36 @@ public class MainActivity extends ActionBarActivity {
         public void failure(RetrofitError error) {
             removeProgressBar();
             Log.e(TAG, "Error: " + error.getMessage());
+        }
+    };
+
+    protected AdapterView.OnItemLongClickListener mOnItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setItems(R.array.card_choices, mDialogListener);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            mCard = mCards.get(position);
+
+            return true;
+        }
+    };
+
+    protected DialogInterface.OnClickListener mDialogListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int which) {
+            switch (which) {
+                case 0: // update card
+                    Intent intent = new Intent(MainActivity.this, CardUpdateActivity.class);
+                    intent.putExtra("card", mCard);
+                    startActivity(intent);
+                    break;
+                case 1: // delete card
+                    break;
+
+            }
         }
     };
 

@@ -21,8 +21,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-
-public class CardAddActivity extends ActionBarActivity {
+public class CardUpdateActivity extends ActionBarActivity {
 
     public static final String TAG = CardAddActivity.class.getSimpleName();
 
@@ -43,6 +42,8 @@ public class CardAddActivity extends ActionBarActivity {
         setContentView(R.layout.activity_card_add);
 
         mDataSource = new SaldoTucDataSource(this);
+        Intent intent = getIntent();
+        Card card = (Card) intent.getSerializableExtra("card");
 
         mNotificationLayout = (RelativeLayout) findViewById(R.id.notificationLayout);
         mName = (EditText) findViewById(R.id.nameField);
@@ -55,6 +56,7 @@ public class CardAddActivity extends ActionBarActivity {
         mNotificationCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         setHourAdapters();
+        fillFields(card);
     }
 
     @Override
@@ -146,6 +148,24 @@ public class CardAddActivity extends ActionBarActivity {
         ArrayAdapter<CharSequence> amPmAdapter = ArrayAdapter.createFromResource(this, R.array.ampm, android.R.layout.simple_spinner_item);
         amPmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mAmPmSpinner.setAdapter(amPmAdapter);
+    }
+
+    protected void fillFields(Card card) {
+        mName.setText(card.getName());
+        mNumber.setText(card.getNumber());
+
+        if (card.getPhone() != null) {
+            mNotificationCheckBox.setChecked(true);
+//            mNotificationLayout.setVisibility(RelativeLayout.VISIBLE);
+            mPhone.setText(card.getPhone());
+            mHourSpinner.setSelection(Integer.parseInt(card.getHour()) - 1);
+
+            if (card.getAmpm().equals("a.m.")) {
+                mAmPmSpinner.setSelection(0);
+            } else {
+                mAmPmSpinner.setSelection(1);
+            }
+        }
     }
 
     protected void validationErrorMessage(String title, String message) {
