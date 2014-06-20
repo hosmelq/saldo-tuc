@@ -48,27 +48,28 @@ public class SaldoTucDataSource {
     }
 
     public Cursor selectAllCards() {
-        return mDatabase.rawQuery("SELECT * FROM " + SaldoTucHelper.TABLE_CARDS + " ORDER BY " + SaldoTucHelper.COLUMN_NAME, null);
+        return mDatabase.rawQuery("SELECT * FROM " + SaldoTucHelper.TABLE_CARDS + " ORDER BY LOWER(" + SaldoTucHelper.COLUMN_NAME + ")", null);
     }
 
     public Cursor selectCard(Integer id) {
         return mDatabase.rawQuery("SELECT * FROM " + SaldoTucHelper.TABLE_CARDS + " WHERE " + SaldoTucHelper.COLUMN_ID + " = " + id, null);
     }
 
-    public int updateCardBalance(Integer id, String balance) {
+    public int updateCard(Card card) {
         ContentValues values = new ContentValues();
-        values.put(SaldoTucHelper.COLUMN_LAST_BALANCE, balance);
+        values.put(SaldoTucHelper.COLUMN_NAME, card.getName());
+        values.put(SaldoTucHelper.COLUMN_CARD, card.getNumber());
+        values.put(SaldoTucHelper.COLUMN_PHONE, card.getPhone());
+        values.put(SaldoTucHelper.COLUMN_HOUR, card.getHour());
+        values.put(SaldoTucHelper.COLUMN_AMPM, card.getAmpm());
+        values.put(SaldoTucHelper.COLUMN_LAST_BALANCE, card.getBalance());
 
         return mDatabase.update(
             SaldoTucHelper.TABLE_CARDS, // table
             values, // values
             SaldoTucHelper.COLUMN_ID + " = ?",   // where clause
-            new String[] { id.toString() } // where params
+            new String[] { card.getId().toString() } // where params
         );
-
-//        String query = "UPDATE " + SaldoTucHelper.TABLE_CARDS + " SET " + SaldoTucHelper.COLUMN_LAST_BALANCE + " = \"" + balance + "\" WHERE " + SaldoTucHelper.COLUMN_ID + " = " + id;
-//        Log.e("TAG", query);
-//        mDatabase.rawQuery(query, null);
     }
 
 }

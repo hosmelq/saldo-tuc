@@ -137,7 +137,8 @@ public class MainActivity extends ActionBarActivity {
 
             if ( ! mpesoBalance.Error && matcher.find()) {
                 String balance = matcher.group(0);
-                mDataSource.updateCardBalance(mCard.getId(), balance);
+                mCard.setBalance(balance);
+                mDataSource.updateCard(mCard);
                 ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + balance);
 
                 Cursor cursor = mDataSource.selectCard(mCard.getId());

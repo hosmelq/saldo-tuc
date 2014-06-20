@@ -11,6 +11,8 @@ import java.util.List;
 
 public class CardAdapter extends ArrayAdapter<Card> {
 
+    public static final String TAG = CardAdapter.class.getSimpleName();
+
     protected Context mContext;
     protected List<Card> mCards;
 
@@ -37,13 +39,19 @@ public class CardAdapter extends ArrayAdapter<Card> {
 
         Card card = mCards.get(position);
         String number = card.getNumber().substring(0, 4) + "-" + card.getNumber().substring(4, 8);
+        String balance;
 
         holder.nameLabel.setText(card.getName());
         holder.numberLabel.setText(number);
 
-        if (card.getBalance() != null) {
-            holder.balanceLabel.setText("C$ " + card.getBalance());
+        if (card.getBalance() == null) {
+            balance = "";
+        } else {
+            balance = "C$ " + card.getBalance();
         }
+
+        card.setBalance(balance);
+        holder.balanceLabel.setText(card.getBalance());
 
         return convertView;
     }
