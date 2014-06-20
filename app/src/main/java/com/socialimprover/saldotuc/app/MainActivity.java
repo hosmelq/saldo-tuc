@@ -94,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
 
             card.setId(cursor.getInt(0));
             card.setName(cursor.getString(1));
-            card.setCard(cursor.getString(2));
+            card.setNumber(cursor.getString(2));
 
             if ( ! cursor.isNull(6)) {
                 card.setBalance(cursor.getString(6));
@@ -145,7 +145,7 @@ public class MainActivity extends ActionBarActivity {
                 SaldoTucService service = new SaldoTucService();
 
                 Card card = new Card();
-                card.setCard(cursor.getString(2));
+                card.setNumber(cursor.getString(2));
                 card.setPhone(cursor.getString(3));
                 card.setHour(cursor.getString(4));
                 card.setAmpm(cursor.getString(5));

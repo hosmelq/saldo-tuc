@@ -67,7 +67,7 @@ public class SaldoTucService {
     }
 
     public void getBalances(Card card, Callback<MpesoBalance> callback) {
-        mRestAdapter.getBalancesAsync(card.getCard(), callback);
+        mRestAdapter.getBalancesAsync(card.getNumber(), callback);
     }
 
 }

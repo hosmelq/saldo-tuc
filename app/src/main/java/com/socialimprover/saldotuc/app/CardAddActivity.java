@@ -4,14 +4,10 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -99,7 +95,7 @@ public class CardAddActivity extends ActionBarActivity {
             } else {
                 Card newCard = new Card();
                 newCard.setName(name);
-                newCard.setCard(card);
+                newCard.setNumber(card);
 
                 if (mNotificationCheckBox.isChecked()) {
                     if (TextUtils.isEmpty(phone) || phone.length() != 8) {

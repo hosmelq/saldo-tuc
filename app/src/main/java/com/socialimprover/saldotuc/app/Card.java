@@ -4,7 +4,7 @@ public class Card {
 
     private Integer id;
     private String name;
-    private String card;
+    private String number;
     private String phone;
     private String hour;
     private String ampm;
@@ -26,12 +26,12 @@ public class Card {
         this.name = name;
     }
 
-    public String getCard() {
-        return card;
+    public String getNumber() {
+        return number;
     }
 
-    public void setCard(String card) {
-        this.card = card;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getPhone() {

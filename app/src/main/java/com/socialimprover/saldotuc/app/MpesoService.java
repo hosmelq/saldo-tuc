@@ -29,7 +29,7 @@ public class MpesoService {
             .build();
 
         BalanceServiceInterface service = restAdapter.create(BalanceServiceInterface.class);
-        service.getBalanceAsync("1", card.getCard(), callback);
+        service.getBalanceAsync("1", card.getNumber(), callback);
     }
 
 }

@@ -36,7 +36,7 @@ public class CardAdapter extends ArrayAdapter<Card> {
         }
 
         Card card = mCards.get(position);
-        String number = card.getCard().substring(0, 4) + "-" + card.getCard().substring(4, 8);
+        String number = card.getNumber().substring(0, 4) + "-" + card.getNumber().substring(4, 8);
 
         holder.nameLabel.setText(card.getName());
         holder.numberLabel.setText(number);

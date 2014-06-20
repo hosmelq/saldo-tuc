@@ -35,7 +35,7 @@ public class SaldoTucDataSource {
     public void insertCard(Card card) {
         ContentValues values = new ContentValues();
         values.put(SaldoTucHelper.COLUMN_NAME, card.getName());
-        values.put(SaldoTucHelper.COLUMN_CARD, card.getCard());
+        values.put(SaldoTucHelper.COLUMN_CARD, card.getNumber());
         values.put(SaldoTucHelper.COLUMN_PHONE, card.getPhone());
         values.put(SaldoTucHelper.COLUMN_HOUR, card.getHour());
         values.put(SaldoTucHelper.COLUMN_AMPM, card.getAmpm());
