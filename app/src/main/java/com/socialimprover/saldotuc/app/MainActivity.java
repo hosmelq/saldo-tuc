@@ -204,8 +204,14 @@ public class MainActivity extends ActionBarActivity {
                     startActivity(intent);
                     break;
                 case 1: // delete card
-                    break;
+                    int delete = mDataSource.deleteCard(mCard);
 
+                    if (delete > 0) {
+                        mCards.remove(mCard);
+                        ( (CardAdapter) mListView.getAdapter()).notifyDataSetChanged();
+                    }
+
+                    break;
             }
         }
     };

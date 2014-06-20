@@ -1,6 +1,7 @@
 package com.socialimprover.saldotuc.app;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,7 @@ public class CardAdapter extends ArrayAdapter<Card> {
         holder.nameLabel.setText(card.getName());
         holder.numberLabel.setText(number);
 
-        if (card.getBalance() == null) {
+        if (card.getBalance() == null || TextUtils.isEmpty(card.getBalance())) {
             balance = "";
         } else {
             balance = "C$ " + card.getBalance();

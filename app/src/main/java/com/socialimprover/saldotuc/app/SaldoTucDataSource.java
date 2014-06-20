@@ -72,4 +72,12 @@ public class SaldoTucDataSource {
         );
     }
 
+    public int deleteCard(Card card) {
+        return mDatabase.delete(
+            SaldoTucHelper.TABLE_CARDS,
+            SaldoTucHelper.COLUMN_ID + " = ?",   // where clause
+            new String[] { card.getId().toString() } // where params
+        );
+    }
+
 }
