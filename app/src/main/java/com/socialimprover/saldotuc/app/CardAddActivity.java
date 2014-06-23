@@ -135,11 +135,6 @@ public class CardAddActivity extends ActionBarActivity {
                             @Override
                             public void failure(RetrofitError error) {
                                 removeProgressBar();
-
-                                if (error.getResponse().getStatus() == 409) {
-                                    validationErrorMessage(getString(R.string.error_title), "Este número de télefono ya esta asociado a otra tarjeta TUC");
-                                }
-
                                 Log.e(TAG, "Error: " + error.getMessage());
                             }
                         });
