@@ -17,6 +17,8 @@
     <string name="menu_save_label">Guardar</string>
     <string name="card_add_error_message">Por favor, asegúrese de introducir un nombre y un número de tarjeta valido</string>
     <string name="card_add_phone_error_message">Número de teléfono inválido</string>
+    <string name="card_add_duplicate_number_error_message">El número de tarjeta ya esta asociado</string>
+    <string name="card_add_duplicate_phone_error_message">El número de teléfono ya esta asociado</string>
     <string name="card_success">Tarjeta guardada</string>
     <string name="card_invalidad">"No es un número de tarjeta TUC ó está inactivo"</string>
     <string name="title_activity_phone_verification">Tu código</string>

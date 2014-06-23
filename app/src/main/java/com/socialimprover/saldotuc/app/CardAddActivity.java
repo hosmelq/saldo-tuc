@@ -97,6 +97,11 @@ public class CardAddActivity extends ActionBarActivity {
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(card) || card.length() != 8) {
                 validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_error_message));
             } else {
+                if (mDataSource.findByNumber(card).getCount() > 0) {
+                    validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_duplicate_number_error_message));
+                    return false;
+                }
+
                 mNewCard = new Card();
                 mNewCard.setName(name);
                 mNewCard.setNumber(card);
@@ -104,6 +109,9 @@ public class CardAddActivity extends ActionBarActivity {
                 if (mNotificationCheckBox.isChecked()) {
                     if (TextUtils.isEmpty(phone) || phone.length() != 8) {
                         validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_phone_error_message));
+                    } else if (mDataSource.findByPhone(phone).getCount() > 0) {
+                        validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_duplicate_phone_error_message));
+                        return false;
                     } else {
                         setSupportProgressBarIndeterminateVisibility(true);
 
