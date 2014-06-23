@@ -1,7 +1,10 @@
 package com.socialimprover.saldotuc.app;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
@@ -27,6 +30,7 @@ public class CardAddActivity extends ActionBarActivity {
     public static final String TAG = CardAddActivity.class.getSimpleName();
 
     protected SaldoTucDataSource mDataSource;
+    protected Card mNewCard;
 
     protected RelativeLayout mNotificationLayout;
     protected EditText mName;
@@ -93,9 +97,9 @@ public class CardAddActivity extends ActionBarActivity {
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(card) || card.length() != 8) {
                 validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_error_message));
             } else {
-                Card newCard = new Card();
-                newCard.setName(name);
-                newCard.setNumber(card);
+                mNewCard = new Card();
+                mNewCard.setName(name);
+                mNewCard.setNumber(card);
 
                 if (mNotificationCheckBox.isChecked()) {
                     if (TextUtils.isEmpty(phone) || phone.length() != 8) {
@@ -103,32 +107,37 @@ public class CardAddActivity extends ActionBarActivity {
                     } else {
                         setSupportProgressBarIndeterminateVisibility(true);
 
-                        newCard.setPhone(phone);
-                        newCard.setHour(hour);
-                        newCard.setAmpm(ampm);
-
-                        saveCard(newCard);
+                        mNewCard.setPhone(phone);
+                        mNewCard.setHour(hour);
+                        mNewCard.setAmpm(ampm);
 
                         SaldoTucService service = new SaldoTucService();
-                        service.storeCard(newCard, new Callback<Card>() {
+                        service.storeCard(mNewCard, new Callback<Card>() {
                             @Override
                             public void success(Card card, Response response) {
                                 removeProgressBar();
+
+                                saveCard(mNewCard);
+
+                                Intent intent = new Intent(CardAddActivity.this, PhoneVerificationActivity.class);
+                                intent.putExtra("phone", mNewCard.getPhone());
+                                startActivity(intent);
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
                                 removeProgressBar();
+
+                                if (error.getResponse().getStatus() == 409) {
+                                    validationErrorMessage(getString(R.string.error_title), "Este número de télefono ya esta asociado a otra tarjeta TUC");
+                                }
+
                                 Log.e(TAG, "Error: " + error.getMessage());
                             }
                         });
-
-                        Intent intent = new Intent(this, PhoneVerificationActivity.class);
-                        intent.putExtra("phone", newCard.getPhone());
-                        startActivity(intent);
                     }
                 } else {
-                    saveCard(newCard);
+                    saveCard(mNewCard);
 
                     finish();
                 }
@@ -168,14 +177,32 @@ public class CardAddActivity extends ActionBarActivity {
         setSupportProgressBarIndeterminateVisibility(false);
     }
 
+    protected boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+
+        boolean isAvailable = false;
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            isAvailable = true;
+        }
+
+        return isAvailable;
+    }
+
     protected CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-        if (isChecked) {
-            mNotificationLayout.setVisibility(RelativeLayout.VISIBLE);
-        } else {
-            mNotificationLayout.setVisibility(RelativeLayout.INVISIBLE);
-        }
+            if (isNetworkAvailable()) {
+                if (isChecked) {
+                    mNotificationLayout.setVisibility(RelativeLayout.VISIBLE);
+                } else {
+                    mNotificationLayout.setVisibility(RelativeLayout.INVISIBLE);
+                }
+            } else {
+                validationErrorMessage(getString(R.string.error_title), "Necesitas conexión a internet para habilitar las notificaciones SMS.");
+                mNotificationCheckBox.setChecked(false);
+            }
         }
     };
 

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class PhoneVerificationActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_phone_verification);
 
         mPhone = getIntent().getExtras().getString("phone");
@@ -53,10 +55,14 @@ public class PhoneVerificationActivity extends ActionBarActivity {
             if (TextUtils.isEmpty(code)) {
                 validationErrorMessage(getString(R.string.error_title), getString(R.string.code_verification_error_message));
             } else {
+                setSupportProgressBarIndeterminateVisibility(true);
+
                 SaldoTucService service = new SaldoTucService();
                 service.verifyCard(mPhone, code, new Callback<Card>() {
                     @Override
                     public void success(Card card, Response response) {
+                        removeProgressBar();
+
                         if (response.getStatus() == 200) {
                             Intent intent = new Intent(PhoneVerificationActivity.this, MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -66,8 +72,13 @@ public class PhoneVerificationActivity extends ActionBarActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
+                        removeProgressBar();
+
+                        if (error.getResponse().getStatus() == 401) {
+                            validationErrorMessage(getString(R.string.error_title), getString(R.string.code_verification_error_message));
+                        }
+
                         Log.e(TAG, "Error: " + error.getMessage());
-                        validationErrorMessage(getString(R.string.error_title), getString(R.string.code_verification_error_message));
                     }
                 });
             }
@@ -88,5 +99,9 @@ public class PhoneVerificationActivity extends ActionBarActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    protected void removeProgressBar() {
+        setSupportProgressBarIndeterminateVisibility(false);
     }
 }

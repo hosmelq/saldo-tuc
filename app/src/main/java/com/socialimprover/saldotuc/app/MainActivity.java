@@ -204,14 +204,29 @@ public class MainActivity extends ActionBarActivity {
                     startActivity(intent);
                     break;
                 case 1: // delete card
-                    int delete = mDataSource.deleteCard(mCard);
+                    String number = mCard.getNumber().substring(0, 4) + "-" + mCard.getNumber().substring(4, 8);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("¿ Eliminar la tarjeta " + number + " ?")
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(android.R.string.ok, mDeleteCardDialogListener);
 
-                    if (delete > 0) {
-                        mCards.remove(mCard);
-                        ( (CardAdapter) mListView.getAdapter()).notifyDataSetChanged();
-                    }
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
                     break;
+            }
+        }
+    };
+
+    protected DialogInterface.OnClickListener mDeleteCardDialogListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            int delete = mDataSource.deleteCard(mCard);
+
+            if (delete > 0) {
+                mCards.remove(mCard);
+                ( (CardAdapter) mListView.getAdapter()).refill(mCards);
+//                ( (CardAdapter) mListView.getAdapter()).notifyDataSetChanged();
             }
         }
     };

@@ -39,10 +39,7 @@ public class SaldoTucDataSource {
         values.put(SaldoTucHelper.COLUMN_PHONE, card.getPhone());
         values.put(SaldoTucHelper.COLUMN_HOUR, card.getHour());
         values.put(SaldoTucHelper.COLUMN_AMPM, card.getAmpm());
-
-        if (card.getBalance() != null) {
-            values.put(SaldoTucHelper.COLUMN_LAST_BALANCE, card.getBalance());
-        }
+        values.put(SaldoTucHelper.COLUMN_LAST_BALANCE, card.getBalance());
 
         mDatabase.insert(SaldoTucHelper.TABLE_CARDS, null, values);
     }
