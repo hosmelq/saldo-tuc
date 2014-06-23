@@ -31,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    protected SaldoTucDataSource mDataSource;
+    protected CardDataSource mDataSource;
     protected ListView mListView;
     protected List<Card> mCards;
     protected Card mCard;
@@ -47,7 +47,7 @@ public class MainActivity extends ActionBarActivity {
         mListView.setOnItemClickListener(mOnItemClickListener);
         mListView.setOnItemLongClickListener(mOnItemLongClickListener);
 
-        mDataSource = new SaldoTucDataSource(this);
+        mDataSource = new CardDataSource(this);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class MainActivity extends ActionBarActivity {
         super.onResume();
         mDataSource.open();
 
-        Cursor cursor = mDataSource.selectAllCards();
+        Cursor cursor = mDataSource.all();
         updateList(cursor);
     }
 
@@ -144,10 +144,10 @@ public class MainActivity extends ActionBarActivity {
             if ( ! mpesoBalance.Error && matcher.find()) {
                 String balance = matcher.group(0);
                 mCard.setBalance(balance);
-                mDataSource.updateCard(mCard);
+                mDataSource.update(mCard);
                 ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + balance);
 
-                Cursor cursor = mDataSource.selectCard(mCard.getId());
+                Cursor cursor = mDataSource.find(mCard.getId());
                 cursor.moveToFirst();
                 SaldoTucService service = new SaldoTucService();
 
@@ -221,7 +221,7 @@ public class MainActivity extends ActionBarActivity {
     protected DialogInterface.OnClickListener mDeleteCardDialogListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
-            int delete = mDataSource.deleteCard(mCard);
+            int delete = mDataSource.delete(mCard);
 
             if (delete > 0) {
                 mCards.remove(mCard);

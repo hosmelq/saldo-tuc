@@ -29,7 +29,7 @@ public class CardAddActivity extends ActionBarActivity {
 
     public static final String TAG = CardAddActivity.class.getSimpleName();
 
-    protected SaldoTucDataSource mDataSource;
+    protected CardDataSource mDataSource;
     protected Card mNewCard;
 
     protected RelativeLayout mNotificationLayout;
@@ -46,7 +46,7 @@ public class CardAddActivity extends ActionBarActivity {
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_card_add);
 
-        mDataSource = new SaldoTucDataSource(this);
+        mDataSource = new CardDataSource(this);
 
         mNotificationLayout = (RelativeLayout) findViewById(R.id.notificationLayout);
         mName = (EditText) findViewById(R.id.nameField);
@@ -168,7 +168,7 @@ public class CardAddActivity extends ActionBarActivity {
     }
 
     protected void saveCard(Card card) {
-        mDataSource.insertCard(card);
+        mDataSource.create(card);
 
         Toast.makeText(this, R.string.card_success, Toast.LENGTH_LONG).show();
     }

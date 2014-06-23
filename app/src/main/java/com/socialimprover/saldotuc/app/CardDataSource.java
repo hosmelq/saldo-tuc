@@ -6,12 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
-public class SaldoTucDataSource {
+public class CardDataSource {
 
     private SQLiteDatabase mDatabase; // The actual DB!
     private SaldoTucHelper mSaldoTucHelper; // Helper class for creating and opening the DB
 
-    public SaldoTucDataSource(Context context) {
+    public CardDataSource(Context context) {
         mSaldoTucHelper = new SaldoTucHelper(context);
     }
 
@@ -32,7 +32,7 @@ public class SaldoTucDataSource {
      /*
      * CRUD operations!
      */
-    public void insertCard(Card card) {
+    public void create(Card card) {
         ContentValues values = new ContentValues();
         values.put(SaldoTucHelper.COLUMN_NAME, card.getName());
         values.put(SaldoTucHelper.COLUMN_CARD, card.getNumber());
@@ -44,15 +44,23 @@ public class SaldoTucDataSource {
         mDatabase.insert(SaldoTucHelper.TABLE_CARDS, null, values);
     }
 
-    public Cursor selectAllCards() {
+    public Cursor all() {
         return mDatabase.rawQuery("SELECT * FROM " + SaldoTucHelper.TABLE_CARDS + " ORDER BY LOWER(" + SaldoTucHelper.COLUMN_NAME + ")", null);
     }
 
-    public Cursor selectCard(Integer id) {
+    public Cursor find(Integer id) {
         return mDatabase.rawQuery("SELECT * FROM " + SaldoTucHelper.TABLE_CARDS + " WHERE " + SaldoTucHelper.COLUMN_ID + " = " + id, null);
     }
 
-    public int updateCard(Card card) {
+    public Cursor findByNumber(String card) {
+        return mDatabase.rawQuery("SELECT * FROM " + SaldoTucHelper.TABLE_CARDS + " WHERE " + SaldoTucHelper.COLUMN_CARD + " = '" + card + "'", null);
+    }
+
+    public Cursor findByPhone(String phone) {
+        return mDatabase.rawQuery("SELECT * FROM " + SaldoTucHelper.TABLE_CARDS + " WHERE " + SaldoTucHelper.COLUMN_PHONE + " = '" + phone + "'", null);
+    }
+
+    public int update(Card card) {
         ContentValues values = new ContentValues();
         values.put(SaldoTucHelper.COLUMN_NAME, card.getName());
         values.put(SaldoTucHelper.COLUMN_CARD, card.getNumber());
@@ -69,7 +77,7 @@ public class SaldoTucDataSource {
         );
     }
 
-    public int deleteCard(Card card) {
+    public int delete(Card card) {
         return mDatabase.delete(
             SaldoTucHelper.TABLE_CARDS,
             SaldoTucHelper.COLUMN_ID + " = ?",   // where clause
