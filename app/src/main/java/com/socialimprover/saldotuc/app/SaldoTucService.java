@@ -6,6 +6,8 @@ import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Path;
 
 public class SaldoTucService {
 
@@ -26,6 +28,13 @@ public class SaldoTucService {
 
         @POST("/cards")
         public void storeCardAsync(
+            @Body Card card,
+            Callback<Card> callback
+        );
+
+        @PUT("/cards/{id}")
+        public void updateCardAsync(
+            @Path("id") Integer id,
             @Body Card card,
             Callback<Card> callback
         );
@@ -55,6 +64,10 @@ public class SaldoTucService {
 
     public void storeCard(Card card, Callback<Card> callback) {
         mRestAdapter.storeCardAsync(card, callback);
+    }
+
+    public void updateCard(Card card, Callback<Card> callback) {
+        mRestAdapter.updateCardAsync(card.getId(), card, callback);
     }
 
     public void verifyCard(String phone, String code, Callback<Card> callback) {

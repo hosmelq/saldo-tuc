@@ -19,7 +19,8 @@
     <string name="card_add_phone_error_message">Número de teléfono inválido</string>
     <string name="card_add_duplicate_number_error_message">El número de tarjeta ya esta asociado</string>
     <string name="card_add_duplicate_phone_error_message">El número de teléfono ya esta asociado</string>
-    <string name="card_success">Tarjeta guardada</string>
+    <string name="card_success_save">Tarjeta guardada</string>
+    <string name="card_success_update">Tarjeta actualizada</string>
     <string name="card_invalidad">"No es un número de tarjeta TUC ó está inactivo"</string>
     <string name="title_activity_phone_verification">Tu código</string>
     <string name="menu_verification_label">Verificar</string>

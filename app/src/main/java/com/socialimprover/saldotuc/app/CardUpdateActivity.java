@@ -26,6 +26,7 @@ public class CardUpdateActivity extends ActionBarActivity {
     public static final String TAG = CardAddActivity.class.getSimpleName();
 
     protected CardDataSource mDataSource;
+    protected Card mCard;
 
     protected RelativeLayout mNotificationLayout;
     protected EditText mName;
@@ -43,7 +44,7 @@ public class CardUpdateActivity extends ActionBarActivity {
 
         mDataSource = new CardDataSource(this);
         Intent intent = getIntent();
-        Card card = (Card) intent.getSerializableExtra("card");
+        mCard = (Card) intent.getSerializableExtra("card");
 
         mNotificationLayout = (RelativeLayout) findViewById(R.id.notificationLayout);
         mName = (EditText) findViewById(R.id.nameField);
@@ -56,7 +57,7 @@ public class CardUpdateActivity extends ActionBarActivity {
         mNotificationCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         setHourAdapters();
-        fillFields(card);
+        fillFields(mCard);
     }
 
     @Override
@@ -95,27 +96,42 @@ public class CardUpdateActivity extends ActionBarActivity {
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(card) || card.length() != 8) {
                 validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_error_message));
             } else {
-                Card newCard = new Card();
-                newCard.setName(name);
-                newCard.setNumber(card);
+                if ( ! mCard.getNumber().equals(card) && mDataSource.findByNumber(card).getCount() > 0) {
+                    validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_duplicate_number_error_message));
+                    return false;
+                }
+
+                mCard.setName(name);
+                mCard.setNumber(card);
 
                 if (mNotificationCheckBox.isChecked()) {
                     if (TextUtils.isEmpty(phone) || phone.length() != 8) {
                         validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_phone_error_message));
+                    } else if ( ! mCard.getPhone().equals(phone) && mDataSource.findByPhone(phone).getCount() > 0) {
+                        validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_duplicate_phone_error_message));
+                        return false;
                     } else {
                         setSupportProgressBarIndeterminateVisibility(true);
 
-                        newCard.setPhone(phone);
-                        newCard.setHour(hour);
-                        newCard.setAmpm(ampm);
-
-                        saveCard(newCard);
+                        mCard.setPhone(phone);
+                        mCard.setHour(hour);
+                        mCard.setAmpm(ampm);
 
                         SaldoTucService service = new SaldoTucService();
-                        service.storeCard(newCard, new Callback<Card>() {
+                        service.updateCard(mCard, new Callback<Card>() {
                             @Override
                             public void success(Card card, Response response) {
                                 removeProgressBar();
+
+                                updateCard(mCard);
+
+                                if (mCard.getPhone().equals(mPhone.getText().toString().trim())) {
+                                    finish();
+                                } else {
+                                    Intent intent = new Intent(CardUpdateActivity.this, PhoneVerificationActivity.class);
+                                    intent.putExtra("phone", mCard.getPhone());
+                                    startActivity(intent);
+                                }
                             }
 
                             @Override
@@ -124,13 +140,9 @@ public class CardUpdateActivity extends ActionBarActivity {
                                 Log.e(TAG, "Error: " + error.getMessage());
                             }
                         });
-
-                        Intent intent = new Intent(this, PhoneVerificationActivity.class);
-                        intent.putExtra("phone", newCard.getPhone());
-                        startActivity(intent);
                     }
                 } else {
-                    saveCard(newCard);
+                    updateCard(mCard);
 
                     finish();
                 }
@@ -178,10 +190,10 @@ public class CardUpdateActivity extends ActionBarActivity {
         dialog.show();
     }
 
-    protected void saveCard(Card card) {
-        mDataSource.create(card);
+    protected void updateCard(Card card) {
+        mDataSource.update(card);
 
-        Toast.makeText(this, R.string.card_success, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.card_success_update, Toast.LENGTH_LONG).show();
     }
 
     protected void removeProgressBar() {

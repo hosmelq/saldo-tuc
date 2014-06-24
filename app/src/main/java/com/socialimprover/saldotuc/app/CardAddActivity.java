@@ -24,7 +24,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-
 public class CardAddActivity extends ActionBarActivity {
 
     public static final String TAG = CardAddActivity.class.getSimpleName();
@@ -173,7 +172,7 @@ public class CardAddActivity extends ActionBarActivity {
     protected void saveCard(Card card) {
         mDataSource.create(card);
 
-        Toast.makeText(this, R.string.card_success, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.card_success_save, Toast.LENGTH_LONG).show();
     }
 
     protected void removeProgressBar() {
