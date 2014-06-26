@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -20,7 +21,9 @@ public class PhoneVerificationActivity extends ActionBarActivity {
 
     public static final String TAG = PhoneVerificationActivity.class.getSimpleName();
 
-    protected String mPhone;
+    protected CardDataSource mDataSource;
+
+    protected Card mCard;
     protected EditText mCode;
 
     @Override
@@ -29,11 +32,25 @@ public class PhoneVerificationActivity extends ActionBarActivity {
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_phone_verification);
 
-        mPhone = getIntent().getExtras().getString("phone");
+        mDataSource = new CardDataSource(this);
+
+        mCard = (Card) getIntent().getSerializableExtra("card");
         mCode = (EditText) findViewById(R.id.codeField);
 
-        String phone = mPhone.substring(0, 4) + "-" + mPhone.substring(4, 8);
+        String phone = mCard.getPhone().substring(0, 4) + "-" + mCard.getPhone().substring(4, 8);
         ( (TextView) findViewById(R.id.textInfo)).append(" " + phone);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mDataSource.open();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mDataSource.close();
     }
 
     @Override
@@ -58,16 +75,17 @@ public class PhoneVerificationActivity extends ActionBarActivity {
                 setSupportProgressBarIndeterminateVisibility(true);
 
                 SaldoTucService service = new SaldoTucService();
-                service.verifyCard(mPhone, code, new Callback<Card>() {
+                service.verifyCard(mCard.getPhone(), code, new Callback<Card>() {
                     @Override
                     public void success(Card card, Response response) {
                         removeProgressBar();
 
-                        if (response.getStatus() == 200) {
-                            Intent intent = new Intent(PhoneVerificationActivity.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                        }
+                        mDataSource.create(mCard);
+                        Toast.makeText(PhoneVerificationActivity.this, R.string.card_success_save, Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(PhoneVerificationActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                     }
 
                     @Override
@@ -83,6 +101,7 @@ public class PhoneVerificationActivity extends ActionBarActivity {
                 });
             }
         }
+
         return super.onOptionsItemSelected(item);
     }
 

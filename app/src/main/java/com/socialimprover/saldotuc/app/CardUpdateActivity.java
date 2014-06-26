@@ -43,8 +43,7 @@ public class CardUpdateActivity extends ActionBarActivity {
         setContentView(R.layout.activity_card_add);
 
         mDataSource = new CardDataSource(this);
-        Intent intent = getIntent();
-        mCard = (Card) intent.getSerializableExtra("card");
+        mCard = (Card) getIntent().getSerializableExtra("card");
 
         mNotificationLayout = (RelativeLayout) findViewById(R.id.notificationLayout);
         mName = (EditText) findViewById(R.id.nameField);
@@ -123,13 +122,12 @@ public class CardUpdateActivity extends ActionBarActivity {
                             public void success(Card card, Response response) {
                                 removeProgressBar();
 
-                                updateCard(mCard);
-
                                 if (mCard.getPhone().equals(mPhone.getText().toString().trim())) {
+                                    updateCard(mCard);
                                     finish();
                                 } else {
                                     Intent intent = new Intent(CardUpdateActivity.this, PhoneVerificationActivity.class);
-                                    intent.putExtra("phone", mCard.getPhone());
+                                    intent.putExtra("card", mCard);
                                     startActivity(intent);
                                 }
                             }
@@ -143,7 +141,6 @@ public class CardUpdateActivity extends ActionBarActivity {
                     }
                 } else {
                     updateCard(mCard);
-
                     finish();
                 }
             }

@@ -124,10 +124,8 @@ public class CardAddActivity extends ActionBarActivity {
                             public void success(Card card, Response response) {
                                 removeProgressBar();
 
-                                saveCard(mNewCard);
-
                                 Intent intent = new Intent(CardAddActivity.this, PhoneVerificationActivity.class);
-                                intent.putExtra("phone", mNewCard.getPhone());
+                                intent.putExtra("card", mNewCard);
                                 startActivity(intent);
                             }
 
@@ -140,7 +138,6 @@ public class CardAddActivity extends ActionBarActivity {
                     }
                 } else {
                     saveCard(mNewCard);
-
                     finish();
                 }
             }
