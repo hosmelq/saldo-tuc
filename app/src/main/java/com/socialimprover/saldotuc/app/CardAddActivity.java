@@ -125,6 +125,7 @@ public class CardAddActivity extends ActionBarActivity {
                                 removeProgressBar();
 
                                 Intent intent = new Intent(CardAddActivity.this, PhoneVerificationActivity.class);
+                                intent.putExtra("action", "create");
                                 intent.putExtra("card", mNewCard);
                                 startActivity(intent);
                             }

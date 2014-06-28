@@ -43,6 +43,7 @@ public class SaldoTucService {
         @POST("/cards/verify")
         public void verifyCardAsync(
             @Field("phone") String phone,
+            @Field("phone_old") String phoneOld,
             @Field("code") String code,
             Callback<Card> callback
         );
@@ -70,8 +71,8 @@ public class SaldoTucService {
         mRestAdapter.updateCardAsync(card.getId(), card, callback);
     }
 
-    public void verifyCard(String phone, String code, Callback<Card> callback) {
-        mRestAdapter.verifyCardAsync(phone, code, callback);
+    public void verifyCard(String phone, String phoneOld, String code, Callback<Card> callback) {
+        mRestAdapter.verifyCardAsync(phone, phoneOld, code, callback);
     }
 
     public void storeBalance(Card card, Callback<Card> callback) {

@@ -25,6 +25,8 @@ public class PhoneVerificationActivity extends ActionBarActivity {
 
     protected Card mCard;
     protected EditText mCode;
+    protected String mPhoneOld;
+    protected String mAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class PhoneVerificationActivity extends ActionBarActivity {
 
         mCard = (Card) getIntent().getSerializableExtra("card");
         mCode = (EditText) findViewById(R.id.codeField);
+        mPhoneOld = getIntent().getExtras().getString("phone_old");
+        mAction = getIntent().getExtras().getString("action");
 
         String phone = mCard.getPhone().substring(0, 4) + "-" + mCard.getPhone().substring(4, 8);
         ( (TextView) findViewById(R.id.textInfo)).append(" " + phone);
@@ -75,13 +79,18 @@ public class PhoneVerificationActivity extends ActionBarActivity {
                 setSupportProgressBarIndeterminateVisibility(true);
 
                 SaldoTucService service = new SaldoTucService();
-                service.verifyCard(mCard.getPhone(), code, new Callback<Card>() {
+                service.verifyCard(mCard.getPhone(), mPhoneOld, code, new Callback<Card>() {
                     @Override
                     public void success(Card card, Response response) {
                         removeProgressBar();
 
-                        mDataSource.create(mCard);
-                        Toast.makeText(PhoneVerificationActivity.this, R.string.card_success_save, Toast.LENGTH_LONG).show();
+                        if (mAction.equals("create")) {
+                            mDataSource.create(mCard);
+                            Toast.makeText(PhoneVerificationActivity.this, R.string.card_success_save, Toast.LENGTH_LONG).show();
+                        } else {
+                            mDataSource.update(mCard);
+                            Toast.makeText(PhoneVerificationActivity.this, R.string.card_success_update, Toast.LENGTH_LONG).show();
+                        }
 
                         Intent intent = new Intent(PhoneVerificationActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

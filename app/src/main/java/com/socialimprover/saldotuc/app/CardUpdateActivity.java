@@ -27,6 +27,7 @@ public class CardUpdateActivity extends ActionBarActivity {
 
     protected CardDataSource mDataSource;
     protected Card mCard;
+    protected String mPhoneOld = null;
 
     protected RelativeLayout mNotificationLayout;
     protected EditText mName;
@@ -112,6 +113,10 @@ public class CardUpdateActivity extends ActionBarActivity {
                     } else {
                         setSupportProgressBarIndeterminateVisibility(true);
 
+                        if ( ! mCard.getPhone().equals(phone)) {
+                            mPhoneOld = mCard.getPhone();
+                        }
+
                         mCard.setPhone(phone);
                         mCard.setHour(hour);
                         mCard.setAmpm(ampm);
@@ -122,12 +127,14 @@ public class CardUpdateActivity extends ActionBarActivity {
                             public void success(Card card, Response response) {
                                 removeProgressBar();
 
-                                if (mCard.getPhone().equals(mPhone.getText().toString().trim())) {
+                                if (mPhoneOld == null) {
                                     updateCard(mCard);
                                     finish();
                                 } else {
                                     Intent intent = new Intent(CardUpdateActivity.this, PhoneVerificationActivity.class);
+                                    intent.putExtra("action", "update");
                                     intent.putExtra("card", mCard);
+                                    intent.putExtra("phone_old", mPhoneOld);
                                     startActivity(intent);
                                 }
                             }
