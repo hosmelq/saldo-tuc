@@ -75,7 +75,7 @@ public class CardUpdateActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.card_add, menu);
+        getMenuInflater().inflate(R.menu.card_update, menu);
         return true;
     }
 
@@ -86,7 +86,7 @@ public class CardUpdateActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_save) {
+        if (id == R.id.action_update) {
             String name = mName.getText().toString().trim();
             String card = mNumber.getText().toString().trim();
             String phone = mPhone.getText().toString().trim();
@@ -107,13 +107,13 @@ public class CardUpdateActivity extends ActionBarActivity {
                 if (mNotificationCheckBox.isChecked()) {
                     if (TextUtils.isEmpty(phone) || phone.length() != 8) {
                         validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_phone_error_message));
-                    } else if ( ! mCard.getPhone().equals(phone) && mDataSource.findByPhone(phone).getCount() > 0) {
+                    } else if (mCard.getPhone() != null && ! mCard.getPhone().equals(phone) && mDataSource.findByPhone(phone).getCount() > 0) {
                         validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_duplicate_phone_error_message));
                         return false;
                     } else {
                         setSupportProgressBarIndeterminateVisibility(true);
 
-                        if ( ! mCard.getPhone().equals(phone)) {
+                        if (mCard.getPhone() != null) {
                             mPhoneOld = mCard.getPhone();
                         }
 
@@ -127,7 +127,7 @@ public class CardUpdateActivity extends ActionBarActivity {
                             public void success(Card card, Response response) {
                                 removeProgressBar();
 
-                                if (mPhoneOld == null) {
+                                if (mCard.getPhone().equals(mPhoneOld)) {
                                     updateCard(mCard);
                                     finish();
                                 } else {

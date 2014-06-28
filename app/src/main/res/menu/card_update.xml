@@ -2,9 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.socialimprover.saldotuc.app.CardUpdateActivity" >
-    <item android:id="@+id/action_save"
-        android:title="@string/menu_save_label"
+    <item android:id="@+id/action_update"
+        android:title="@string/menu_update_label"
         android:orderInCategory="100"
         app:showAsAction="always"
-        android:icon="@drawable/ic_action_send_now"/>
+        android:icon="@drawable/ic_action_accept"/>
 </menu>
