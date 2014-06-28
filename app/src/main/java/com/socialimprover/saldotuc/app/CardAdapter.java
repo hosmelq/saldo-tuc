@@ -51,8 +51,7 @@ public class CardAdapter extends ArrayAdapter<Card> {
             balance = "C$ " + card.getBalance();
         }
 
-        card.setBalance(balance);
-        holder.balanceLabel.setText(card.getBalance());
+        holder.balanceLabel.setText(balance);
 
         return convertView;
     }
