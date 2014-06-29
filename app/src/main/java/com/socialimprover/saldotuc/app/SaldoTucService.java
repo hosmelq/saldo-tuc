@@ -2,12 +2,15 @@ package com.socialimprover.saldotuc.app;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.client.Response;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 public class SaldoTucService {
 
@@ -37,6 +40,13 @@ public class SaldoTucService {
             @Path("id") Integer id,
             @Body Card card,
             Callback<Card> callback
+        );
+
+        @DELETE("/cards/{id}")
+        public void deleteCardAsync(
+            @Path("id") Integer id,
+            @Query("phone") String phone,
+            Callback<Response> callback
         );
 
         @FormUrlEncoded
@@ -69,6 +79,10 @@ public class SaldoTucService {
 
     public void updateCard(Card card, Callback<Card> callback) {
         mRestAdapter.updateCardAsync(card.getId(), card, callback);
+    }
+
+    public void deleteCard(Card card, Callback<Response> callback) {
+        mRestAdapter.deleteCardAsync(card.getId(), card.getPhone(), callback);
     }
 
     public void verifyCard(String phone, String phoneOld, String code, Callback<Card> callback) {

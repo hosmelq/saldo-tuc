@@ -1,9 +1,12 @@
 package com.socialimprover.saldotuc.app;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
@@ -221,18 +224,66 @@ public class MainActivity extends ActionBarActivity {
     protected DialogInterface.OnClickListener mDeleteCardDialogListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
-            int delete = mDataSource.delete(mCard);
+            if (mCard.getPhone() != null) {
+                if (isNetworkAvailable()) {
+                    SaldoTucService service = new SaldoTucService();
 
-            if (delete > 0) {
-                mCards.remove(mCard);
-                ( (CardAdapter) mListView.getAdapter()).refill(mCards);
-//                ( (CardAdapter) mListView.getAdapter()).notifyDataSetChanged();
+                    service.deleteCard(mCard, new Callback<Response>() {
+                        @Override
+                        public void success(Response result, Response response) {
+                            deleteCard(mCard);
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            removeProgressBar();
+                            Log.e(TAG, "Error: " + error.getMessage());
+                        }
+                    });
+                } else {
+                    validationErrorMessage(getString(R.string.error_title), "Necesitas conexión a internet para eliminar esta tarjeta.");
+                }
+            } else {
+                deleteCard(mCard);
             }
         }
     };
 
+    protected void validationErrorMessage(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok, null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    protected void deleteCard(Card card) {
+        int delete = mDataSource.delete(card);
+
+        if (delete > 0) {
+            mCards.remove(mCard);
+            ( (CardAdapter) mListView.getAdapter()).refill(mCards);
+            Toast.makeText(this, R.string.card_success_delete, Toast.LENGTH_LONG).show();
+        }
+    }
+
     private void removeProgressBar() {
         setSupportProgressBarIndeterminateVisibility(false);
+    }
+
+    protected boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+
+        boolean isAvailable = false;
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            isAvailable = true;
+        }
+
+        return isAvailable;
     }
 
 }
