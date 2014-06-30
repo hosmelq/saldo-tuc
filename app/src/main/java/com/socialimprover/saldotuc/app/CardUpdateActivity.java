@@ -1,7 +1,10 @@
 package com.socialimprover.saldotuc.app;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
@@ -147,8 +150,38 @@ public class CardUpdateActivity extends ActionBarActivity {
                         });
                     }
                 } else {
-                    updateCard(mCard);
-                    finish();
+                    if (mCard.getPhone() != null) {
+                        if (isNetworkAvailable()) {
+                            setSupportProgressBarIndeterminateVisibility(true);
+
+                            SaldoTucService service = new SaldoTucService();
+
+                            service.deleteCard(mCard, new Callback<Response>() {
+                                @Override
+                                public void success(Response result, Response response) {
+                                    removeProgressBar();
+
+                                    mCard.setPhone(null);
+                                    mCard.setHour(null);
+                                    mCard.setAmpm(null);
+
+                                    updateCard(mCard);
+                                    finish();
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    removeProgressBar();
+                                    Log.e(TAG, "Error: " + error.getMessage());
+                                }
+                            });
+                        } else {
+                            validationErrorMessage(getString(R.string.error_title), "Necesitas conexión a internet para actualizar esta tarjeta.");
+                        }
+                    } else {
+                        updateCard(mCard);
+                        finish();
+                    }
                 }
             }
         }
@@ -202,6 +235,19 @@ public class CardUpdateActivity extends ActionBarActivity {
 
     protected void removeProgressBar() {
         setSupportProgressBarIndeterminateVisibility(false);
+    }
+
+    protected boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+
+        boolean isAvailable = false;
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            isAvailable = true;
+        }
+
+        return isAvailable;
     }
 
     protected CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {

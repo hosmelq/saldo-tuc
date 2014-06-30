@@ -226,6 +226,8 @@ public class MainActivity extends ActionBarActivity {
         public void onClick(DialogInterface dialogInterface, int i) {
             if (mCard.getPhone() != null) {
                 if (isNetworkAvailable()) {
+                    setSupportProgressBarIndeterminateVisibility(true);
+
                     SaldoTucService service = new SaldoTucService();
 
                     service.deleteCard(mCard, new Callback<Response>() {
