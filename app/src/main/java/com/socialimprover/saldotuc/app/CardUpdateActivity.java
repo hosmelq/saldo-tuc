@@ -14,7 +14,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -93,10 +92,10 @@ public class CardUpdateActivity extends ActionBarActivity {
             String ampm = mAmPmSpinner.getSelectedItem().toString();
 
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(card) || card.length() != 8) {
-                AppUtil.createDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_error_message));
+                AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_error_message));
             } else {
                 if ( ! mCard.getNumber().equals(card) && mDataSource.findByNumber(card).getCount() > 0) {
-                    AppUtil.createDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_number_error_message));
+                    AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_number_error_message));
                     return false;
                 }
 
@@ -105,9 +104,9 @@ public class CardUpdateActivity extends ActionBarActivity {
 
                 if (mNotificationCheckBox.isChecked()) {
                     if (TextUtils.isEmpty(phone) || phone.length() != 8) {
-                        AppUtil.createDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_phone_error_message));
+                        AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_phone_error_message));
                     } else if (mCard.getPhone() != null && ! mCard.getPhone().equals(phone) && mDataSource.findByPhone(phone).getCount() > 0) {
-                        AppUtil.createDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_phone_error_message));
+                        AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_phone_error_message));
                         return false;
                     } else {
                         setSupportProgressBarIndeterminateVisibility(true);
@@ -172,7 +171,7 @@ public class CardUpdateActivity extends ActionBarActivity {
                                 }
                             });
                         } else {
-                            AppUtil.createDialog(CardUpdateActivity.this, getString(R.string.error_title), "Necesitas conexión a internet para actualizar esta tarjeta.");
+                            AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), "Necesitas conexión a internet para actualizar esta tarjeta.");
                         }
                     } else {
                         updateCard(mCard);
@@ -216,7 +215,7 @@ public class CardUpdateActivity extends ActionBarActivity {
     protected void updateCard(Card card) {
         mDataSource.update(card);
 
-        Toast.makeText(this, R.string.card_success_update, Toast.LENGTH_LONG).show();
+        AppUtil.showToast(this, getString(R.string.card_success_update));
     }
 
     protected void removeProgressBar() {
@@ -233,7 +232,7 @@ public class CardUpdateActivity extends ActionBarActivity {
                     mNotificationLayout.setVisibility(RelativeLayout.INVISIBLE);
                 }
             } else {
-                AppUtil.createDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_sms_no_internet_error_message));
+                AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_sms_no_internet_error_message));
                 mNotificationCheckBox.setChecked(false);
             }
         }

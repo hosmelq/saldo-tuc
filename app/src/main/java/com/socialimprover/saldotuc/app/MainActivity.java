@@ -15,7 +15,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +124,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
-                Toast.makeText(MainActivity.this, R.string.no_connection_message, Toast.LENGTH_LONG).show();
+                AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
             } else {
                 setSupportProgressBarIndeterminateVisibility(true);
 
@@ -171,7 +170,7 @@ public class MainActivity extends ActionBarActivity {
                     }
                 });
             } else {
-                Toast.makeText(MainActivity.this, R.string.card_invalidad, Toast.LENGTH_LONG).show();
+                AppUtil.showToast(MainActivity.this, getString(R.string.card_invalidad));
                 removeProgressBar();
             }
         }
@@ -243,7 +242,7 @@ public class MainActivity extends ActionBarActivity {
                         }
                     });
                 } else {
-                    AppUtil.createDialog(MainActivity.this, getString(R.string.error_title), "Necesitas conexión a internet para eliminar esta tarjeta.");
+                    AppUtil.showDialog(MainActivity.this, getString(R.string.error_title), "Necesitas conexión a internet para eliminar esta tarjeta.");
                 }
             } else {
                 deleteCard(mCard);
@@ -257,7 +256,7 @@ public class MainActivity extends ActionBarActivity {
         if (delete > 0) {
             mCards.remove(mCard);
             ( (CardAdapter) mListView.getAdapter()).refill(mCards);
-            Toast.makeText(this, R.string.card_success_delete, Toast.LENGTH_LONG).show();
+            AppUtil.showToast(this, getString(R.string.card_success_delete));
         }
     }
 

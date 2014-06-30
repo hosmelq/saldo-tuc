@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -73,7 +72,7 @@ public class PhoneVerificationActivity extends ActionBarActivity {
             String code = mCode.getText().toString().trim();
 
             if (TextUtils.isEmpty(code)) {
-                AppUtil.createDialog(PhoneVerificationActivity.this, getString(R.string.error_title), getString(R.string.code_verification_error_message));
+                AppUtil.showDialog(PhoneVerificationActivity.this, getString(R.string.error_title), getString(R.string.code_verification_error_message));
             } else {
                 setSupportProgressBarIndeterminateVisibility(true);
 
@@ -85,10 +84,10 @@ public class PhoneVerificationActivity extends ActionBarActivity {
 
                         if (mAction.equals("create")) {
                             mDataSource.create(mCard);
-                            Toast.makeText(PhoneVerificationActivity.this, R.string.card_success_save, Toast.LENGTH_LONG).show();
+                            AppUtil.showToast(PhoneVerificationActivity.this, getString(R.string.card_success_save));
                         } else {
                             mDataSource.update(mCard);
-                            Toast.makeText(PhoneVerificationActivity.this, R.string.card_success_update, Toast.LENGTH_LONG).show();
+                            AppUtil.showToast(PhoneVerificationActivity.this, getString(R.string.card_success_update));
                         }
 
                         Intent intent = new Intent(PhoneVerificationActivity.this, MainActivity.class);
@@ -101,7 +100,7 @@ public class PhoneVerificationActivity extends ActionBarActivity {
                         removeProgressBar();
 
                         if (error.getResponse().getStatus() == 401) {
-                            AppUtil.createDialog(PhoneVerificationActivity.this, getString(R.string.error_title), getString(R.string.code_verification_error_message));
+                            AppUtil.showDialog(PhoneVerificationActivity.this, getString(R.string.error_title), getString(R.string.code_verification_error_message));
                         }
 
                         Log.e(TAG, "Error: " + error.getMessage());
