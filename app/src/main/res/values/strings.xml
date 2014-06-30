@@ -2,6 +2,7 @@
 <resources>
 
     <string name="error_title">Oops!</string>
+    <string name="no_connection_message">Sin conexión</string>
     <string name="app_name">Saldo TUC</string>
     <string name="menu_card_add_label">Agregar tarjeta</string>
     <string name="title_activity_card_add">Agregar tarjeta</string>

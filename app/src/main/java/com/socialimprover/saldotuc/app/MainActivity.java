@@ -1,12 +1,9 @@
 package com.socialimprover.saldotuc.app;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
@@ -122,14 +119,13 @@ public class MainActivity extends ActionBarActivity {
         } else {
             ( (CardAdapter) mListView.getAdapter()).refill(cards);
         }
-
     }
 
     protected AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            if ( ! isNetworkAvailable()) {
-                validationErrorMessage(getString(R.string.error_title), "Necesitas conexión a internet para consultar el saldo de esta tarjeta.");
+            if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
+                Toast.makeText(MainActivity.this, R.string.no_connection_message, Toast.LENGTH_LONG).show();
             } else {
                 setSupportProgressBarIndeterminateVisibility(true);
 
@@ -211,7 +207,7 @@ public class MainActivity extends ActionBarActivity {
                     startActivity(intent);
                     break;
                 case 1: // delete card
-                    String number = mCard.getNumber().substring(0, 4) + "-" + mCard.getNumber().substring(4, 8);
+                    String number = AppUtil.formatCard(mCard.getNumber());
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle("¿ Eliminar la tarjeta " + number + " ?")
                         .setNegativeButton(android.R.string.cancel, null)
@@ -229,7 +225,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
             if (mCard.getPhone() != null) {
-                if (isNetworkAvailable()) {
+                if (AppUtil.isNetworkAvailable(MainActivity.this)) {
                     setSupportProgressBarIndeterminateVisibility(true);
 
                     SaldoTucService service = new SaldoTucService();
@@ -247,23 +243,13 @@ public class MainActivity extends ActionBarActivity {
                         }
                     });
                 } else {
-                    validationErrorMessage(getString(R.string.error_title), "Necesitas conexión a internet para eliminar esta tarjeta.");
+                    AppUtil.createDialog(MainActivity.this, getString(R.string.error_title), "Necesitas conexión a internet para eliminar esta tarjeta.");
                 }
             } else {
                 deleteCard(mCard);
             }
         }
     };
-
-    protected void validationErrorMessage(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(android.R.string.ok, null);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
 
     protected void deleteCard(Card card) {
         int delete = mDataSource.delete(card);
@@ -277,19 +263,6 @@ public class MainActivity extends ActionBarActivity {
 
     private void removeProgressBar() {
         setSupportProgressBarIndeterminateVisibility(false);
-    }
-
-    protected boolean isNetworkAvailable() {
-        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-
-        boolean isAvailable = false;
-
-        if (networkInfo != null && networkInfo.isConnected()) {
-            isAvailable = true;
-        }
-
-        return isAvailable;
     }
 
 }

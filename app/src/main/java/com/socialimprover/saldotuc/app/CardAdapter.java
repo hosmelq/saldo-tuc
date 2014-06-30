@@ -39,7 +39,7 @@ public class CardAdapter extends ArrayAdapter<Card> {
         }
 
         Card card = mCards.get(position);
-        String number = card.getNumber().substring(0, 4) + "-" + card.getNumber().substring(4, 8);
+        String number = AppUtil.formatCard(card.getNumber());
         String balance;
 
         holder.nameLabel.setText(card.getName());

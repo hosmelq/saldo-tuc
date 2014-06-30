@@ -1,10 +1,6 @@
 package com.socialimprover.saldotuc.app;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
@@ -94,10 +90,10 @@ public class CardAddActivity extends ActionBarActivity {
             String ampm = mAmPmSpinner.getSelectedItem().toString();
 
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(card) || card.length() != 8) {
-                validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_error_message));
+                AppUtil.createDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_error_message));
             } else {
                 if (mDataSource.findByNumber(card).getCount() > 0) {
-                    validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_duplicate_number_error_message));
+                    AppUtil.createDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_number_error_message));
                     return false;
                 }
 
@@ -107,9 +103,9 @@ public class CardAddActivity extends ActionBarActivity {
 
                 if (mNotificationCheckBox.isChecked()) {
                     if (TextUtils.isEmpty(phone) || phone.length() != 8) {
-                        validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_phone_error_message));
+                        AppUtil.createDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_phone_error_message));
                     } else if (mDataSource.findByPhone(phone).getCount() > 0) {
-                        validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_duplicate_phone_error_message));
+                        AppUtil.createDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_phone_error_message));
                         return false;
                     } else {
                         setSupportProgressBarIndeterminateVisibility(true);
@@ -157,16 +153,6 @@ public class CardAddActivity extends ActionBarActivity {
         mAmPmSpinner.setAdapter(amPmAdapter);
     }
 
-    protected void validationErrorMessage(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, null);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
     protected void saveCard(Card card) {
         mDataSource.create(card);
 
@@ -177,30 +163,17 @@ public class CardAddActivity extends ActionBarActivity {
         setSupportProgressBarIndeterminateVisibility(false);
     }
 
-    protected boolean isNetworkAvailable() {
-        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-
-        boolean isAvailable = false;
-
-        if (networkInfo != null && networkInfo.isConnected()) {
-            isAvailable = true;
-        }
-
-        return isAvailable;
-    }
-
     protected CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-            if (isNetworkAvailable()) {
+            if (AppUtil.isNetworkAvailable(CardAddActivity.this)) {
                 if (isChecked) {
                     mNotificationLayout.setVisibility(RelativeLayout.VISIBLE);
                 } else {
                     mNotificationLayout.setVisibility(RelativeLayout.INVISIBLE);
                 }
             } else {
-                validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_sms_no_internet_error_message));
+                AppUtil.createDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_sms_no_internet_error_message));
                 mNotificationCheckBox.setChecked(false);
             }
         }

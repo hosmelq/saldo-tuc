@@ -1,6 +1,5 @@
 package com.socialimprover.saldotuc.app;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -74,7 +73,7 @@ public class PhoneVerificationActivity extends ActionBarActivity {
             String code = mCode.getText().toString().trim();
 
             if (TextUtils.isEmpty(code)) {
-                validationErrorMessage(getString(R.string.error_title), getString(R.string.code_verification_error_message));
+                AppUtil.createDialog(PhoneVerificationActivity.this, getString(R.string.error_title), getString(R.string.code_verification_error_message));
             } else {
                 setSupportProgressBarIndeterminateVisibility(true);
 
@@ -102,7 +101,7 @@ public class PhoneVerificationActivity extends ActionBarActivity {
                         removeProgressBar();
 
                         if (error.getResponse().getStatus() == 401) {
-                            validationErrorMessage(getString(R.string.error_title), getString(R.string.code_verification_error_message));
+                            AppUtil.createDialog(PhoneVerificationActivity.this, getString(R.string.error_title), getString(R.string.code_verification_error_message));
                         }
 
                         Log.e(TAG, "Error: " + error.getMessage());
@@ -117,16 +116,6 @@ public class PhoneVerificationActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         // super.onBackPressed();
-    }
-
-    protected void validationErrorMessage(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, null);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     protected void removeProgressBar() {
