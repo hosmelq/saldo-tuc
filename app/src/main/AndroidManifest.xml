@@ -38,7 +38,8 @@
         <activity
             android:name=".CardUpdateActivity"
             android:label="@string/title_activity_card_update"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
