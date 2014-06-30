@@ -128,13 +128,17 @@ public class MainActivity extends ActionBarActivity {
     protected AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            setSupportProgressBarIndeterminateVisibility(true);
+            if ( ! isNetworkAvailable()) {
+                validationErrorMessage(getString(R.string.error_title), "Necesitas conexión a internet para consultar el saldo de esta tarjeta.");
+            } else {
+                setSupportProgressBarIndeterminateVisibility(true);
 
-            MpesoService service = new MpesoService();
-            Card card = mCards.get(position);
-            mCard = card;
-            mCardView = view;
-            service.loadBalance(card, mBalanceCallback);
+                MpesoService service = new MpesoService();
+                Card card = mCards.get(position);
+                mCard = card;
+                mCardView = view;
+                service.loadBalance(card, mBalanceCallback);
+            }
         }
     };
 
