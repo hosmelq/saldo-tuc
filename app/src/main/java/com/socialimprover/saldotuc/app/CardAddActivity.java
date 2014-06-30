@@ -200,7 +200,7 @@ public class CardAddActivity extends ActionBarActivity {
                     mNotificationLayout.setVisibility(RelativeLayout.INVISIBLE);
                 }
             } else {
-                validationErrorMessage(getString(R.string.error_title), "Necesitas conexión a internet para habilitar las notificaciones SMS.");
+                validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_sms_no_internet_error_message));
                 mNotificationCheckBox.setChecked(false);
             }
         }

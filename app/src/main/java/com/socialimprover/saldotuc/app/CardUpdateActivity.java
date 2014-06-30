@@ -253,11 +253,16 @@ public class CardUpdateActivity extends ActionBarActivity {
     protected CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-        if (isChecked) {
-            mNotificationLayout.setVisibility(RelativeLayout.VISIBLE);
-        } else {
-            mNotificationLayout.setVisibility(RelativeLayout.INVISIBLE);
-        }
+            if (isNetworkAvailable()) {
+                if (isChecked) {
+                    mNotificationLayout.setVisibility(RelativeLayout.VISIBLE);
+                } else {
+                    mNotificationLayout.setVisibility(RelativeLayout.INVISIBLE);
+                }
+            } else {
+                validationErrorMessage(getString(R.string.error_title), getString(R.string.card_add_sms_no_internet_error_message));
+                mNotificationCheckBox.setChecked(false);
+            }
         }
     };
 

@@ -17,13 +17,14 @@
     <string name="menu_save_label">Guardar</string>
     <string name="menu_update_label">Actualizar</string>
     <string name="card_add_error_message">Por favor, asegúrese de introducir un nombre y un número de tarjeta valido</string>
+    <string name="card_add_sms_no_internet_error_message">Necesitas conexión a internet para activar o desactivar las notificaciones SMS</string>
     <string name="card_add_phone_error_message">Número de teléfono inválido</string>
     <string name="card_add_duplicate_number_error_message">El número de tarjeta ya esta asociado</string>
     <string name="card_add_duplicate_phone_error_message">El número de teléfono ya esta asociado</string>
     <string name="card_success_save">Tarjeta guardada</string>
     <string name="card_success_update">Tarjeta actualizada</string>
     <string name="card_success_delete">Tarjeta borrada</string>
-    <string name="card_invalidad">"No es un número de tarjeta TUC ó está inactivo"</string>
+    <string name="card_invalidad">No es un número de tarjeta TUC ó está inactivo</string>
     <string name="title_activity_phone_verification">Tu código</string>
     <string name="menu_verification_label">Verificar</string>
     <string name="code_verification_hint">Código</string>
