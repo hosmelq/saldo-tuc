@@ -54,8 +54,7 @@ public class MainActivity extends ActionBarActivity {
         super.onResume();
         mDataSource.open();
 
-        Cursor cursor = mDataSource.all();
-        updateList(cursor);
+        updateList();
     }
 
     @Override
@@ -86,8 +85,9 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void updateList(Cursor cursor) {
+    protected void updateList() {
         List<Card> cards = new ArrayList<Card>();
+        Cursor cursor = mDataSource.all();
 
         cursor.moveToFirst();
 
@@ -254,8 +254,9 @@ public class MainActivity extends ActionBarActivity {
         int delete = mDataSource.delete(card);
 
         if (delete > 0) {
-            mCards.remove(mCard);
-            ( (CardAdapter) mListView.getAdapter()).refill(mCards);
+//            mCards.remove(mCard);
+//            ( (CardAdapter) mListView.getAdapter()).refill(mCards);
+            updateList();
             AppUtil.showToast(this, getString(R.string.card_success_delete));
         }
     }
