@@ -13,7 +13,8 @@
         android:layout_alignParentTop="true"
         android:divider="@android:color/transparent"
         android:paddingBottom="@dimen/cards_list_vertical_margin"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:listSelector="@color/card_item">
     </ListView>
 
 </RelativeLayout>
