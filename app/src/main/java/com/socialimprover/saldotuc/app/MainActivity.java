@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ public class MainActivity extends ActionBarActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
 
     protected CardDataSource mDataSource;
+
     protected ListView mListView;
     protected List<Card> mCards;
     protected Card mCard;
@@ -43,11 +45,10 @@ public class MainActivity extends ActionBarActivity {
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
 
+        mDataSource = new CardDataSource(this);
+
         mListView = (ListView) findViewById(R.id.cardList);
         mListView.setOnItemClickListener(mOnItemClickListener);
-        mListView.setOnItemLongClickListener(mOnItemLongClickListener);
-
-        mDataSource = new CardDataSource(this);
     }
 
     @Override
@@ -124,8 +125,16 @@ public class MainActivity extends ActionBarActivity {
     protected AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
+            RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
+            Button balanceButton = (Button) view.findViewById(R.id.card_action_balance);
+            Button editButton = (Button) view.findViewById(R.id.card_action_edit);
+            Button deleteButton = (Button) view.findViewById(R.id.card_action_delete);
+
+            editButton.setOnClickListener(mActionOnClickListener);
+            balanceButton.setOnClickListener(mActionOnClickListener);
+            deleteButton.setOnClickListener(mActionOnClickListener);
+
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) infoLayout.getLayoutParams();
             int actionsWidth = AppUtil.dpToPx(MainActivity.this, 199);
             int margin;
 
@@ -136,18 +145,44 @@ public class MainActivity extends ActionBarActivity {
             }
 
             layoutParams.leftMargin = margin;
-            relativeLayout.setLayoutParams(layoutParams);
+            infoLayout.setLayoutParams(layoutParams);
+        }
+    };
 
-            if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
-                AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
-            } else {
-                setSupportProgressBarIndeterminateVisibility(true);
+    protected View.OnClickListener mActionOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int position = mListView.getPositionForView(view);
+            Card card = mCards.get(position);
+            mCard = card;
 
-                MpesoService service = new MpesoService();
-                Card card = mCards.get(position);
-                mCard = card;
-                mCardView = view;
-                service.loadBalance(card, mBalanceCallback);
+            switch (view.getId()) {
+                case R.id.card_action_balance: // request balance
+                    if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
+                        AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
+                    } else {
+                        setSupportProgressBarIndeterminateVisibility(true);
+
+                        MpesoService service = new MpesoService();
+                        mCardView = mListView.getChildAt(position);
+                        service.loadBalance(card, mBalanceCallback);
+                    }
+                    break;
+                case R.id.card_action_edit: // update card
+                    Intent intent = new Intent(MainActivity.this, CardUpdateActivity.class);
+                    intent.putExtra("card", mCard);
+                    startActivity(intent);
+                    break;
+                case R.id.card_action_delete: // delete card
+                    String number = AppUtil.formatCard(mCard.getNumber());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("¿ Eliminar la tarjeta " + number + " ?")
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(android.R.string.ok, mDeleteCardDialogListener);
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    break;
             }
         }
     };
@@ -197,44 +232,6 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    protected AdapterView.OnItemLongClickListener mOnItemLongClickListener = new AdapterView.OnItemLongClickListener() {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setItems(R.array.card_choices, mDialogListener);
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-            mCard = mCards.get(position);
-
-            return true;
-        }
-    };
-
-    protected DialogInterface.OnClickListener mDialogListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int which) {
-            switch (which) {
-                case 0: // update card
-                    Intent intent = new Intent(MainActivity.this, CardUpdateActivity.class);
-                    intent.putExtra("card", mCard);
-                    startActivity(intent);
-                    break;
-                case 1: // delete card
-                    String number = AppUtil.formatCard(mCard.getNumber());
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("¿ Eliminar la tarjeta " + number + " ?")
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .setPositiveButton(android.R.string.ok, mDeleteCardDialogListener);
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
-                    break;
-            }
-        }
-    };
-
     protected DialogInterface.OnClickListener mDeleteCardDialogListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
@@ -269,8 +266,6 @@ public class MainActivity extends ActionBarActivity {
         int delete = mDataSource.delete(card);
 
         if (delete > 0) {
-//            mCards.remove(mCard);
-//            ( (CardAdapter) mListView.getAdapter()).refill(mCards);
             updateList();
             AppUtil.showToast(this, getString(R.string.card_success_delete));
         }
