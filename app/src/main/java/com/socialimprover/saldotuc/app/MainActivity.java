@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -123,6 +124,20 @@ public class MainActivity extends ActionBarActivity {
     protected AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
+            int actionsWidth = AppUtil.dpToPx(MainActivity.this, 199);
+            int margin;
+
+            if (layoutParams.leftMargin == actionsWidth) {
+                margin = AppUtil.dpToPx(MainActivity.this, 8);
+            } else {
+                margin = actionsWidth;
+            }
+
+            layoutParams.leftMargin = margin;
+            relativeLayout.setLayoutParams(layoutParams);
+
             if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
                 AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
             } else {
