@@ -14,19 +14,25 @@
         android:background="@drawable/card_item_actions" >
 
         <Button
+            android:id="@+id/card_action_balance"
             android:layout_width="64dp"
             android:layout_height="match_parent"
-            android:background="@drawable/card_balance_background" />
+            android:background="@drawable/card_balance_background"
+            android:focusable="false" />
 
         <Button
+            android:id="@+id/card_action_edit"
             android:layout_width="64dp"
             android:layout_height="match_parent"
-            android:background="@drawable/card_edit_background" />
+            android:background="@drawable/card_edit_background"
+            android:focusable="false" />
 
         <Button
+            android:id="@+id/card_action_delete"
             android:layout_width="64dp"
             android:layout_height="match_parent"
-            android:background="@drawable/card_discard_background" />
+            android:background="@drawable/card_discard_background"
+            android:focusable="false" />
 
     </LinearLayout>
 
