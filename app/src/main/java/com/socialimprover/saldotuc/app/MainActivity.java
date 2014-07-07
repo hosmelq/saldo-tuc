@@ -126,9 +126,9 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
-            Button balanceButton = (Button) view.findViewById(R.id.card_action_balance);
-            Button editButton = (Button) view.findViewById(R.id.card_action_edit);
-            Button deleteButton = (Button) view.findViewById(R.id.card_action_delete);
+            Button balanceButton = (Button) view.findViewById(R.id.cardActionBalance);
+            Button editButton = (Button) view.findViewById(R.id.cardActionEdit);
+            Button deleteButton = (Button) view.findViewById(R.id.cardActionDelete);
 
             editButton.setOnClickListener(mActionOnClickListener);
             balanceButton.setOnClickListener(mActionOnClickListener);
@@ -157,7 +157,7 @@ public class MainActivity extends ActionBarActivity {
             mCard = card;
 
             switch (view.getId()) {
-                case R.id.card_action_balance: // request balance
+                case R.id.cardActionBalance: // request balance
                     if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
                         AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
                     } else {
@@ -168,12 +168,12 @@ public class MainActivity extends ActionBarActivity {
                         service.loadBalance(card, mBalanceCallback);
                     }
                     break;
-                case R.id.card_action_edit: // update card
+                case R.id.cardActionEdit: // update card
                     Intent intent = new Intent(MainActivity.this, CardUpdateActivity.class);
                     intent.putExtra("card", mCard);
                     startActivity(intent);
                     break;
-                case R.id.card_action_delete: // delete card
+                case R.id.cardActionDelete: // delete card
                     String number = AppUtil.formatCard(mCard.getNumber());
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle("¿ Eliminar la tarjeta " + number + " ?")
