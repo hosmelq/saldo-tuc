@@ -11,7 +11,8 @@
         android:paddingBottom="@dimen/cards_list_vertical_padding"
         android:paddingTop="@dimen/cards_list_vertical_padding"
         android:id="@+id/actionsLayout"
-        android:background="@drawable/card_item_actions" >
+        android:background="@drawable/card_item_actions"
+        android:visibility="invisible">
 
         <Button
             android:id="@+id/cardActionBalance"

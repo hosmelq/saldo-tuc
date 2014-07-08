@@ -12,8 +12,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -125,7 +128,8 @@ public class MainActivity extends ActionBarActivity {
     protected AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
+            final LinearLayout actionsLayout = (LinearLayout) view.findViewById(R.id.actionsLayout);
+            final RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
             Button balanceButton = (Button) view.findViewById(R.id.cardActionBalance);
             Button editButton = (Button) view.findViewById(R.id.cardActionEdit);
             Button deleteButton = (Button) view.findViewById(R.id.cardActionDelete);
@@ -134,18 +138,34 @@ public class MainActivity extends ActionBarActivity {
             balanceButton.setOnClickListener(mActionOnClickListener);
             deleteButton.setOnClickListener(mActionOnClickListener);
 
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) infoLayout.getLayoutParams();
-            int actionsWidth = AppUtil.dpToPx(MainActivity.this, 199);
-            int margin;
+            TranslateAnimation animation;
+            int actionsWidth = AppUtil.dpToPx(MainActivity.this, 192);
 
-            if (layoutParams.leftMargin == actionsWidth) {
-                margin = AppUtil.dpToPx(MainActivity.this, 8);
+            if (infoLayout.getAnimation() == null) {
+                actionsLayout.setVisibility(LinearLayout.VISIBLE);
+                animation = new TranslateAnimation(0, actionsWidth, 0, 0);
             } else {
-                margin = actionsWidth;
+                animation = new TranslateAnimation(actionsWidth, 0, 0, 0);
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        infoLayout.clearAnimation();
+                        actionsLayout.setVisibility(LinearLayout.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
             }
 
-            layoutParams.leftMargin = margin;
-            infoLayout.setLayoutParams(layoutParams);
+            animation.setFillAfter(true);
+            animation.setDuration(150);
+            infoLayout.startAnimation(animation);
         }
     };
 
