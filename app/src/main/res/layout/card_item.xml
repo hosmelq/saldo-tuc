@@ -5,11 +5,9 @@
 
     <LinearLayout
         android:layout_width="192dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginLeft="@dimen/cards_list_horizontal_margin"
         android:layout_marginTop="@dimen/cards_list_vertical_margin"
-        android:paddingBottom="@dimen/cards_list_vertical_padding"
-        android:paddingTop="@dimen/cards_list_vertical_padding"
         android:id="@+id/actionsLayout"
         android:background="@drawable/card_item_actions"
         android:visibility="invisible">
@@ -21,12 +19,26 @@
             android:background="@drawable/card_balance_background"
             android:focusable="false" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="59dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/button_divider"
+            android:contentDescription="@string/content_desc_actions_divider"/>
+
         <Button
             android:id="@+id/cardActionEdit"
             android:layout_width="64dp"
             android:layout_height="match_parent"
             android:background="@drawable/card_edit_background"
             android:focusable="false" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="59dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/button_divider"
+            android:contentDescription="@string/content_desc_actions_divider"/>
 
         <Button
             android:id="@+id/cardActionDelete"
@@ -38,7 +50,7 @@
     </LinearLayout>
 
     <RelativeLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginLeft="@dimen/cards_list_horizontal_margin"
         android:layout_marginRight="@dimen/cards_list_horizontal_margin"
         android:layout_marginTop="@dimen/cards_list_vertical_margin"
@@ -47,7 +59,7 @@
         android:paddingRight="@dimen/cards_list_horizontal_padding"
         android:paddingTop="@dimen/cards_list_vertical_padding"
         android:id="@+id/infoLayout"
-        android:background="@drawable/card_item" >
+        android:background="@drawable/card_item">
 
         <TextView
             android:layout_width="match_parent"
