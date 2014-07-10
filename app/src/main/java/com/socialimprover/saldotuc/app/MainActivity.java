@@ -90,82 +90,24 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void updateList() {
-        List<Card> cards = new ArrayList<Card>();
-        Cursor cursor = mDataSource.all();
-
-        cursor.moveToFirst();
-
-        while( ! cursor.isAfterLast() ) {
-            Card card = new Card();
-
-            card.setId(cursor.getInt(0));
-            card.setName(cursor.getString(1));
-            card.setNumber(cursor.getString(2));
-            card.setPhone(cursor.getString(3));
-            card.setHour(cursor.getString(4));
-            card.setAmpm(cursor.getString(5));
-
-            if ( ! cursor.isNull(6)) {
-                card.setBalance(cursor.getString(6));
-            }
-
-            cards.add(card);
-
-            cursor.moveToNext();
-        }
-
-        mCards = cards;
-
-        if (mListView.getAdapter() == null) {
-            CardAdapter adapter = new CardAdapter(this, cards);
-            mListView.setAdapter(adapter);
-        } else {
-            ( (CardAdapter) mListView.getAdapter()).refill(cards);
-        }
-    }
-
     protected AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            final LinearLayout actionsLayout = (LinearLayout) view.findViewById(R.id.actionsLayout);
-            final RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
+            RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
+
             Button balanceButton = (Button) view.findViewById(R.id.cardActionBalance);
             Button editButton = (Button) view.findViewById(R.id.cardActionEdit);
             Button deleteButton = (Button) view.findViewById(R.id.cardActionDelete);
 
-            editButton.setOnClickListener(mActionOnClickListener);
             balanceButton.setOnClickListener(mActionOnClickListener);
+            editButton.setOnClickListener(mActionOnClickListener);
             deleteButton.setOnClickListener(mActionOnClickListener);
 
-            TranslateAnimation animation;
-            int actionsWidth = AppUtil.dpToPx(MainActivity.this, 192);
-
             if (infoLayout.getAnimation() == null) {
-                actionsLayout.setVisibility(LinearLayout.VISIBLE);
-                animation = new TranslateAnimation(0, actionsWidth, 0, 0);
+                showActions(view);
             } else {
-                animation = new TranslateAnimation(actionsWidth, 0, 0, 0);
-                animation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        infoLayout.clearAnimation();
-                        actionsLayout.setVisibility(LinearLayout.INVISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
+                hideActions(view);
             }
-
-            animation.setFillAfter(true);
-            animation.setDuration(150);
-            infoLayout.startAnimation(animation);
         }
     };
 
@@ -173,8 +115,11 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onClick(View view) {
             int position = mListView.getPositionForView(view);
+            View parentView = mListView.getChildAt(position);
             Card card = mCards.get(position);
             mCard = card;
+
+            hideActions(parentView);
 
             switch (view.getId()) {
                 case R.id.cardActionBalance: // request balance
@@ -184,7 +129,7 @@ public class MainActivity extends ActionBarActivity {
                         setSupportProgressBarIndeterminateVisibility(true);
 
                         MpesoService service = new MpesoService();
-                        mCardView = mListView.getChildAt(position);
+                        mCardView = parentView;
                         service.loadBalance(card, mBalanceCallback);
                     }
                     break;
@@ -240,7 +185,7 @@ public class MainActivity extends ActionBarActivity {
                     }
                 });
             } else {
-                AppUtil.showToast(MainActivity.this, getString(R.string.card_invalidad));
+                AppUtil.showToast(MainActivity.this, getString(R.string.card_invalid));
                 removeProgressBar();
             }
         }
@@ -248,6 +193,9 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void failure(RetrofitError error) {
             removeProgressBar();
+            if (error.isNetworkError()) {
+                AppUtil.showToast(MainActivity.this, getString(R.string.network_error));
+            }
             Log.e(TAG, "Error: " + error.getMessage());
         }
     };
@@ -281,6 +229,80 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     };
+
+    protected void updateList() {
+        List<Card> cards = new ArrayList<Card>();
+        Cursor cursor = mDataSource.all();
+
+        cursor.moveToFirst();
+
+        while( ! cursor.isAfterLast() ) {
+            Card card = new Card();
+
+            card.setId(cursor.getInt(0));
+            card.setName(cursor.getString(1));
+            card.setNumber(cursor.getString(2));
+            card.setPhone(cursor.getString(3));
+            card.setHour(cursor.getString(4));
+            card.setAmpm(cursor.getString(5));
+
+            if ( ! cursor.isNull(6)) {
+                card.setBalance(cursor.getString(6));
+            }
+
+            cards.add(card);
+
+            cursor.moveToNext();
+        }
+
+        mCards = cards;
+
+        if (mListView.getAdapter() == null) {
+            CardAdapter adapter = new CardAdapter(this, cards);
+            mListView.setAdapter(adapter);
+        } else {
+            ( (CardAdapter) mListView.getAdapter()).refill(cards);
+        }
+    }
+
+    protected void showActions(View view) {
+        LinearLayout actionsLayout = (LinearLayout) view.findViewById(R.id.actionsLayout);
+        RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
+        int actionsWidth = AppUtil.dpToPx(MainActivity.this, 191);
+
+        actionsLayout.setVisibility(LinearLayout.VISIBLE);
+        TranslateAnimation animation = new TranslateAnimation(0, actionsWidth, 0, 0);
+
+        animation.setFillAfter(true);
+        animation.setDuration(150);
+        infoLayout.startAnimation(animation);
+    }
+
+    protected void hideActions(View view) {
+        final LinearLayout actionsLayout = (LinearLayout) view.findViewById(R.id.actionsLayout);
+        final RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
+        int actionsWidth = AppUtil.dpToPx(MainActivity.this, 191);
+
+        TranslateAnimation animation = new TranslateAnimation(actionsWidth, 0, 0, 0);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                infoLayout.clearAnimation();
+                actionsLayout.setVisibility(LinearLayout.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        animation.setDuration(150);
+        infoLayout.startAnimation(animation);
+    }
 
     protected void deleteCard(Card card) {
         int delete = mDataSource.delete(card);

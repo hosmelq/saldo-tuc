@@ -3,6 +3,7 @@
 
     <string name="error_title">Oops!</string>
     <string name="no_connection_message">Sin conexión</string>
+    <string name="network_error">No se pudo establecer la conexión</string>
     <string name="app_name">Saldo TUC</string>
     <string name="menu_card_add_label">Agregar tarjeta</string>
     <string name="title_activity_card_add">Agregar tarjeta</string>
@@ -22,7 +23,7 @@
     <string name="card_success_save">Tarjeta guardada</string>
     <string name="card_success_update">Tarjeta actualizada</string>
     <string name="card_success_delete">Tarjeta borrada</string>
-    <string name="card_invalidad">No es un número de tarjeta TUC ó está inactivo</string>
+    <string name="card_invalid">No es un número de tarjeta TUC ó está inactivo</string>
     <string name="title_activity_phone_verification">Tu código</string>
     <string name="menu_verification_label">Verificar</string>
     <string name="code_verification_hint">Código</string>
