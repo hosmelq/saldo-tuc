@@ -268,7 +268,7 @@ public class MainActivity extends ActionBarActivity {
     protected void showActions(View view) {
         LinearLayout actionsLayout = (LinearLayout) view.findViewById(R.id.actionsLayout);
         RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
-        int actionsWidth = AppUtil.dpToPx(MainActivity.this, 191);
+        int actionsWidth = actionsLayout.getWidth() - 2;
 
         actionsLayout.setVisibility(LinearLayout.VISIBLE);
         TranslateAnimation animation = new TranslateAnimation(0, actionsWidth, 0, 0);
