@@ -2,4 +2,6 @@
 <resources>
     <color name="light_gray">#efefef</color>
     <color name="apptheme_color">#1f7fbe</color>
+    <color name="chart_green">#20b2aa</color>
+    <color name="chart_red">#f08080</color>
 </resources>

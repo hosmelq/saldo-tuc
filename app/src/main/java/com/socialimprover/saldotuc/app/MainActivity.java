@@ -96,10 +96,12 @@ public class MainActivity extends ActionBarActivity {
             RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
 
             Button balanceButton = (Button) view.findViewById(R.id.cardActionBalance);
+            Button statisticsButton = (Button) view.findViewById(R.id.cardActionStatistics);
             Button editButton = (Button) view.findViewById(R.id.cardActionEdit);
             Button deleteButton = (Button) view.findViewById(R.id.cardActionDelete);
 
             balanceButton.setOnClickListener(mActionOnClickListener);
+            statisticsButton.setOnClickListener(mActionOnClickListener);
             editButton.setOnClickListener(mActionOnClickListener);
             deleteButton.setOnClickListener(mActionOnClickListener);
 
@@ -119,10 +121,10 @@ public class MainActivity extends ActionBarActivity {
             Card card = mCards.get(position);
             mCard = card;
 
-            hideActions(parentView);
-
             switch (view.getId()) {
                 case R.id.cardActionBalance: // request balance
+                    hideActions(parentView);
+
                     if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
                         AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
                     } else {
@@ -133,12 +135,34 @@ public class MainActivity extends ActionBarActivity {
                         service.loadBalance(card, mBalanceCallback);
                     }
                     break;
+                case R.id.cardActionStatistics: // show statistics
+                    SaldoTucService service = new SaldoTucService();
+                    service.getBalances(mCard, new Callback<Records>() {
+                        @Override
+                        public void success(Records records, Response response) {
+                            removeProgressBar();
+
+                            Intent statisticsIntent = new Intent(MainActivity.this, CardStatisticsActivity.class);
+                            statisticsIntent.putExtra("card", mCard);
+                            statisticsIntent.putExtra("records", records);
+                            startActivity(statisticsIntent);
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            removeProgressBar();
+                            Log.e(TAG, "Error: " + error.getMessage());
+                        }
+                    });
+                    break;
                 case R.id.cardActionEdit: // update card
-                    Intent intent = new Intent(MainActivity.this, CardUpdateActivity.class);
-                    intent.putExtra("card", mCard);
-                    startActivity(intent);
+                    Intent updateIntent = new Intent(MainActivity.this, CardUpdateActivity.class);
+                    updateIntent.putExtra("card", mCard);
+                    startActivity(updateIntent);
                     break;
                 case R.id.cardActionDelete: // delete card
+                    hideActions(parentView);
+
                     String number = AppUtil.formatCard(mCard.getNumber());
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle("¿ Eliminar la tarjeta " + number + " ?")
@@ -164,15 +188,8 @@ public class MainActivity extends ActionBarActivity {
                 mDataSource.update(mCard);
                 ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + balance);
 
-                Cursor cursor = mDataSource.find(mCard.getId());
-                cursor.moveToFirst();
                 SaldoTucService service = new SaldoTucService();
-
-                Card card = new Card();
-                card.setNumber(cursor.getString(2));
-                card.setBalance(cursor.getString(6));
-
-                service.storeBalance(card, new Callback<Card>() {
+                service.storeBalance(mCard, new Callback<Card>() {
                     @Override
                     public void success(Card card, Response response) {
                         removeProgressBar();

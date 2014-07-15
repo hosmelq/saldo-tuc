@@ -8,8 +8,8 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:logo="@drawable/ic_logo"
         android:label="@string/app_name"
+        android:logo="@drawable/ic_logo"
         android:theme="@style/Theme.Saldotuc" >
         <activity
             android:name=".MainActivity"
@@ -40,6 +40,14 @@
             android:label="@string/title_activity_card_update"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".CardStatisticsActivity"
+            android:label="@string/title_activity_card_statistics"
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />

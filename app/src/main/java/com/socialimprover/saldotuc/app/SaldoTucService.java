@@ -67,8 +67,9 @@ public class SaldoTucService {
         @FormUrlEncoded
         @POST("/cards/{card}/records")
         public void getBalancesAsync(
-            @Field("card") String card,
-            Callback<MpesoBalance> callback
+            @Field("number") String number,
+            @Field("balance") String card,
+            Callback<Records> callback
         );
 
     }
@@ -93,8 +94,8 @@ public class SaldoTucService {
         mRestAdapter.storeBalanceAsync(card, callback);
     }
 
-    public void getBalances(Card card, Callback<MpesoBalance> callback) {
-        mRestAdapter.getBalancesAsync(card.getNumber(), callback);
+    public void getBalances(Card card, Callback<Records> callback) {
+        mRestAdapter.getBalancesAsync(card.getNumber(), card.getBalance(), callback);
     }
 
 }

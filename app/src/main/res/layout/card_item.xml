@@ -4,7 +4,7 @@
   android:background="@android:color/transparent" >
 
     <LinearLayout
-        android:layout_width="192dp"
+        android:layout_width="256dp"
         android:layout_height="64dp"
         android:layout_marginLeft="@dimen/cards_list_horizontal_margin"
         android:layout_marginTop="@dimen/cards_list_vertical_margin"
@@ -17,6 +17,20 @@
             android:layout_width="64dp"
             android:layout_height="match_parent"
             android:background="@drawable/card_balance_background"
+            android:focusable="false" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="63dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/button_divider"
+            android:contentDescription="@string/content_desc_actions_divider"/>
+
+        <Button
+            android:id="@+id/cardActionStatistics"
+            android:layout_width="64dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/card_statistics_background"
             android:focusable="false" />
 
         <ImageView

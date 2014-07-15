@@ -6,4 +6,9 @@
     <dimen name="cards_list_vertical_margin">8dp</dimen>
     <dimen name="cards_list_horizontal_padding">10dp</dimen>
     <dimen name="cards_list_vertical_padding">8dp</dimen>
+    <dimen name="chart_line_paint_stroke_width">3dp</dimen>
+    <dimen name="chart_vertex_paint_stroke_width">8dp</dimen>
+    <dimen name="chart_range_tick_label_font_size">15dp</dimen>
+    <dimen name="chart_domain_tick_label_font_size">15dp</dimen>
+    <dimen name="chart_legend_text_font_size">15dp</dimen>
 </resources>
