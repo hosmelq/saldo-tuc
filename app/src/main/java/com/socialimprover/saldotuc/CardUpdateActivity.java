@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc.app;
+package com.socialimprover.saldotuc;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,13 +15,15 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import com.socialimprover.saldotuc.app.R;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class CardUpdateActivity extends ActionBarActivity {
 
-    public static final String TAG = CardAddActivity.class.getSimpleName();
+    public static final String TAG = CardUpdateActivity.class.getSimpleName();
 
     protected CardDataSource mDataSource;
     protected Card mCard;

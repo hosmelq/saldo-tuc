@@ -12,7 +12,7 @@
         android:logo="@drawable/ic_logo"
         android:theme="@style/Theme.Saldotuc" >
         <activity
-            android:name=".MainActivity"
+            android:name="com.socialimprover.saldotuc.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -22,32 +22,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CardAddActivity"
+            android:name="com.socialimprover.saldotuc.CardAddActivity"
             android:label="@string/title_activity_card_add"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.socialimprover.saldotuc.MainActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".PhoneVerificationActivity"
+            android:name="com.socialimprover.saldotuc.PhoneVerificationActivity"
             android:label="@string/title_activity_phone_verification"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".CardUpdateActivity"
+            android:name="com.socialimprover.saldotuc.CardUpdateActivity"
             android:label="@string/title_activity_card_update"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.socialimprover.saldotuc.MainActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".CardStatisticsActivity"
+            android:name="com.socialimprover.saldotuc.CardStatisticsActivity"
             android:label="@string/title_activity_card_statistics"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName="com.socialimprover.saldotuc.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />

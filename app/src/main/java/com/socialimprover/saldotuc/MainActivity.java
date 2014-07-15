@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc.app;
+package com.socialimprover.saldotuc;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.socialimprover.saldotuc.app.R;
 
 import java.util.ArrayList;
 import java.util.List;

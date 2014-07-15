@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc.app;
+package com.socialimprover.saldotuc;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
