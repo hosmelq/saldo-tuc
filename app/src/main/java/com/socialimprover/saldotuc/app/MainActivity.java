@@ -117,13 +117,13 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onClick(View view) {
             int position = mListView.getPositionForView(view);
-            View parentView = mListView.getChildAt(position);
+            mCardView = mListView.getChildAt(position);
             Card card = mCards.get(position);
             mCard = card;
 
             switch (view.getId()) {
                 case R.id.cardActionBalance: // request balance
-                    hideActions(parentView);
+                    hideActions(mCardView);
 
                     if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
                         AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
@@ -131,29 +131,18 @@ public class MainActivity extends ActionBarActivity {
                         setSupportProgressBarIndeterminateVisibility(true);
 
                         MpesoService service = new MpesoService();
-                        mCardView = parentView;
                         service.loadBalance(card, mBalanceCallback);
                     }
                     break;
                 case R.id.cardActionStatistics: // show statistics
-                    SaldoTucService service = new SaldoTucService();
-                    service.getBalances(mCard, new Callback<Records>() {
-                        @Override
-                        public void success(Records records, Response response) {
-                            removeProgressBar();
+                    if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
+                        AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
+                    } else {
+                        setSupportProgressBarIndeterminateVisibility(true);
 
-                            Intent statisticsIntent = new Intent(MainActivity.this, CardStatisticsActivity.class);
-                            statisticsIntent.putExtra("card", mCard);
-                            statisticsIntent.putExtra("records", records);
-                            startActivity(statisticsIntent);
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            removeProgressBar();
-                            Log.e(TAG, "Error: " + error.getMessage());
-                        }
-                    });
+                        MpesoService service = new MpesoService();
+                        service.loadBalance(card, mStatisticsBalanceCallback);
+                    }
                     break;
                 case R.id.cardActionEdit: // update card
                     Intent updateIntent = new Intent(MainActivity.this, CardUpdateActivity.class);
@@ -161,7 +150,7 @@ public class MainActivity extends ActionBarActivity {
                     startActivity(updateIntent);
                     break;
                 case R.id.cardActionDelete: // delete card
-                    hideActions(parentView);
+                    hideActions(mCardView);
 
                     String number = AppUtil.formatCard(mCard.getNumber());
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -179,11 +168,9 @@ public class MainActivity extends ActionBarActivity {
     protected Callback<MpesoBalance> mBalanceCallback = new Callback<MpesoBalance>() {
         @Override
         public void success(MpesoBalance mpesoBalance, Response response) {
-            Pattern pattern = Pattern.compile("[0-9]+(?:\\.[0-9]*)?");
-            Matcher matcher = pattern.matcher(Html.fromHtml(mpesoBalance.Mensaje).toString());
+            String balance = parseBalance(mpesoBalance.Mensaje);
 
-            if ( ! mpesoBalance.Error && matcher.find()) {
-                String balance = matcher.group(0);
+            if ( ! mpesoBalance.Error && balance != null) {
                 mCard.setBalance(balance);
                 mDataSource.update(mCard);
                 ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + balance);
@@ -193,6 +180,50 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void success(Card card, Response response) {
                         removeProgressBar();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        removeProgressBar();
+                        Log.e(TAG, "Error: " + error.getMessage());
+                    }
+                });
+            } else {
+                AppUtil.showToast(MainActivity.this, getString(R.string.card_invalid));
+                removeProgressBar();
+            }
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            removeProgressBar();
+            if (error.isNetworkError()) {
+                AppUtil.showToast(MainActivity.this, getString(R.string.network_error));
+            }
+            Log.e(TAG, "Error: " + error.getMessage());
+        }
+    };
+
+    protected Callback<MpesoBalance> mStatisticsBalanceCallback = new Callback<MpesoBalance>() {
+        @Override
+        public void success(MpesoBalance mpesoBalance, Response response) {
+            String balance = parseBalance(mpesoBalance.Mensaje);
+
+            if ( ! mpesoBalance.Error && balance != null) {
+                mCard.setBalance(balance);
+                mDataSource.update(mCard);
+                ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + balance);
+
+                SaldoTucService service = new SaldoTucService();
+                service.getBalances(mCard, new Callback<Records>() {
+                    @Override
+                    public void success(Records records, Response response) {
+                        removeProgressBar();
+
+                        Intent statisticsIntent = new Intent(MainActivity.this, CardStatisticsActivity.class);
+                        statisticsIntent.putExtra("card", mCard);
+                        statisticsIntent.putExtra("records", records);
+                        startActivity(statisticsIntent);
                     }
 
                     @Override
@@ -321,6 +352,17 @@ public class MainActivity extends ActionBarActivity {
         infoLayout.startAnimation(animation);
     }
 
+    protected String parseBalance(String balance) {
+        Pattern pattern = Pattern.compile("[0-9]+(?:\\.[0-9]*)?");
+        Matcher matcher = pattern.matcher(Html.fromHtml(balance).toString());
+
+        if (matcher.find()) {
+            return matcher.group(0);
+        } else {
+            return null;
+        }
+    }
+
     protected void deleteCard(Card card) {
         int delete = mDataSource.delete(card);
 
@@ -330,7 +372,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private void removeProgressBar() {
+    protected void removeProgressBar() {
         setSupportProgressBarIndeterminateVisibility(false);
     }
 
