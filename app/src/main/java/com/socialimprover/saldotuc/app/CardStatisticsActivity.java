@@ -3,6 +3,9 @@ package com.socialimprover.saldotuc.app;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
 
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
@@ -23,27 +26,49 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 public class CardStatisticsActivity extends ActionBarActivity {
 
-    public static final String TAG = CardAddActivity.class.getSimpleName();
+    public static final String TAG = CardStatisticsActivity.class.getSimpleName();
 
     protected Card mCard;
-    protected Records mRecords;
     protected XYPlot mChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_card_statistics);
 
         mCard = (Card) getIntent().getSerializableExtra("card");
-        mRecords = (Records) getIntent().getSerializableExtra("records");
         mChart = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 
-        configChart();
+        setSupportProgressBarIndeterminateVisibility(true);
 
-        drawChart(mRecords);
+        SaldoTucService service = new SaldoTucService();
+        service.getBalances(mCard, mBalanceCallback);
     }
+
+    protected Callback<Records> mBalanceCallback = new Callback<Records>() {
+        @Override
+        public void success(Records records, Response response) {
+            removeProgressBar();
+
+            mChart.setVisibility(View.VISIBLE);
+
+            configChart();
+            drawChart(records);
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            removeProgressBar();
+            Log.e(TAG, "Error: " + error.getMessage());
+        }
+    };
 
     private void configChart() {
         // set backgrounds
@@ -98,6 +123,10 @@ public class CardStatisticsActivity extends ActionBarActivity {
 
         // reduce the number of range labels
 //        mChart.setTicksPerRangeLabel(3);
+    }
+
+    protected void removeProgressBar() {
+        setSupportProgressBarIndeterminateVisibility(false);
     }
 
     private class DateFormat extends Format {

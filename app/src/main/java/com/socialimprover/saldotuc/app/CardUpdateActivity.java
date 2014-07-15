@@ -39,7 +39,7 @@ public class CardUpdateActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_card_add);
+        setContentView(R.layout.activity_card_update);
 
         mDataSource = new CardDataSource(this);
         mCard = (Card) getIntent().getSerializableExtra("card");

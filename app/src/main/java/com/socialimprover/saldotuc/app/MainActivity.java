@@ -108,7 +108,7 @@ public class MainActivity extends ActionBarActivity {
             if (infoLayout.getAnimation() == null) {
                 showActions(view);
             } else {
-                hideActions(view);
+                hideActions(view, true);
             }
         }
     };
@@ -123,7 +123,7 @@ public class MainActivity extends ActionBarActivity {
 
             switch (view.getId()) {
                 case R.id.cardActionBalance: // request balance
-                    hideActions(mCardView);
+                    hideActions(mCardView, true);
 
                     if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
                         AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
@@ -135,6 +135,8 @@ public class MainActivity extends ActionBarActivity {
                     }
                     break;
                 case R.id.cardActionStatistics: // show statistics
+                    hideActions(mCardView, false);
+
                     if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
                         AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
                     } else {
@@ -145,12 +147,14 @@ public class MainActivity extends ActionBarActivity {
                     }
                     break;
                 case R.id.cardActionEdit: // update card
+                    hideActions(mCardView, false);
+
                     Intent updateIntent = new Intent(MainActivity.this, CardUpdateActivity.class);
                     updateIntent.putExtra("card", mCard);
                     startActivity(updateIntent);
                     break;
                 case R.id.cardActionDelete: // delete card
-                    hideActions(mCardView);
+                    hideActions(mCardView, true);
 
                     String number = AppUtil.formatCard(mCard.getNumber());
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -207,6 +211,8 @@ public class MainActivity extends ActionBarActivity {
     protected Callback<MpesoBalance> mStatisticsBalanceCallback = new Callback<MpesoBalance>() {
         @Override
         public void success(MpesoBalance mpesoBalance, Response response) {
+            removeProgressBar();
+
             String balance = parseBalance(mpesoBalance.Mensaje);
 
             if ( ! mpesoBalance.Error && balance != null) {
@@ -214,24 +220,9 @@ public class MainActivity extends ActionBarActivity {
                 mDataSource.update(mCard);
                 ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + balance);
 
-                SaldoTucService service = new SaldoTucService();
-                service.getBalances(mCard, new Callback<Records>() {
-                    @Override
-                    public void success(Records records, Response response) {
-                        removeProgressBar();
-
-                        Intent statisticsIntent = new Intent(MainActivity.this, CardStatisticsActivity.class);
-                        statisticsIntent.putExtra("card", mCard);
-                        statisticsIntent.putExtra("records", records);
-                        startActivity(statisticsIntent);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        removeProgressBar();
-                        Log.e(TAG, "Error: " + error.getMessage());
-                    }
-                });
+                Intent statisticsIntent = new Intent(MainActivity.this, CardStatisticsActivity.class);
+                statisticsIntent.putExtra("card", mCard);
+                startActivity(statisticsIntent);
             } else {
                 AppUtil.showToast(MainActivity.this, getString(R.string.card_invalid));
                 removeProgressBar();
@@ -326,30 +317,36 @@ public class MainActivity extends ActionBarActivity {
         infoLayout.startAnimation(animation);
     }
 
-    protected void hideActions(View view) {
+    protected void hideActions(View view, Boolean animate) {
         final LinearLayout actionsLayout = (LinearLayout) view.findViewById(R.id.actionsLayout);
         final RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
-        int actionsWidth = AppUtil.dpToPx(MainActivity.this, 191);
 
-        TranslateAnimation animation = new TranslateAnimation(actionsWidth, 0, 0, 0);
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
+        if (animate) {
+            int actionsWidth = AppUtil.dpToPx(MainActivity.this, 191);
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                infoLayout.clearAnimation();
-                actionsLayout.setVisibility(LinearLayout.INVISIBLE);
-            }
+            TranslateAnimation animation = new TranslateAnimation(actionsWidth, 0, 0, 0);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    infoLayout.clearAnimation();
+                    actionsLayout.setVisibility(LinearLayout.INVISIBLE);
+                }
 
-        animation.setDuration(150);
-        infoLayout.startAnimation(animation);
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+
+            animation.setDuration(150);
+            infoLayout.startAnimation(animation);
+        } else {
+            infoLayout.clearAnimation();
+            actionsLayout.setVisibility(LinearLayout.INVISIBLE);
+        }
     }
 
     protected String parseBalance(String balance) {
