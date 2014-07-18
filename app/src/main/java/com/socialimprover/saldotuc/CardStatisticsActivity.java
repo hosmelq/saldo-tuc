@@ -47,6 +47,8 @@ public class CardStatisticsActivity extends ActionBarActivity {
         mCard = (Card) getIntent().getSerializableExtra("card");
         mChart = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 
+        getSupportActionBar().setTitle(getString(R.string.title_activity_card_statistics) + " - " + AppUtil.formatCard(mCard.getNumber()));
+
         setSupportProgressBarIndeterminateVisibility(true);
 
         SaldoTucService service = new SaldoTucService();

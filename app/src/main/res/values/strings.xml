@@ -5,6 +5,7 @@
     <string name="no_connection_message">Sin conexión</string>
     <string name="network_error">No se pudo establecer la conexión</string>
     <string name="app_name">Saldo TUC</string>
+    <string name="title_activity_main">Tarjetas</string>
     <string name="menu_card_add_label">Agregar tarjeta</string>
     <string name="title_activity_card_add">Agregar tarjeta</string>
     <string name="name_hint">Nombre</string>
