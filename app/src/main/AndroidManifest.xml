@@ -9,11 +9,10 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:logo="@drawable/ic_logo"
         android:theme="@style/Theme.Saldotuc" >
         <activity
             android:name="com.socialimprover.saldotuc.MainActivity"
-            android:label="@string/title_activity_main"
+            android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,6 +22,7 @@
         </activity>
         <activity
             android:name="com.socialimprover.saldotuc.CardAddActivity"
+            android:icon="@drawable/ic_logo"
             android:label="@string/title_activity_card_add"
             android:parentActivityName="com.socialimprover.saldotuc.MainActivity"
             android:screenOrientation="portrait" >
@@ -32,11 +32,13 @@
         </activity>
         <activity
             android:name="com.socialimprover.saldotuc.PhoneVerificationActivity"
+            android:icon="@drawable/ic_logo"
             android:label="@string/title_activity_phone_verification"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.socialimprover.saldotuc.CardUpdateActivity"
+            android:icon="@drawable/ic_logo"
             android:label="@string/title_activity_card_update"
             android:parentActivityName="com.socialimprover.saldotuc.MainActivity"
             android:screenOrientation="portrait" >
@@ -46,6 +48,7 @@
         </activity>
         <activity
             android:name="com.socialimprover.saldotuc.CardStatisticsActivity"
+            android:icon="@drawable/ic_logo"
             android:label="@string/title_activity_card_statistics"
             android:parentActivityName="com.socialimprover.saldotuc.MainActivity" >
             <meta-data
