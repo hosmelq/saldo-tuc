@@ -23,7 +23,11 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.socialimprover.saldotuc.app.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +44,7 @@ public class MainActivity extends ActionBarActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
 
     protected CardDataSource mDataSource;
+    protected MixpanelAPI mMixpanel;
 
     protected ListView mListView;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
@@ -54,6 +59,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         mDataSource = new CardDataSource(this);
+        mMixpanel = SaldoTucApplication.getMixpanelInstance(this);
 
         mListView = (ListView) findViewById(R.id.cardList);
         mListView.setOnItemClickListener(mOnItemClickListener);
@@ -74,6 +80,12 @@ public class MainActivity extends ActionBarActivity {
     public void onPause() {
         super.onPause();
         mDataSource.close();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mMixpanel.flush();
+        super.onDestroy();
     }
 
     @Override
@@ -187,6 +199,8 @@ public class MainActivity extends ActionBarActivity {
                 mDataSource.update(mCard);
                 ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + balance);
 
+                trackBalance(mCard.getBalance(), mCard.getNumber());
+
                 SaldoTucService service = new SaldoTucService();
                 service.storeBalance(mCard, new Callback<Card>() {
                     @Override
@@ -228,9 +242,25 @@ public class MainActivity extends ActionBarActivity {
                 mDataSource.update(mCard);
                 ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + balance);
 
-                Intent statisticsIntent = new Intent(MainActivity.this, CardStatisticsActivity.class);
-                statisticsIntent.putExtra("card", mCard);
-                startActivity(statisticsIntent);
+                trackBalance(mCard.getBalance(), mCard.getNumber());
+
+                SaldoTucService service = new SaldoTucService();
+                service.storeBalance(mCard, new Callback<Card>() {
+                    @Override
+                    public void success(Card card, Response response) {
+                        removeProgressBar();
+
+                        Intent statisticsIntent = new Intent(MainActivity.this, CardStatisticsActivity.class);
+                        statisticsIntent.putExtra("card", mCard);
+                        startActivity(statisticsIntent);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        removeProgressBar();
+                        Log.e(TAG, "Error: " + error.getMessage());
+                    }
+                });
             } else {
                 AppUtil.showToast(MainActivity.this, getString(R.string.card_invalid));
                 removeProgressBar();
@@ -399,6 +429,15 @@ public class MainActivity extends ActionBarActivity {
         setSupportProgressBarIndeterminateVisibility(false);
     }
 
+    protected void trackBalance(String balance, String number) {
+        try {
+            JSONObject props = new JSONObject();
+            props.put("balance", balance);
+            props.put("tuc", number);
+            mMixpanel.track("Consulta Saldo", props);
+        } catch (JSONException e) {}
+    }
+
     private class GetMpesoBalances extends AsyncTask<Object, Void, List<CardBalanceContainer>> {
 
         private List<Card> mCards;
@@ -436,6 +475,8 @@ public class MainActivity extends ActionBarActivity {
                     card.setBalance(balance);
                     mDataSource.update(card);
                     ((TextView) mListView.getChildAt(i).findViewById(R.id.cardBalance)).setText("C$ " + balance);
+
+                    trackBalance(card.getBalance(), card.getNumber());
 
                     SaldoTucService service = new SaldoTucService();
                     service.storeBalance(card, new Callback<Card>() {
