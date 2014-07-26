@@ -294,6 +294,7 @@ public class MainActivity extends ActionBarActivity {
                     service.deleteCard(mCard, new Callback<Response>() {
                         @Override
                         public void success(Response result, Response response) {
+                            removeProgressBar();
                             deleteCard(mCard);
                         }
 
@@ -439,6 +440,8 @@ public class MainActivity extends ActionBarActivity {
             JSONObject props = new JSONObject();
             props.put("balance", balance);
             props.put("tuc", number);
+
+            mMixpanel.identify(number);
             mMixpanel.track("Consulta Saldo", props);
         } catch (JSONException e) {}
     }

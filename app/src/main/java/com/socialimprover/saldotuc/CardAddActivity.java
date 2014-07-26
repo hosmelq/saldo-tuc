@@ -171,7 +171,7 @@ public class CardAddActivity extends ActionBarActivity {
                 if (isChecked) {
                     mNotificationLayout.setVisibility(RelativeLayout.VISIBLE);
                 } else {
-                    mNotificationLayout.setVisibility(RelativeLayout.INVISIBLE);
+                    mNotificationLayout.setVisibility(RelativeLayout.GONE);
                 }
             } else {
                 AppUtil.showDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_sms_no_internet_error_message));
