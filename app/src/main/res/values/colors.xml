@@ -4,4 +4,8 @@
     <color name="apptheme_color">#1f7fbe</color>
     <color name="chart_green">#20b2aa</color>
     <color name="chart_red">#f08080</color>
+    <color name="swipeRefresh1">#005B9A</color>
+    <color name="swipeRefresh2">#0D6DAC</color>
+    <color name="swipeRefresh3">#1F7FBE</color>
+    <color name="swipeRefresh4">#0D6DAC</color>
 </resources>

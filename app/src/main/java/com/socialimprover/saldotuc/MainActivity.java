@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.Log;
@@ -40,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
     protected CardDataSource mDataSource;
 
     protected ListView mListView;
+    protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected List<Card> mCards;
     protected Card mCard;
     protected View mCardView;
@@ -54,6 +57,9 @@ public class MainActivity extends ActionBarActivity {
 
         mListView = (ListView) findViewById(R.id.cardList);
         mListView.setOnItemClickListener(mOnItemClickListener);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
+        mSwipeRefreshLayout.setColorScheme(R.color.swipeRefresh1, R.color.swipeRefresh2, R.color.swipeRefresh3, R.color.swipeRefresh4);
     }
 
     @Override
@@ -271,7 +277,19 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    protected void updateList() {
+    protected SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            if (mCards.isEmpty() && mSwipeRefreshLayout.isRefreshing()) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+
+            GetMpesoBalances getMpesoBalance = new GetMpesoBalances(mCards);
+            getMpesoBalance.execute();
+        }
+    };
+
+    protected List<Card> getCards() {
         List<Card> cards = new ArrayList<Card>();
         Cursor cursor = mDataSource.all();
 
@@ -295,6 +313,12 @@ public class MainActivity extends ActionBarActivity {
 
             cursor.moveToNext();
         }
+
+        return cards;
+    }
+
+    protected void updateList() {
+        List<Card> cards = getCards();
 
         mCards = cards;
 
@@ -373,6 +397,82 @@ public class MainActivity extends ActionBarActivity {
 
     protected void removeProgressBar() {
         setSupportProgressBarIndeterminateVisibility(false);
+    }
+
+    private class GetMpesoBalances extends AsyncTask<Object, Void, List<CardBalanceContainer>> {
+
+        private List<Card> mCards;
+        private int mCount;
+
+        private GetMpesoBalances(List<Card> cards) {
+            mCards = cards;
+        }
+
+        @Override
+        protected List<CardBalanceContainer> doInBackground(Object... objects) {
+            MpesoService service = new MpesoService();
+            List<CardBalanceContainer> list = new ArrayList<CardBalanceContainer>();
+
+            for (Card card : mCards) {
+                MpesoBalance balance = service.loadBalanceSync(card);
+                CardBalanceContainer cardBalanceContainer = new CardBalanceContainer(card, balance);
+
+                list.add(cardBalanceContainer);
+            }
+
+            return list;
+        }
+
+        @Override
+        protected void onPostExecute(List<CardBalanceContainer> hashMaps) {
+            for (int i = 0; i < hashMaps.size(); i++) {
+                CardBalanceContainer item = hashMaps.get(i);
+                Card card = item.card;
+                MpesoBalance mpesoBalance = item.mpesoBalance;
+                String balance = parseBalance(mpesoBalance.Mensaje);
+                final int hashMapsSize = hashMaps.size();
+
+                if (!mpesoBalance.Error && balance != null) {
+                    card.setBalance(balance);
+                    mDataSource.update(card);
+                    ((TextView) mListView.getChildAt(i).findViewById(R.id.cardBalance)).setText("C$ " + balance);
+
+                    SaldoTucService service = new SaldoTucService();
+                    service.storeBalance(card, new Callback<Card>() {
+                        @Override
+                        public void success(Card card, Response response) {
+                            mCount++;
+
+                            if (mCount == hashMapsSize) {
+                                if (mSwipeRefreshLayout.isRefreshing()) {
+                                    mSwipeRefreshLayout.setRefreshing(false);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e(TAG, "Error: " + error.getMessage());
+                        }
+                    });
+                } else {
+                    AppUtil.showToast(MainActivity.this, getString(R.string.card_invalid));
+                    removeProgressBar();
+                }
+            }
+        }
+
+    }
+
+    private class CardBalanceContainer {
+
+        protected Card card;
+        protected MpesoBalance mpesoBalance;
+
+        private CardBalanceContainer(Card card, MpesoBalance mpesoBalance) {
+            this.card = card;
+            this.mpesoBalance = mpesoBalance;
+        }
     }
 
 }

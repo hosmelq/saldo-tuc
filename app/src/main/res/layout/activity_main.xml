@@ -5,16 +5,25 @@
     android:background="@color/light_gray"
     tools:context="com.socialimprover.saldotuc.MainActivity">
 
-    <ListView
-        android:id="@+id/cardList"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:divider="@android:color/transparent"
-        android:paddingBottom="@dimen/cards_list_vertical_margin"
-        android:clipToPadding="false"
-        android:listSelector="@color/card_item">
-    </ListView>
+        android:layout_alignParentTop="true">
+
+        <ListView
+            android:id="@+id/cardList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:divider="@android:color/transparent"
+            android:paddingBottom="@dimen/cards_list_vertical_margin"
+            android:clipToPadding="false"
+            android:listSelector="@color/card_item">
+        </ListView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>
