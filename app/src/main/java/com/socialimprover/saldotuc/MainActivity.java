@@ -438,7 +438,7 @@ public class MainActivity extends ActionBarActivity {
     protected void trackBalance(String balance, String number) {
         try {
             JSONObject props = new JSONObject();
-            props.put("balance", balance);
+            props.put("balance", Float.parseFloat(balance));
             props.put("tuc", number);
 
             mMixpanel.identify(number);
