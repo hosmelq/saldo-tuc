@@ -15,3 +15,18 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+#-renamesourcefileattribute SourceFile
+#-keepattributes SourceFile,LineNumberTable
+
+-keepattributes Signature
+-keepattributes *Annotation*
+
+-keep class com.socialimprover.saldotuc.** { *; }
+
+-dontwarn retrofit.**
+-keep class retrofit.** { *; }
+
+-dontwarn org.joda.**
+-keep class org.joda.** { *; }
+
+-keep class com.androidplot.** { *; }

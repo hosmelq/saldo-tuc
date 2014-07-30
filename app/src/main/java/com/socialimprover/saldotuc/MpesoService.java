@@ -14,7 +14,7 @@ public class MpesoService {
 
     public MpesoService() {
         RestAdapter restAdapter = new RestAdapter.Builder()
-            .setLogLevel(RestAdapter.LogLevel.FULL)
+            // .setLogLevel(RestAdapter.LogLevel.FULL)
             .setEndpoint(MPESO_URL)
             .build();
 

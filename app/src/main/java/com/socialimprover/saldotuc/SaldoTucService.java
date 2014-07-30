@@ -20,7 +20,7 @@ public class SaldoTucService {
 
     public SaldoTucService() {
         RestAdapter restAdapter = new RestAdapter.Builder()
-            .setLogLevel(RestAdapter.LogLevel.FULL)
+            // .setLogLevel(RestAdapter.LogLevel.FULL)
             .setEndpoint(API_END_POINT)
             .build();
 
