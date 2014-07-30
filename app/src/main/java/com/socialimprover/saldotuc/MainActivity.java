@@ -66,7 +66,7 @@ public class MainActivity extends ActionBarActivity {
         mDataSource = new CardDataSource(this);
         mMixpanel = SaldoTucApplication.getMixpanelInstance(this);
 
-        mListView = (ListView) findViewById(R.id.cardList);
+        mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(mOnItemClickListener);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
@@ -360,6 +360,7 @@ public class MainActivity extends ActionBarActivity {
 
         if (mListView.getAdapter() == null) {
             CardAdapter adapter = new CardAdapter(this, cards);
+            mListView.setEmptyView(findViewById(android.R.id.empty));
             mListView.setAdapter(adapter);
         } else {
             ( (CardAdapter) mListView.getAdapter()).refill(cards);
