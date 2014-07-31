@@ -127,6 +127,7 @@ public class MainActivity extends ActionBarActivity {
             deleteButton.setOnClickListener(mActionOnClickListener);
 
             if (infoLayout.getAnimation() == null) {
+                hideAllActions();
                 showActions(view);
             } else {
                 hideActions(view, true);
@@ -326,6 +327,16 @@ public class MainActivity extends ActionBarActivity {
         animation.setFillAfter(true);
         animation.setDuration(150);
         infoLayout.startAnimation(animation);
+    }
+
+    protected void hideAllActions() {
+        for (int i = 0; i < mListView.getCount(); i++) {
+            View view = mListView.getChildAt(i);
+
+            if (view.findViewById(R.id.infoLayout).getAnimation() != null) {
+                hideActions(view, true);
+            }
+        }
     }
 
     protected void hideActions(View view, Boolean animate) {
