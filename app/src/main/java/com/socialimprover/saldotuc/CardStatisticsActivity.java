@@ -15,6 +15,7 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.socialimprover.saldotuc.app.R;
 
 import org.joda.time.DateTime;
@@ -27,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -34,6 +37,9 @@ import retrofit.client.Response;
 public class CardStatisticsActivity extends ActionBarActivity {
 
     public static final String TAG = CardStatisticsActivity.class.getSimpleName();
+
+    protected CardDataSource mDataSource;
+    protected MixpanelAPI mMixpanel;
 
     protected Card mCard;
     protected XYPlot mChart;
@@ -44,6 +50,9 @@ public class CardStatisticsActivity extends ActionBarActivity {
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_card_statistics);
 
+        mDataSource = new CardDataSource(this);
+        mMixpanel = SaldoTucApplication.getMixpanelInstance(this);
+
         mCard = (Card) getIntent().getSerializableExtra("card");
         mChart = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 
@@ -51,25 +60,79 @@ public class CardStatisticsActivity extends ActionBarActivity {
 
         setSupportProgressBarIndeterminateVisibility(true);
 
-        SaldoTucService service = new SaldoTucService();
-        service.getBalances(mCard, mBalanceCallback);
+        MpesoService service = new MpesoService();
+        service.loadBalance(mCard, mBalanceCallback);
     }
 
-    protected Callback<Records> mBalanceCallback = new Callback<Records>() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        mDataSource.open();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mDataSource.close();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mMixpanel.flush();
+        super.onDestroy();
+    }
+
+    protected Callback<MpesoBalance> mBalanceCallback = new Callback<MpesoBalance>() {
+        @Override
+        public void success(MpesoBalance mpesoBalance, Response response) {
+            String balance = AppUtil.parseBalance(mpesoBalance.Mensaje);
+
+            if ( ! mpesoBalance.Error && balance != null) {
+                mCard.setBalance(balance);
+                mDataSource.update(mCard);
+
+                trackBalance(mCard.getBalance(), mCard.getNumber());
+
+                SaldoTucService service = new SaldoTucService();
+                service.getBalances(mCard, mStatisticsBalanceCallback);
+            } else {
+                AppUtil.showToast(CardStatisticsActivity.this, getString(R.string.card_invalid));
+                removeProgressBar();
+                finish();
+            }
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            removeProgressBar();
+            if (error.isNetworkError()) {
+                AppUtil.showToast(CardStatisticsActivity.this, getString(R.string.network_error));
+            }
+            Log.e(TAG, "Error: " + error.getMessage());
+            finish();
+        }
+    };
+
+    protected Callback<Records> mStatisticsBalanceCallback = new Callback<Records>() {
         @Override
         public void success(Records records, Response response) {
             removeProgressBar();
 
-            mChart.setVisibility(View.VISIBLE);
-
-            configChart();
-            drawChart(records);
+            if (records.data.size() <= 0) {
+                AppUtil.showToast(CardStatisticsActivity.this, getString(R.string.no_statistics_data));
+                finish();
+            } else {
+                mChart.setVisibility(View.VISIBLE);
+                configChart();
+                drawChart(records);
+            }
         }
 
         @Override
         public void failure(RetrofitError error) {
             removeProgressBar();
             Log.e(TAG, "Error: " + error.getMessage());
+            finish();
         }
     };
 
@@ -130,6 +193,17 @@ public class CardStatisticsActivity extends ActionBarActivity {
 
     protected void removeProgressBar() {
         setSupportProgressBarIndeterminateVisibility(false);
+    }
+
+    protected void trackBalance(String balance, String number) {
+        try {
+            JSONObject props = new JSONObject();
+            props.put("balance", Float.parseFloat(balance));
+            props.put("tuc", number);
+
+            mMixpanel.identify(number);
+            mMixpanel.track("Consulta Saldo", props);
+        } catch (JSONException e) {}
     }
 
     private class DateFormat extends Format {

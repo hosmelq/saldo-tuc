@@ -53,5 +53,6 @@
     <string name="title_activity_card_update">Actualizar tarjeta</string>
     <string name="content_desc_actions_divider">Divisor</string>
     <string name="title_activity_card_statistics">Grafica</string>
+    <string name="no_statistics_data">No logramos obtener datos de esa tarjeta</string>
 
 </resources>
