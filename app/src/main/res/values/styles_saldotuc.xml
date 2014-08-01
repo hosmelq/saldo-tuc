@@ -37,6 +37,7 @@
 
     <style name="ActionBar.Solid.Saldotuc" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="background">@drawable/ab_solid_saldotuc</item>
+        <item name="icon">@drawable/actionbar_icon</item>
         <item name="backgroundStacked">@drawable/ab_stacked_solid_saldotuc</item>
         <item name="backgroundSplit">@drawable/ab_bottom_solid_saldotuc</item>
         <item name="progressBarStyle">@style/ProgressBar.Saldotuc</item>

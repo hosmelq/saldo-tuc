@@ -55,9 +55,7 @@ public class MainActivity extends ActionBarActivity {
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.title_activity_main);
-        actionBar.setIcon(R.drawable.ic_logo);
+        getSupportActionBar().setTitle(R.string.title_activity_main);
 
         mDataSource = new CardDataSource(this);
         mMixpanel = SaldoTucApplication.getMixpanelInstance(this);

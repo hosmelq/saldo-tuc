@@ -22,7 +22,6 @@
         </activity>
         <activity
             android:name="com.socialimprover.saldotuc.CardAddActivity"
-            android:icon="@drawable/ic_logo"
             android:label="@string/title_activity_card_add"
             android:parentActivityName="com.socialimprover.saldotuc.MainActivity"
             android:screenOrientation="portrait" >
@@ -32,13 +31,11 @@
         </activity>
         <activity
             android:name="com.socialimprover.saldotuc.PhoneVerificationActivity"
-            android:icon="@drawable/ic_logo"
             android:label="@string/title_activity_phone_verification"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.socialimprover.saldotuc.CardUpdateActivity"
-            android:icon="@drawable/ic_logo"
             android:label="@string/title_activity_card_update"
             android:parentActivityName="com.socialimprover.saldotuc.MainActivity"
             android:screenOrientation="portrait" >
@@ -48,7 +45,6 @@
         </activity>
         <activity
             android:name="com.socialimprover.saldotuc.CardStatisticsActivity"
-            android:icon="@drawable/ic_logo"
             android:label="@string/title_activity_card_statistics"
             android:parentActivityName="com.socialimprover.saldotuc.MainActivity" >
             <meta-data
