@@ -5,18 +5,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-
+import android.view.inputmethod.EditorInfo;
+import android.widget.*;
 import com.socialimprover.saldotuc.app.R;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -52,6 +47,7 @@ public class CardAddActivity extends ActionBarActivity {
         mHourSpinner = (Spinner) findViewById(R.id.hour_spinner);
         mAmPmSpinner = (Spinner) findViewById(R.id.ampm_spinner);
 
+        mNumber.setOnEditorActionListener(mEnterListener);
         mNotificationCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         setHourAdapters();
@@ -84,85 +80,22 @@ public class CardAddActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_save) {
-            String name = mName.getText().toString().trim();
-            String card = mNumber.getText().toString().trim();
-            String phone = mPhone.getText().toString().trim();
-            String hour = mHourSpinner.getSelectedItem().toString();
-            String ampm = mAmPmSpinner.getSelectedItem().toString();
-
-            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(card) || card.length() != 8) {
-                AppUtil.showDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_error_message));
-            } else {
-                if (mDataSource.findByNumber(card).getCount() > 0) {
-                    AppUtil.showDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_number_error_message));
-                    return false;
-                }
-
-                mNewCard = new Card();
-                mNewCard.setName(name);
-                mNewCard.setNumber(card);
-
-                if (mNotificationCheckBox.isChecked()) {
-                    if (TextUtils.isEmpty(phone) || phone.length() != 8) {
-                        AppUtil.showDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_phone_error_message));
-                    } else if (mDataSource.findByPhone(phone).getCount() > 0) {
-                        AppUtil.showDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_phone_error_message));
-                        return false;
-                    } else {
-                        setSupportProgressBarIndeterminateVisibility(true);
-
-                        mNewCard.setPhone(phone);
-                        mNewCard.setHour(hour);
-                        mNewCard.setAmpm(ampm);
-
-                        SaldoTucService service = new SaldoTucService();
-                        service.storeCard(mNewCard, new Callback<Card>() {
-                            @Override
-                            public void success(Card card, Response response) {
-                                removeProgressBar();
-
-                                Intent intent = new Intent(CardAddActivity.this, PhoneVerificationActivity.class);
-                                intent.putExtra("action", "create");
-                                intent.putExtra("card", mNewCard);
-                                startActivity(intent);
-                            }
-
-                            @Override
-                            public void failure(RetrofitError error) {
-                                removeProgressBar();
-                                Log.e(TAG, "Error: " + error.getMessage());
-                            }
-                        });
-                    }
-                } else {
-                    saveCard(mNewCard);
-                    finish();
-                }
-            }
+            saveCard();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    protected void setHourAdapters() {
-        ArrayAdapter<CharSequence> hourAdapter = ArrayAdapter.createFromResource(this, R.array.hours, android.R.layout.simple_spinner_item);
-        hourAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mHourSpinner.setAdapter(hourAdapter);
+    protected TextView.OnEditorActionListener mEnterListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            if ((keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) || i == EditorInfo.IME_ACTION_DONE) {
+                saveCard();
+            }
 
-        ArrayAdapter<CharSequence> amPmAdapter = ArrayAdapter.createFromResource(this, R.array.ampm, android.R.layout.simple_spinner_item);
-        amPmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mAmPmSpinner.setAdapter(amPmAdapter);
-    }
-
-    protected void saveCard(Card card) {
-        mDataSource.create(card);
-
-        AppUtil.showToast(this, getString(R.string.card_success_save));
-    }
-
-    protected void removeProgressBar() {
-        setSupportProgressBarIndeterminateVisibility(false);
-    }
+            return false;
+        }
+    };
 
     protected CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
@@ -179,5 +112,84 @@ public class CardAddActivity extends ActionBarActivity {
             }
         }
     };
+
+    private boolean saveCard() {
+        String name = mName.getText().toString().trim();
+        String card = mNumber.getText().toString().trim();
+        String phone = mPhone.getText().toString().trim();
+        String hour = mHourSpinner.getSelectedItem().toString();
+        String ampm = mAmPmSpinner.getSelectedItem().toString();
+
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(card) || card.length() != 8) {
+            AppUtil.showDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_error_message));
+        } else {
+            if (mDataSource.findByNumber(card).getCount() > 0) {
+                AppUtil.showDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_number_error_message));
+                return true;
+            }
+
+            mNewCard = new Card();
+            mNewCard.setName(name);
+            mNewCard.setNumber(card);
+
+            if (mNotificationCheckBox.isChecked()) {
+                if (TextUtils.isEmpty(phone) || phone.length() != 8) {
+                    AppUtil.showDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_phone_error_message));
+                } else if (mDataSource.findByPhone(phone).getCount() > 0) {
+                    AppUtil.showDialog(CardAddActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_phone_error_message));
+                    return true;
+                } else {
+                    setSupportProgressBarIndeterminateVisibility(true);
+
+                    mNewCard.setPhone(phone);
+                    mNewCard.setHour(hour);
+                    mNewCard.setAmpm(ampm);
+
+                    SaldoTucService service = new SaldoTucService();
+                    service.storeCard(mNewCard, new Callback<Card>() {
+                        @Override
+                        public void success(Card card, Response response) {
+                            removeProgressBar();
+
+                            Intent intent = new Intent(CardAddActivity.this, PhoneVerificationActivity.class);
+                            intent.putExtra("action", "create");
+                            intent.putExtra("card", mNewCard);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            removeProgressBar();
+                            Log.e(TAG, "Error: " + error.getMessage());
+                        }
+                    });
+                }
+            } else {
+                createCard(mNewCard);
+                finish();
+            }
+        }
+        return false;
+    }
+
+    protected void setHourAdapters() {
+        ArrayAdapter<CharSequence> hourAdapter = ArrayAdapter.createFromResource(this, R.array.hours, android.R.layout.simple_spinner_item);
+        hourAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mHourSpinner.setAdapter(hourAdapter);
+
+        ArrayAdapter<CharSequence> amPmAdapter = ArrayAdapter.createFromResource(this, R.array.ampm, android.R.layout.simple_spinner_item);
+        amPmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mAmPmSpinner.setAdapter(amPmAdapter);
+    }
+
+    protected void createCard(Card card) {
+        mDataSource.create(card);
+
+        AppUtil.showToast(this, getString(R.string.card_success_save));
+    }
+
+    protected void removeProgressBar() {
+        setSupportProgressBarIndeterminateVisibility(false);
+    }
 
 }
