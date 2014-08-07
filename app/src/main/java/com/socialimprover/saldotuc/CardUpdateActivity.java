@@ -5,15 +5,18 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.socialimprover.saldotuc.app.R;
 
@@ -54,6 +57,7 @@ public class CardUpdateActivity extends ActionBarActivity {
         mHourSpinner = (Spinner) findViewById(R.id.hour_spinner);
         mAmPmSpinner = (Spinner) findViewById(R.id.ampm_spinner);
 
+        mNumber.setOnEditorActionListener(mEnterListener);
         mNotificationCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         setHourAdapters();
@@ -87,104 +91,38 @@ public class CardUpdateActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_update) {
-            String name = mName.getText().toString().trim();
-            String card = mNumber.getText().toString().trim();
-            String phone = mPhone.getText().toString().trim();
-            String hour = mHourSpinner.getSelectedItem().toString();
-            String ampm = mAmPmSpinner.getSelectedItem().toString();
-
-            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(card) || card.length() != 8) {
-                AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_error_message));
-            } else {
-                if ( ! mCard.getNumber().equals(card) && mDataSource.findByNumber(card).getCount() > 0) {
-                    AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_number_error_message));
-                    return false;
-                }
-
-                mCard.setName(name);
-                mCard.setNumber(card);
-
-                if (mNotificationCheckBox.isChecked()) {
-                    if (TextUtils.isEmpty(phone) || phone.length() != 8) {
-                        AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_phone_error_message));
-                    } else if (mCard.getPhone() != null && ! mCard.getPhone().equals(phone) && mDataSource.findByPhone(phone).getCount() > 0) {
-                        AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_phone_error_message));
-                        return false;
-                    } else {
-                        setSupportProgressBarIndeterminateVisibility(true);
-
-                        if (mCard.getPhone() != null) {
-                            mPhoneOld = mCard.getPhone();
-                        }
-
-                        mCard.setPhone(phone);
-                        mCard.setHour(hour);
-                        mCard.setAmpm(ampm);
-
-                        SaldoTucService service = new SaldoTucService();
-                        service.updateCard(mCard, new Callback<Card>() {
-                            @Override
-                            public void success(Card card, Response response) {
-                                removeProgressBar();
-
-                                if (mCard.getPhone().equals(mPhoneOld)) {
-                                    updateCard(mCard);
-                                    finish();
-                                } else {
-                                    Intent intent = new Intent(CardUpdateActivity.this, PhoneVerificationActivity.class);
-                                    intent.putExtra("action", "update");
-                                    intent.putExtra("card", mCard);
-                                    intent.putExtra("phone_old", mPhoneOld);
-                                    startActivity(intent);
-                                }
-                            }
-
-                            @Override
-                            public void failure(RetrofitError error) {
-                                removeProgressBar();
-                                Log.e(TAG, "Error: " + error.getMessage());
-                            }
-                        });
-                    }
-                } else {
-                    if (mCard.getPhone() != null) {
-                        if (AppUtil.isNetworkAvailable(CardUpdateActivity.this)) {
-                            setSupportProgressBarIndeterminateVisibility(true);
-
-                            SaldoTucService service = new SaldoTucService();
-
-                            service.deleteCard(mCard, new Callback<Response>() {
-                                @Override
-                                public void success(Response result, Response response) {
-                                    removeProgressBar();
-
-                                    mCard.setPhone(null);
-                                    mCard.setHour(null);
-                                    mCard.setAmpm(null);
-
-                                    updateCard(mCard);
-                                    finish();
-                                }
-
-                                @Override
-                                public void failure(RetrofitError error) {
-                                    removeProgressBar();
-                                    Log.e(TAG, "Error: " + error.getMessage());
-                                }
-                            });
-                        } else {
-                            AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), "Necesitas conexión a internet para actualizar esta tarjeta.");
-                        }
-                    } else {
-                        updateCard(mCard);
-                        finish();
-                    }
-                }
-            }
+            processCard();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    protected TextView.OnEditorActionListener mEnterListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            if ((keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) || i == EditorInfo.IME_ACTION_DONE) {
+                processCard();
+            }
+
+            return false;
+        }
+    };
+
+    protected CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+            if (AppUtil.isNetworkAvailable(CardUpdateActivity.this)) {
+                if (isChecked) {
+                    mNotificationLayout.setVisibility(RelativeLayout.VISIBLE);
+                } else {
+                    mNotificationLayout.setVisibility(RelativeLayout.INVISIBLE);
+                }
+            } else {
+                AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_sms_no_internet_error_message));
+                mNotificationCheckBox.setChecked(false);
+            }
+        }
+    };
 
     protected void setHourAdapters() {
         ArrayAdapter<CharSequence> hourAdapter = ArrayAdapter.createFromResource(this, R.array.hours, android.R.layout.simple_spinner_item);
@@ -214,6 +152,104 @@ public class CardUpdateActivity extends ActionBarActivity {
         }
     }
 
+    protected boolean processCard() {
+        String name = mName.getText().toString().trim();
+        String card = mNumber.getText().toString().trim();
+        String phone = mPhone.getText().toString().trim();
+        String hour = mHourSpinner.getSelectedItem().toString();
+        String ampm = mAmPmSpinner.getSelectedItem().toString();
+
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(card) || card.length() != 8) {
+            AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_error_message));
+        } else {
+            if ( ! mCard.getNumber().equals(card) && mDataSource.findByNumber(card).getCount() > 0) {
+                AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_number_error_message));
+                return true;
+            }
+
+            mCard.setName(name);
+            mCard.setNumber(card);
+
+            if (mNotificationCheckBox.isChecked()) {
+                if (TextUtils.isEmpty(phone) || phone.length() != 8) {
+                    AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_phone_error_message));
+                } else if (mCard.getPhone() != null && ! mCard.getPhone().equals(phone) && mDataSource.findByPhone(phone).getCount() > 0) {
+                    AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_duplicate_phone_error_message));
+                    return true;
+                } else {
+                    setSupportProgressBarIndeterminateVisibility(true);
+
+                    if (mCard.getPhone() != null) {
+                        mPhoneOld = mCard.getPhone();
+                    }
+
+                    mCard.setPhone(phone);
+                    mCard.setHour(hour);
+                    mCard.setAmpm(ampm);
+
+                    SaldoTucService service = new SaldoTucService();
+                    service.updateCard(mCard, new Callback<Card>() {
+                        @Override
+                        public void success(Card card, Response response) {
+                            removeProgressBar();
+
+                            if (mCard.getPhone().equals(mPhoneOld)) {
+                                updateCard(mCard);
+                                finish();
+                            } else {
+                                Intent intent = new Intent(CardUpdateActivity.this, PhoneVerificationActivity.class);
+                                intent.putExtra("action", "update");
+                                intent.putExtra("card", mCard);
+                                intent.putExtra("phone_old", mPhoneOld);
+                                startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            removeProgressBar();
+                            Log.e(TAG, "Error: " + error.getMessage());
+                        }
+                    });
+                }
+            } else {
+                if (mCard.getPhone() != null) {
+                    if (AppUtil.isNetworkAvailable(CardUpdateActivity.this)) {
+                        setSupportProgressBarIndeterminateVisibility(true);
+
+                        SaldoTucService service = new SaldoTucService();
+
+                        service.deleteCard(mCard, new Callback<Response>() {
+                            @Override
+                            public void success(Response result, Response response) {
+                                removeProgressBar();
+
+                                mCard.setPhone(null);
+                                mCard.setHour(null);
+                                mCard.setAmpm(null);
+
+                                updateCard(mCard);
+                                finish();
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                removeProgressBar();
+                                Log.e(TAG, "Error: " + error.getMessage());
+                            }
+                        });
+                    } else {
+                        AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), "Necesitas conexión a internet para actualizar esta tarjeta.");
+                    }
+                } else {
+                    updateCard(mCard);
+                    finish();
+                }
+            }
+        }
+        return false;
+    }
+
     protected void updateCard(Card card) {
         mDataSource.update(card);
 
@@ -223,21 +259,5 @@ public class CardUpdateActivity extends ActionBarActivity {
     protected void removeProgressBar() {
         setSupportProgressBarIndeterminateVisibility(false);
     }
-
-    protected CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-            if (AppUtil.isNetworkAvailable(CardUpdateActivity.this)) {
-                if (isChecked) {
-                    mNotificationLayout.setVisibility(RelativeLayout.VISIBLE);
-                } else {
-                    mNotificationLayout.setVisibility(RelativeLayout.INVISIBLE);
-                }
-            } else {
-                AppUtil.showDialog(CardUpdateActivity.this, getString(R.string.error_title), getString(R.string.card_add_sms_no_internet_error_message));
-                mNotificationCheckBox.setChecked(false);
-            }
-        }
-    };
 
 }

@@ -80,7 +80,7 @@ public class CardAddActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_save) {
-            saveCard();
+            processCard();
         }
 
         return super.onOptionsItemSelected(item);
@@ -90,7 +90,7 @@ public class CardAddActivity extends ActionBarActivity {
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
             if ((keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) || i == EditorInfo.IME_ACTION_DONE) {
-                saveCard();
+                processCard();
             }
 
             return false;
@@ -113,7 +113,17 @@ public class CardAddActivity extends ActionBarActivity {
         }
     };
 
-    private boolean saveCard() {
+    protected void setHourAdapters() {
+        ArrayAdapter<CharSequence> hourAdapter = ArrayAdapter.createFromResource(this, R.array.hours, android.R.layout.simple_spinner_item);
+        hourAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mHourSpinner.setAdapter(hourAdapter);
+
+        ArrayAdapter<CharSequence> amPmAdapter = ArrayAdapter.createFromResource(this, R.array.ampm, android.R.layout.simple_spinner_item);
+        amPmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mAmPmSpinner.setAdapter(amPmAdapter);
+    }
+
+    protected boolean processCard() {
         String name = mName.getText().toString().trim();
         String card = mNumber.getText().toString().trim();
         String phone = mPhone.getText().toString().trim();
@@ -170,16 +180,6 @@ public class CardAddActivity extends ActionBarActivity {
             }
         }
         return false;
-    }
-
-    protected void setHourAdapters() {
-        ArrayAdapter<CharSequence> hourAdapter = ArrayAdapter.createFromResource(this, R.array.hours, android.R.layout.simple_spinner_item);
-        hourAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mHourSpinner.setAdapter(hourAdapter);
-
-        ArrayAdapter<CharSequence> amPmAdapter = ArrayAdapter.createFromResource(this, R.array.ampm, android.R.layout.simple_spinner_item);
-        amPmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mAmPmSpinner.setAdapter(amPmAdapter);
     }
 
     protected void createCard(Card card) {
