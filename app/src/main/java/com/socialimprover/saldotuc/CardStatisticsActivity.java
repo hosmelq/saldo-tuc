@@ -148,6 +148,7 @@ public class CardStatisticsActivity extends ActionBarActivity {
         mChart.getGraphWidget().position(0, XLayoutStyle.ABSOLUTE_FROM_LEFT, 0, YLayoutStyle.ABSOLUTE_FROM_TOP);
 
 //        mChart.setDomainStepValue(5);
+//        mChart.setRangeStepValue(5);
         mChart.getGraphWidget().setRangeValueFormat(new DecimalFormat("0"));
         mChart.getGraphWidget().setDomainValueFormat(new DateFormat());
     }
@@ -189,6 +190,7 @@ public class CardStatisticsActivity extends ActionBarActivity {
 
         // reduce the number of range labels
 //        mChart.setTicksPerRangeLabel(3);
+        mChart.setTicksPerDomainLabel(4);
     }
 
     protected void removeProgressBar() {
