@@ -10,16 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-
+import android.widget.*;
 import com.socialimprover.saldotuc.app.R;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -46,7 +38,7 @@ public class CardUpdateActivity extends ActionBarActivity {
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_card_update);
 
-        mDataSource = new CardDataSource(this);
+        mDataSource = SaldoTucApplication.getDatabaseHelper();
         mCard = (Card) getIntent().getSerializableExtra("card");
 
         mNotificationLayout = (RelativeLayout) findViewById(R.id.notificationLayout);
@@ -62,18 +54,6 @@ public class CardUpdateActivity extends ActionBarActivity {
 
         setHourAdapters();
         fillFields(mCard);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mDataSource.open();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mDataSource.close();
     }
 
     @Override

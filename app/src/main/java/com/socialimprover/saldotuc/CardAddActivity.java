@@ -37,7 +37,7 @@ public class CardAddActivity extends ActionBarActivity {
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_card_add);
 
-        mDataSource = new CardDataSource(this);
+        mDataSource = SaldoTucApplication.getDatabaseHelper();
 
         mNotificationLayout = (RelativeLayout) findViewById(R.id.notificationLayout);
         mName = (EditText) findViewById(R.id.nameField);
@@ -51,18 +51,6 @@ public class CardAddActivity extends ActionBarActivity {
         mNotificationCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         setHourAdapters();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mDataSource.open();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mDataSource.close();
     }
 
     @Override

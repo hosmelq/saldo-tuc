@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SaldoTucHelper extends SQLiteOpenHelper {
 
     // Database information
-    private static final String DB_NAME = "mpeso";
+    private static final String DB_NAME = "saldotuc";
     private static final int DB_VERSION = 1;
 
     // Table and column information

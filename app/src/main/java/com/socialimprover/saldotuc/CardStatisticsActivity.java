@@ -6,33 +6,21 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.PointLabelFormatter;
-import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYSeries;
-import com.androidplot.xy.XYStepMode;
+import com.androidplot.xy.*;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.socialimprover.saldotuc.app.R;
-
 import org.joda.time.DateTime;
-
-import java.text.DecimalFormat;
-import java.text.FieldPosition;
-import java.text.Format;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import java.text.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class CardStatisticsActivity extends ActionBarActivity {
 
@@ -50,7 +38,7 @@ public class CardStatisticsActivity extends ActionBarActivity {
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_card_statistics);
 
-        mDataSource = new CardDataSource(this);
+        mDataSource = SaldoTucApplication.getDatabaseHelper();
         mMixpanel = SaldoTucApplication.getMixpanelInstance(this);
 
         mCard = (Card) getIntent().getSerializableExtra("card");
@@ -62,18 +50,6 @@ public class CardStatisticsActivity extends ActionBarActivity {
 
         MpesoService service = new MpesoService();
         service.loadBalance(mCard, mBalanceCallback);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mDataSource.open();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mDataSource.close();
     }
 
     @Override
@@ -166,6 +142,12 @@ public class CardStatisticsActivity extends ActionBarActivity {
             dates.add(dt.getMillis());
         }
 
+        if (records.data.size() > 10) {
+            // reduce the number of range labels
+            // mChart.setTicksPerRangeLabel(3);
+            mChart.setTicksPerDomainLabel(4);
+        }
+
         // Turn the above arrays into XYSeries':
         XYSeries series1 = new SimpleXYSeries(dates, balance, "Saldo");
         XYSeries series2 = new SimpleXYSeries(dates, spending, "Gastos");
@@ -187,10 +169,6 @@ public class CardStatisticsActivity extends ActionBarActivity {
         mChart.addSeries(series2, series2Format);
 
         mChart.setDomainStep(XYStepMode.SUBDIVIDE, dates.size());
-
-        // reduce the number of range labels
-//        mChart.setTicksPerRangeLabel(3);
-        mChart.setTicksPerDomainLabel(4);
     }
 
     protected void removeProgressBar() {

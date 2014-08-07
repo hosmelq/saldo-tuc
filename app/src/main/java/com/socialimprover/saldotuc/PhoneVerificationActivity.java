@@ -10,9 +10,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.socialimprover.saldotuc.app.R;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -34,7 +32,7 @@ public class PhoneVerificationActivity extends ActionBarActivity {
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_phone_verification);
 
-        mDataSource = new CardDataSource(this);
+        mDataSource = SaldoTucApplication.getDatabaseHelper();
 
         mCard = (Card) getIntent().getSerializableExtra("card");
         mCode = (EditText) findViewById(R.id.codeField);
@@ -43,18 +41,6 @@ public class PhoneVerificationActivity extends ActionBarActivity {
 
         String phone = mCard.getPhone().substring(0, 4) + "-" + mCard.getPhone().substring(4, 8);
         ( (TextView) findViewById(R.id.textInfo)).append(" " + phone);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mDataSource.open();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mDataSource.close();
     }
 
     @Override

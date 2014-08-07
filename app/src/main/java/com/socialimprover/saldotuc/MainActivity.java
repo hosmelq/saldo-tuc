@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
 
         getSupportActionBar().setTitle(R.string.title_activity_main);
 
-        mDataSource = new CardDataSource(this);
+        mDataSource = SaldoTucApplication.getDatabaseHelper();
         mMixpanel = SaldoTucApplication.getMixpanelInstance(this);
 
         mListView = (ListView) findViewById(android.R.id.list);
@@ -61,15 +61,8 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
-        mDataSource.open();
 
         updateList();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mDataSource.close();
     }
 
     @Override

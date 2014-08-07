@@ -26,7 +26,10 @@ public class CardDataSource {
      * We always need to close our db connections
      */
     public void close() {
-        mDatabase.close();
+        if (mDatabase != null && mDatabase.isOpen()) {
+            mDatabase.close();
+            mDatabase = null;
+        }
     }
 
      /*
