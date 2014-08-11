@@ -249,10 +249,15 @@ public class MainActivity extends ActionBarActivity {
         public void onRefresh() {
             if (mCards.isEmpty() && mSwipeRefreshLayout.isRefreshing()) {
                 mSwipeRefreshLayout.setRefreshing(false);
+            } else {
+                if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
+                } else {
+                    GetMpesoBalances getMpesoBalance = new GetMpesoBalances(mCards);
+                    getMpesoBalance.execute();
+                }
             }
-
-            GetMpesoBalances getMpesoBalance = new GetMpesoBalances(mCards);
-            getMpesoBalance.execute();
         }
     };
 
