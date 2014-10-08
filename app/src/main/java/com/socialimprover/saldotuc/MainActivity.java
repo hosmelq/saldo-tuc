@@ -393,57 +393,68 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         protected List<CardBalanceContainer> doInBackground(Object... objects) {
-            MpesoService service = new MpesoService();
-            List<CardBalanceContainer> list = new ArrayList<CardBalanceContainer>();
+            try {
+                MpesoService service = new MpesoService();
+                List<CardBalanceContainer> list = new ArrayList<CardBalanceContainer>();
 
-            for (Card card : mCards) {
-                MpesoBalance balance = service.loadBalanceSync(card);
-                CardBalanceContainer cardBalanceContainer = new CardBalanceContainer(card, balance);
+                for (Card card : mCards) {
+                    MpesoBalance balance = service.loadBalanceSync(card);
+                    CardBalanceContainer cardBalanceContainer = new CardBalanceContainer(card, balance);
 
-                list.add(cardBalanceContainer);
+                    list.add(cardBalanceContainer);
+                }
+
+                return list;
+            } catch (Exception e) {
+                return null;
             }
-
-            return list;
         }
 
         @Override
         protected void onPostExecute(List<CardBalanceContainer> hashMaps) {
-            for (int i = 0; i < hashMaps.size(); i++) {
-                CardBalanceContainer item = hashMaps.get(i);
-                Card card = item.card;
-                MpesoBalance mpesoBalance = item.mpesoBalance;
-                String balance = AppUtil.parseBalance(mpesoBalance.Mensaje);
-                final int hashMapsSize = hashMaps.size();
+            if (hashMaps != null) {
+                for (int i = 0; i < hashMaps.size(); i++) {
+                    CardBalanceContainer item = hashMaps.get(i);
+                    Card card = item.card;
+                    MpesoBalance mpesoBalance = item.mpesoBalance;
+                    String balance = AppUtil.parseBalance(mpesoBalance.Mensaje);
+                    final int hashMapsSize = hashMaps.size();
 
-                if (!mpesoBalance.Error && balance != null) {
-                    card.setBalance(balance);
-                    mDataSource.update(card);
-                    ((TextView) mListView.getChildAt(i).findViewById(R.id.cardBalance)).setText("C$ " + balance);
+                    if (!mpesoBalance.Error && balance != null) {
+                        card.setBalance(balance);
+                        mDataSource.update(card);
+                        ((TextView) mListView.getChildAt(i).findViewById(R.id.cardBalance)).setText("C$ " + balance);
 
-                    trackBalance(card.getBalance(), card.getNumber());
+                        trackBalance(card.getBalance(), card.getNumber());
 
-                    SaldoTucService service = new SaldoTucService();
-                    service.storeBalance(card, new Callback<Card>() {
-                        @Override
-                        public void success(Card card, Response response) {
-                            mCount++;
+                        SaldoTucService service = new SaldoTucService();
+                        service.storeBalance(card, new Callback<Card>() {
+                            @Override
+                            public void success(Card card, Response response) {
+                                mCount++;
 
-                            if (mCount == hashMapsSize) {
-                                if (mSwipeRefreshLayout.isRefreshing()) {
-                                    mSwipeRefreshLayout.setRefreshing(false);
+                                if (mCount == hashMapsSize) {
+                                    if (mSwipeRefreshLayout.isRefreshing()) {
+                                        mSwipeRefreshLayout.setRefreshing(false);
+                                    }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Log.e(TAG, "Error: " + error.getMessage());
-                        }
-                    });
-                } else {
-                    AppUtil.showToast(MainActivity.this, getString(R.string.card_invalid));
-                    removeProgressBar();
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Log.e(TAG, "Error: " + error.getMessage());
+                            }
+                        });
+                    } else {
+                        AppUtil.showToast(MainActivity.this, getString(R.string.card_invalid));
+                        removeProgressBar();
+                    }
                 }
+            } else {
+                if (mSwipeRefreshLayout.isRefreshing()) {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+                AppUtil.showToast(MainActivity.this, getString(R.string.network_error));
             }
         }
 
