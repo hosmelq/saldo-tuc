@@ -24,7 +24,7 @@
     <string name="card_success_save">Tarjeta guardada</string>
     <string name="card_success_update">Tarjeta actualizada</string>
     <string name="card_success_delete">Tarjeta borrada</string>
-    <string name="card_invalid">No es un número de tarjeta TUC ó está inactivo</string>
+    <string name="card_invalid">%1$s no es un número de tarjeta TUC ó está inactivo</string>
     <string name="title_activity_phone_verification">Tu código</string>
     <string name="menu_verification_label">Verificar</string>
     <string name="code_verification_hint">Código</string>

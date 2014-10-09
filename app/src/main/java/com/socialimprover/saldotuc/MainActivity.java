@@ -198,7 +198,7 @@ public class MainActivity extends ActionBarActivity {
                     }
                 });
             } else {
-                AppUtil.showToast(MainActivity.this, getString(R.string.card_invalid));
+                AppUtil.showToast(MainActivity.this, String.format(getString(R.string.card_invalid), AppUtil.formatCard(mCard.getNumber())));
                 removeProgressBar();
             }
         }
@@ -317,7 +317,10 @@ public class MainActivity extends ActionBarActivity {
     }
 
     protected void hideAllActions() {
-        for (int i = 0; i < mListView.getCount(); i++) {
+        int firstVisible = mListView.getFirstVisiblePosition();
+        int lastVisible = mListView.getLastVisiblePosition();
+
+        for (int i = 0; i <= (lastVisible - firstVisible); i++) {
             View view = mListView.getChildAt(i);
 
             if (view.findViewById(R.id.infoLayout).getAnimation() != null) {
@@ -371,6 +374,12 @@ public class MainActivity extends ActionBarActivity {
         setSupportProgressBarIndeterminateVisibility(false);
     }
 
+    protected void removeSwipe() {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
     protected void trackBalance(String balance, String number) {
         try {
             JSONObject props = new JSONObject();
@@ -413,17 +422,17 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(List<CardBalanceContainer> hashMaps) {
             if (hashMaps != null) {
-                for (int i = 0; i < hashMaps.size(); i++) {
-                    CardBalanceContainer item = hashMaps.get(i);
-                    Card card = item.card;
-                    MpesoBalance mpesoBalance = item.mpesoBalance;
+                final int hashMapsSize = hashMaps.size();
+
+                for (CardBalanceContainer hashMap : hashMaps) {
+                    mCount++;
+                    Card card = hashMap.card;
+                    MpesoBalance mpesoBalance = hashMap.mpesoBalance;
                     String balance = AppUtil.parseBalance(mpesoBalance.Mensaje);
-                    final int hashMapsSize = hashMaps.size();
 
                     if (!mpesoBalance.Error && balance != null) {
                         card.setBalance(balance);
                         mDataSource.update(card);
-                        ((TextView) mListView.getChildAt(i).findViewById(R.id.cardBalance)).setText("C$ " + balance);
 
                         trackBalance(card.getBalance(), card.getNumber());
 
@@ -431,30 +440,30 @@ public class MainActivity extends ActionBarActivity {
                         service.storeBalance(card, new Callback<Card>() {
                             @Override
                             public void success(Card card, Response response) {
-                                mCount++;
-
-                                if (mCount == hashMapsSize) {
-                                    if (mSwipeRefreshLayout.isRefreshing()) {
-                                        mSwipeRefreshLayout.setRefreshing(false);
-                                    }
-                                }
+                                checkIfLast(hashMapsSize);
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
+                                checkIfLast(hashMapsSize);
                                 Log.e(TAG, "Error: " + error.getMessage());
                             }
                         });
                     } else {
-                        AppUtil.showToast(MainActivity.this, getString(R.string.card_invalid));
-                        removeProgressBar();
+                        checkIfLast(hashMapsSize);
+                        AppUtil.showToast(MainActivity.this, String.format(getString(R.string.card_invalid), AppUtil.formatCard(card.getNumber())));
                     }
                 }
             } else {
-                if (mSwipeRefreshLayout.isRefreshing()) {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
+                removeSwipe();
                 AppUtil.showToast(MainActivity.this, getString(R.string.network_error));
+            }
+        }
+
+        protected void checkIfLast(int hashMapsSize) {
+            if (mCount == hashMapsSize) {
+                removeSwipe();
+                updateList();
             }
         }
 
