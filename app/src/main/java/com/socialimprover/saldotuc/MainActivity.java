@@ -121,7 +121,10 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onClick(View view) {
             int position = mListView.getPositionForView(view);
-            mCardView = mListView.getChildAt(position);
+            int firstVisiblePosition = mListView.getFirstVisiblePosition() - mListView.getHeaderViewsCount();
+            int wantedChild = position - firstVisiblePosition;
+
+            mCardView = mListView.getChildAt(wantedChild);
             Card card = mCards.get(position);
             mCard = card;
 
