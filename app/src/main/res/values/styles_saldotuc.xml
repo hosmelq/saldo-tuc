@@ -33,6 +33,8 @@
                 <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.Saldotuc.Widget</item>
 
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
     </style>
 
     <style name="ActionBar.Solid.Saldotuc" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">

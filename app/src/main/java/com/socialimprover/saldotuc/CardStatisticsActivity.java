@@ -2,27 +2,37 @@ package com.socialimprover.saldotuc;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
+
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.YLayoutStyle;
-import com.androidplot.xy.*;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.PointLabelFormatter;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
+import com.androidplot.xy.XYStepMode;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.socialimprover.saldotuc.app.R;
+
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import java.text.*;
-import java.util.ArrayList;
-import java.util.Date;
-
-public class CardStatisticsActivity extends ActionBarActivity {
+public class CardStatisticsActivity extends BaseActivity {
 
     public static final String TAG = CardStatisticsActivity.class.getSimpleName();
 
@@ -35,8 +45,6 @@ public class CardStatisticsActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_card_statistics);
 
         mDataSource = SaldoTucApplication.getDatabaseHelper();
         mMixpanel = SaldoTucApplication.getMixpanelInstance(this);
@@ -44,9 +52,9 @@ public class CardStatisticsActivity extends ActionBarActivity {
         mCard = (Card) getIntent().getSerializableExtra("card");
         mChart = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 
-        getSupportActionBar().setTitle(getString(R.string.title_activity_card_statistics) + " - " + AppUtil.formatCard(mCard.getNumber()));
+        setActionBarTitle(getString(R.string.title_activity_card_statistics) + " - " + AppUtil.formatCard(mCard.getNumber()));
 
-        setSupportProgressBarIndeterminateVisibility(true);
+        showProgressBar();
 
         MpesoService service = new MpesoService();
         service.loadBalance(mCard, mBalanceCallback);
@@ -56,6 +64,11 @@ public class CardStatisticsActivity extends ActionBarActivity {
     protected void onDestroy() {
         mMixpanel.flush();
         super.onDestroy();
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_card_statistics;
     }
 
     protected Callback<MpesoBalance> mBalanceCallback = new Callback<MpesoBalance>() {
@@ -72,15 +85,15 @@ public class CardStatisticsActivity extends ActionBarActivity {
                 SaldoTucService service = new SaldoTucService();
                 service.getBalances(mCard, mStatisticsBalanceCallback);
             } else {
-                AppUtil.showToast(CardStatisticsActivity.this, getString(R.string.card_invalid));
-                removeProgressBar();
+                AppUtil.showToast(CardStatisticsActivity.this, getString(R.string.card_invalid, AppUtil.formatCard(mCard.getNumber())));
+                hideProgressBar();
                 finish();
             }
         }
 
         @Override
         public void failure(RetrofitError error) {
-            removeProgressBar();
+            hideProgressBar();
             if (error.isNetworkError()) {
                 AppUtil.showToast(CardStatisticsActivity.this, getString(R.string.network_error));
             }
@@ -92,7 +105,7 @@ public class CardStatisticsActivity extends ActionBarActivity {
     protected Callback<Records> mStatisticsBalanceCallback = new Callback<Records>() {
         @Override
         public void success(Records records, Response response) {
-            removeProgressBar();
+            hideProgressBar();
 
             if (records.data.size() <= 0) {
                 AppUtil.showToast(CardStatisticsActivity.this, getString(R.string.no_statistics_data));
@@ -106,7 +119,7 @@ public class CardStatisticsActivity extends ActionBarActivity {
 
         @Override
         public void failure(RetrofitError error) {
-            removeProgressBar();
+            hideProgressBar();
             Log.e(TAG, "Error: " + error.getMessage());
             finish();
         }
@@ -169,10 +182,6 @@ public class CardStatisticsActivity extends ActionBarActivity {
         mChart.addSeries(series2, series2Format);
 
         mChart.setDomainStep(XYStepMode.SUBDIVIDE, dates.size());
-    }
-
-    protected void removeProgressBar() {
-        setSupportProgressBarIndeterminateVisibility(false);
     }
 
     protected void trackBalance(String balance, String number) {

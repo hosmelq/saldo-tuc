@@ -2,7 +2,6 @@ package com.socialimprover.saldotuc;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -10,13 +9,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+
 import com.socialimprover.saldotuc.app.R;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CardAddActivity extends ActionBarActivity {
+public class CardAddActivity extends BaseActivity {
 
     public static final String TAG = CardAddActivity.class.getSimpleName();
 
@@ -35,7 +42,6 @@ public class CardAddActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_card_add);
 
         mDataSource = SaldoTucApplication.getDatabaseHelper();
 
@@ -51,6 +57,11 @@ public class CardAddActivity extends ActionBarActivity {
         mNotificationCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         setHourAdapters();
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_card_add;
     }
 
     @Override

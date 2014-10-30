@@ -29,10 +29,12 @@
         <item name="android:actionModeBackground">@drawable/cab_background_top_saldotuc</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_saldotuc</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Saldotuc</item>
-        
-                <!-- Light.DarkActionBar specific -->
+
+        <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.Saldotuc.Widget</item>
 
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
     </style>
 
     <style name="ActionBar.Solid.Saldotuc" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">

@@ -2,21 +2,27 @@ package com.socialimprover.saldotuc;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+
 import com.socialimprover.saldotuc.app.R;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CardUpdateActivity extends ActionBarActivity {
+public class CardUpdateActivity extends BaseActivity {
 
     public static final String TAG = CardUpdateActivity.class.getSimpleName();
 
@@ -35,8 +41,6 @@ public class CardUpdateActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_card_update);
 
         mDataSource = SaldoTucApplication.getDatabaseHelper();
         mCard = (Card) getIntent().getSerializableExtra("card");
@@ -54,6 +58,11 @@ public class CardUpdateActivity extends ActionBarActivity {
 
         setHourAdapters();
         fillFields(mCard);
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_card_update;
     }
 
     @Override
@@ -171,7 +180,7 @@ public class CardUpdateActivity extends ActionBarActivity {
                     service.updateCard(mCard, new Callback<Card>() {
                         @Override
                         public void success(Card card, Response response) {
-                            removeProgressBar();
+                            hideProgressBar();
 
                             if (mCard.getPhone().equals(mPhoneOld)) {
                                 updateCard(mCard);
@@ -187,7 +196,7 @@ public class CardUpdateActivity extends ActionBarActivity {
 
                         @Override
                         public void failure(RetrofitError error) {
-                            removeProgressBar();
+                            hideProgressBar();
                             Log.e(TAG, "Error: " + error.getMessage());
                         }
                     });
@@ -202,7 +211,7 @@ public class CardUpdateActivity extends ActionBarActivity {
                         service.deleteCard(mCard, new Callback<Response>() {
                             @Override
                             public void success(Response result, Response response) {
-                                removeProgressBar();
+                                hideProgressBar();
 
                                 mCard.setPhone(null);
                                 mCard.setHour(null);
@@ -214,7 +223,7 @@ public class CardUpdateActivity extends ActionBarActivity {
 
                             @Override
                             public void failure(RetrofitError error) {
-                                removeProgressBar();
+                                hideProgressBar();
                                 Log.e(TAG, "Error: " + error.getMessage());
                             }
                         });
@@ -234,10 +243,6 @@ public class CardUpdateActivity extends ActionBarActivity {
         mDataSource.update(card);
 
         AppUtil.showToast(this, getString(R.string.card_success_update));
-    }
-
-    protected void removeProgressBar() {
-        setSupportProgressBarIndeterminateVisibility(false);
     }
 
 }

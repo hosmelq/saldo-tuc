@@ -5,29 +5,39 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.shamanland.fab.FloatingActionButton;
+import com.shamanland.fab.ShowHideOnScroll;
 import com.socialimprover.saldotuc.app.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends ActionBarActivity {
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
+public class MainActivity extends BaseActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -39,14 +49,14 @@ public class MainActivity extends ActionBarActivity {
     protected List<Card> mCards;
     protected Card mCard;
     protected View mCardView;
+    protected ImageView mAddBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_main);
 
-        getSupportActionBar().setTitle(R.string.title_activity_main);
+        setActionBarTitle(R.string.title_activity_main);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         mDataSource = SaldoTucApplication.getDatabaseHelper();
         mMixpanel = SaldoTucApplication.getMixpanelInstance(this);
@@ -56,6 +66,8 @@ public class MainActivity extends ActionBarActivity {
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
         mSwipeRefreshLayout.setColorScheme(R.color.swipeRefresh1, R.color.swipeRefresh2, R.color.swipeRefresh3, R.color.swipeRefresh4);
+
+        setupAddBottom();
     }
 
     @Override
@@ -72,11 +84,19 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    protected int getLayoutResource() {
+        return R.layout.activity_main;
     }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+//            getMenuInflater().inflate(R.menu.main, menu);
+//        }
+//
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -86,11 +106,33 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_card_add) {
-            Intent intent = new Intent(this, CardAddActivity.class);
-            startActivity(intent);
+            addNewCard();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void setupAddBottom() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mAddBottom = (ImageButton) findViewById(R.id.fab_action_card_add);
+//            mAddBottom.setBackground(getDrawable(R.drawable.ripple));
+            mAddBottom.setBackgroundResource(R.drawable.ripple);
+            mAddBottom.setVisibility(ImageButton.VISIBLE);
+        } else {
+            mAddBottom = (FloatingActionButton) findViewById(R.id.fab);
+            mAddBottom.setVisibility(FloatingActionButton.VISIBLE);
+//            findViewById(R.id.fab_action_card_add).setVisibility(ImageView.GONE);
+        }
+
+        if (mAddBottom != null) {
+            mListView.setOnTouchListener(new ShowHideOnScroll(mAddBottom));
+            mAddBottom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    addNewCard();
+                }
+            });
+        }
     }
 
     protected AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
@@ -135,7 +177,7 @@ public class MainActivity extends ActionBarActivity {
                     if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
                         AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
                     } else {
-                        setSupportProgressBarIndeterminateVisibility(true);
+                        showProgressBar();
 
                         MpesoService service = new MpesoService();
                         service.loadBalance(card, mBalanceCallback);
@@ -191,24 +233,24 @@ public class MainActivity extends ActionBarActivity {
                 service.storeBalance(mCard, new Callback<Card>() {
                     @Override
                     public void success(Card card, Response response) {
-                        removeProgressBar();
+                        hideProgressBar();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        removeProgressBar();
+                        hideProgressBar();
                         Log.e(TAG, "Error: " + error.getMessage());
                     }
                 });
             } else {
                 AppUtil.showToast(MainActivity.this, String.format(getString(R.string.card_invalid), AppUtil.formatCard(mCard.getNumber())));
-                removeProgressBar();
+                hideProgressBar();
             }
         }
 
         @Override
         public void failure(RetrofitError error) {
-            removeProgressBar();
+            hideProgressBar();
             if (error.isNetworkError()) {
                 AppUtil.showToast(MainActivity.this, getString(R.string.network_error));
             }
@@ -228,13 +270,13 @@ public class MainActivity extends ActionBarActivity {
                     service.deleteCard(mCard, new Callback<Response>() {
                         @Override
                         public void success(Response result, Response response) {
-                            removeProgressBar();
+                            hideProgressBar();
                             deleteCard(mCard);
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
-                            removeProgressBar();
+                            hideProgressBar();
                             Log.e(TAG, "Error: " + error.getMessage());
                         }
                     });
@@ -306,6 +348,11 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    protected void addNewCard() {
+        Intent intent = new Intent(this, CardAddActivity.class);
+        startActivity(intent);
+    }
+
     protected void showActions(View view) {
         LinearLayout actionsLayout = (LinearLayout) view.findViewById(R.id.actionsLayout);
         RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
@@ -371,10 +418,6 @@ public class MainActivity extends ActionBarActivity {
             updateList();
             AppUtil.showToast(this, getString(R.string.card_success_delete));
         }
-    }
-
-    protected void removeProgressBar() {
-        setSupportProgressBarIndeterminateVisibility(false);
     }
 
     protected void removeSwipe() {
