@@ -20,40 +20,15 @@
 <resources>
 
     <style name="Theme.Saldotuc" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarItemBackground">@drawable/selectable_background_saldotuc</item>
-        <item name="android:popupMenuStyle">@style/PopupMenu.Saldotuc</item>
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Saldotuc</item>
-        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Saldotuc</item>
-        <item name="android:actionDropDownStyle">@style/DropDownNav.Saldotuc</item>
         <item name="android:actionBarStyle">@style/ActionBar.Solid.Saldotuc</item>
-        <item name="android:actionModeBackground">@drawable/cab_background_top_saldotuc</item>
-        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_saldotuc</item>
-        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Saldotuc</item>
-
-        <!-- Light.DarkActionBar specific -->
-        <item name="android:actionBarWidgetTheme">@style/Theme.Saldotuc.Widget</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
     </style>
 
     <style name="ActionBar.Solid.Saldotuc" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/ab_solid_saldotuc</item>
         <item name="android:icon">@drawable/actionbar_icon</item>
-        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_saldotuc</item>
-        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_saldotuc</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Saldotuc</item>
-    </style>
-
-    <style name="ActionBar.Transparent.Saldotuc" parent="@style/Widget.AppCompat.ActionBar">
-        <item name="android:background">@drawable/ab_transparent_saldotuc</item>
-        <item name="android:progressBarStyle">@style/ProgressBar.Saldotuc</item>
-    </style>
-    
-    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
-    <style name="Theme.Saldotuc.Widget" parent="@style/Theme.AppCompat">
-        <item name="android:popupMenuStyle">@style/PopupMenu.Saldotuc</item>
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Saldotuc</item>
     </style>
 
 </resources>
