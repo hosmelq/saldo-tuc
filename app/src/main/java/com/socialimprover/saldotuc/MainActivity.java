@@ -21,9 +21,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.shamanland.fab.FloatingActionButton;
-import com.shamanland.fab.ShowHideOnScroll;
 import com.socialimprover.saldotuc.app.R;
 
 import org.json.JSONException;
@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.fabric.sdk.android.Fabric;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -53,6 +54,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
 
         setActionBarTitle(R.string.title_activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -98,7 +100,6 @@ public class MainActivity extends BaseActivity {
         }
 
         if (mAddBottom != null) {
-//            mListView.setOnTouchListener(new ShowHideOnScroll(mAddBottom));
             mAddBottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

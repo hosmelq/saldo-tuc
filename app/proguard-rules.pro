@@ -30,3 +30,6 @@
 -keep class org.joda.** { *; }
 
 -keep class com.androidplot.** { *; }
+
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**

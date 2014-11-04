@@ -47,6 +47,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="0c7eedbdf74b2ac0ca43734647aea9bdbb2db6ad"/>
     </application>
 
 </manifest>
