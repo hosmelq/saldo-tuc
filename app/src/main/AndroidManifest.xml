@@ -31,11 +31,6 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name="com.socialimprover.saldotuc.PhoneVerificationActivity"
-            android:label="@string/title_activity_phone_verification"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name="com.socialimprover.saldotuc.CardUpdateActivity"
             android:label="@string/title_activity_card_update"
             android:parentActivityName="com.socialimprover.saldotuc.MainActivity"

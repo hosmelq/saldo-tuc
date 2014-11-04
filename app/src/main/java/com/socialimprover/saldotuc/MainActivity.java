@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -88,44 +87,18 @@ public class MainActivity extends BaseActivity {
         return R.layout.activity_main;
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-//            getMenuInflater().inflate(R.menu.main, menu);
-//        }
-//
-//        return true;
-//    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_card_add) {
-            addNewCard();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     protected void setupAddBottom() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mAddBottom = (ImageButton) findViewById(R.id.fab_action_card_add);
-//            mAddBottom.setBackground(getDrawable(R.drawable.ripple));
             mAddBottom.setBackgroundResource(R.drawable.ripple);
             mAddBottom.setVisibility(ImageButton.VISIBLE);
         } else {
             mAddBottom = (FloatingActionButton) findViewById(R.id.fab);
             mAddBottom.setVisibility(FloatingActionButton.VISIBLE);
-//            findViewById(R.id.fab_action_card_add).setVisibility(ImageView.GONE);
         }
 
         if (mAddBottom != null) {
-            mListView.setOnTouchListener(new ShowHideOnScroll(mAddBottom));
+//            mListView.setOnTouchListener(new ShowHideOnScroll(mAddBottom));
             mAddBottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -15,9 +15,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:progressDrawable="@drawable/progress_horizontal_saldotuc"
-        android:visibility="gone"/>
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:indeterminateDrawable="@drawable/toolbar_progress_bar"
+        android:indeterminateDuration="@android:integer/config_longAnimTime"
+        android:visibility="gone"
+        android:indeterminate="true"/>
 
 </android.support.v7.widget.Toolbar>
