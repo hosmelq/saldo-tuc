@@ -1,88 +1,95 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent" >
+    android:background="@android:color/transparent">
+
+    <TextView
+        android:id="@+id/charLabel"
+        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/cards_list_horizontal_margin"
+        android:layout_marginStart="@dimen/cards_list_horizontal_margin"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold"
+        android:textColor="#999999"/>
 
     <LinearLayout
-        android:layout_width="256dp"
-        android:layout_height="64dp"
-        android:layout_marginLeft="@dimen/cards_list_horizontal_margin"
-        android:layout_marginTop="@dimen/cards_list_vertical_margin"
         android:id="@+id/actionsLayout"
-        android:background="@drawable/card_item_actions"
-        android:visibility="invisible"
-        android:orientation="horizontal">
+        android:layout_height="72dp"
+        android:layout_width="256dp"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:layout_below="@+id/charLabel"
+        android:visibility="invisible">
 
         <Button
             android:id="@+id/cardActionBalance"
             android:layout_width="64dp"
             android:layout_height="match_parent"
             android:background="@drawable/card_balance_background"
-            android:focusable="false" />
+            android:focusable="false"/>
 
         <ImageView
+            android:layout_height="72dp"
             android:layout_width="wrap_content"
-            android:layout_height="63dp"
+            android:contentDescription="@string/content_desc_actions_divider"
             android:scaleType="fitXY"
-            android:src="@drawable/button_divider"
-            android:contentDescription="@string/content_desc_actions_divider"/>
+            android:src="@drawable/button_divider"/>
 
         <Button
             android:id="@+id/cardActionStatistics"
-            android:layout_width="64dp"
             android:layout_height="match_parent"
+            android:layout_width="64dp"
             android:background="@drawable/card_statistics_background"
-            android:focusable="false" />
+            android:focusable="false"/>
 
         <ImageView
+            android:layout_height="72dp"
             android:layout_width="wrap_content"
-            android:layout_height="63dp"
             android:scaleType="fitXY"
             android:src="@drawable/button_divider"
             android:contentDescription="@string/content_desc_actions_divider"/>
 
         <Button
             android:id="@+id/cardActionEdit"
-            android:layout_width="64dp"
             android:layout_height="match_parent"
+            android:layout_width="64dp"
             android:background="@drawable/card_edit_background"
             android:focusable="false" />
 
         <ImageView
+            android:layout_height="72dp"
             android:layout_width="wrap_content"
-            android:layout_height="63dp"
             android:scaleType="fitXY"
             android:src="@drawable/button_divider"
             android:contentDescription="@string/content_desc_actions_divider"/>
 
         <Button
             android:id="@+id/cardActionDelete"
-            android:layout_width="64dp"
             android:layout_height="match_parent"
+            android:layout_width="64dp"
             android:background="@drawable/card_discard_background"
             android:focusable="false" />
 
     </LinearLayout>
 
-    <RelativeLayout android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginLeft="@dimen/cards_list_horizontal_margin"
-        android:layout_marginRight="@dimen/cards_list_horizontal_margin"
-        android:layout_marginTop="@dimen/cards_list_vertical_margin"
-        android:paddingBottom="@dimen/cards_list_vertical_padding"
+    <RelativeLayout
+        android:id="@+id/infoLayout"
+        android:layout_height="72dp"
+        android:layout_width="match_parent"
+        android:background="@android:color/white"
+        android:layout_below="@+id/charLabel"
         android:paddingLeft="@dimen/cards_list_horizontal_padding"
         android:paddingRight="@dimen/cards_list_horizontal_padding"
-        android:paddingTop="@dimen/cards_list_vertical_padding"
-        android:id="@+id/infoLayout"
-        android:background="@drawable/card_item">
+        android:gravity="center">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#282830"
+            android:textColor="#212121"
             android:id="@+id/cardName"
-            android:layout_marginBottom="2dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />

@@ -11,8 +11,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
         android:orientation="horizontal"
         android:layout_below="@+id/toolbar">
 
@@ -25,7 +23,9 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="16dp"
             android:inputType="text"
-            android:hint="@string/name_hint">
+            android:hint="@string/name_hint"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <requestFocus/>
         </EditText>
@@ -40,7 +40,9 @@
             android:layout_alignParentStart="true"
             android:layout_marginBottom="8dp"
             android:maxLength="8"
-            android:hint="@string/card_hint" />
+            android:hint="@string/card_hint"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"/>
 
         <CheckBox
             android:layout_width="wrap_content"

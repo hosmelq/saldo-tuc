@@ -18,6 +18,8 @@ public class CardAdapter extends ArrayAdapter<Card> {
 
     protected Context mContext;
     protected List<Card> mCards;
+    protected final int VIEW_TYPE_SEPARATOR = 0;
+    protected final int VIEW_TYPE_ITEM = 1;
 
     public CardAdapter(Context context, List<Card> cards) {
         super(context, R.layout.card_item, cards);
@@ -26,12 +28,30 @@ public class CardAdapter extends ArrayAdapter<Card> {
     }
 
     @Override
+    public int getItemViewType(int position) {
+        String previousCardChar = position == 0 ? null : mCards.get(position - 1).getName().substring(0, 1).toLowerCase();
+        String currentCardChar = mCards.get(position).getName().substring(0, 1).toLowerCase();
+
+        if (previousCardChar == null || ! previousCardChar.equals(currentCardChar)) {
+            return VIEW_TYPE_SEPARATOR;
+        }
+
+        return VIEW_TYPE_ITEM;
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        String balance;
         ViewHolder holder;
+
+        Card card = mCards.get(position);
+        String number = AppUtil.formatCard(card.getNumber());
+        int type = getItemViewType(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.card_item, null);
             holder = new ViewHolder();
+            holder.chartLabel = (TextView) convertView.findViewById(R.id.charLabel);
             holder.nameLabel = (TextView) convertView.findViewById(R.id.cardName);
             holder.numberLabel = (TextView) convertView.findViewById(R.id.cardNumber);
             holder.balanceLabel = (TextView) convertView.findViewById(R.id.cardBalance);
@@ -40,9 +60,15 @@ public class CardAdapter extends ArrayAdapter<Card> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Card card = mCards.get(position);
-        String number = AppUtil.formatCard(card.getNumber());
-        String balance;
+        switch (type) {
+            case VIEW_TYPE_SEPARATOR:
+                holder.chartLabel.setText(card.getName().substring(0, 1));
+                holder.chartLabel.setVisibility(TextView.VISIBLE);
+                break;
+            case VIEW_TYPE_ITEM:
+                holder.chartLabel.setVisibility(TextView.GONE);
+                break;
+        }
 
         holder.nameLabel.setText(card.getName());
         holder.numberLabel.setText(number);
@@ -58,15 +84,17 @@ public class CardAdapter extends ArrayAdapter<Card> {
         return convertView;
     }
 
-    private static class ViewHolder {
-        TextView nameLabel;
-        TextView numberLabel;
-        TextView balanceLabel;
-    }
-
     public void refill(List<Card> cards) {
         mCards.clear();
         mCards.addAll(cards);
         notifyDataSetChanged();
     }
+
+    private static class ViewHolder {
+        TextView chartLabel;
+        TextView nameLabel;
+        TextView numberLabel;
+        TextView balanceLabel;
+    }
+
 }

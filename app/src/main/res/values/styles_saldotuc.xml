@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Saldotuc" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.Saldotuc" parent="Base.Saldotuc"></style>
+    
+    <style name="Base.Saldotuc" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/windowBackground</item>
+
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
     </style>
