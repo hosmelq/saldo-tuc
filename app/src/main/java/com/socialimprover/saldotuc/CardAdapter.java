@@ -62,7 +62,7 @@ public class CardAdapter extends ArrayAdapter<Card> {
 
         switch (type) {
             case VIEW_TYPE_SEPARATOR:
-                holder.chartLabel.setText(card.getName().substring(0, 1));
+                holder.chartLabel.setText(card.getName().substring(0, 1).toUpperCase());
                 holder.chartLabel.setVisibility(TextView.VISIBLE);
                 break;
             case VIEW_TYPE_ITEM:
