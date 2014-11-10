@@ -23,7 +23,9 @@
             android:layout_alignParentTop="true"
             android:divider="#dddddd"
             android:dividerHeight="1dp"
-            android:listSelector="@color/card_item" />
+            android:listSelector="@color/card_item"
+            android:paddingBottom="88dp"
+            android:clipToPadding="false"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
