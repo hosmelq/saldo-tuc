@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.socialimprover.saldotuc.CardUpdateActivity">
+    tools:context="com.socialimprover.saldotuc.ui.CardUpdateActivity">
 
     <include
         android:id="@+id/toolbar"

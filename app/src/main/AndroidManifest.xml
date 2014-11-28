@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.Saldotuc" >
         <activity
-            android:name="com.socialimprover.saldotuc.MainActivity"
+            android:name="com.socialimprover.saldotuc.ui.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -22,46 +22,48 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.socialimprover.saldotuc.CardAddActivity"
+            android:name="com.socialimprover.saldotuc.ui.CardAddActivity"
             android:label="@string/title_activity_card_add"
-            android:parentActivityName="com.socialimprover.saldotuc.MainActivity"
+            android:parentActivityName="com.socialimprover.saldotuc.ui.MainActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.socialimprover.saldotuc.ui.MainActivity" />
         </activity>
         <activity
-            android:name="com.socialimprover.saldotuc.CardUpdateActivity"
+            android:name="com.socialimprover.saldotuc.ui.CardUpdateActivity"
             android:label="@string/title_activity_card_update"
-            android:parentActivityName="com.socialimprover.saldotuc.MainActivity"
+            android:parentActivityName="com.socialimprover.saldotuc.ui.MainActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.socialimprover.saldotuc.ui.MainActivity" />
         </activity>
         <activity
-            android:name="com.socialimprover.saldotuc.CardStatisticsActivity"
+            android:name="com.socialimprover.saldotuc.ui.CardStatisticsActivity"
             android:label="@string/title_activity_card_statistics"
-            android:parentActivityName="com.socialimprover.saldotuc.MainActivity" >
+            android:parentActivityName="com.socialimprover.saldotuc.ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.socialimprover.saldotuc.ui.MainActivity" />
         </activity>
         <activity
-            android:name="com.socialimprover.saldotuc.DistrictsActivity"
+            android:name="com.socialimprover.saldotuc.ui.DistrictsActivity"
             android:label="@string/title_activity_districts"
-            android:parentActivityName="com.socialimprover.saldotuc.MainActivity" >
+            android:parentActivityName="com.socialimprover.saldotuc.ui.MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.socialimprover.saldotuc.ui.MainActivity" />
         </activity>
         <activity
-            android:name="com.socialimprover.saldotuc.AgencyActivity"
+            android:name="com.socialimprover.saldotuc.ui.AgenciesActivity"
             android:label="@string/title_activity_agency"
-            android:parentActivityName="com.socialimprover.saldotuc.DistrictsActivity" >
+            android:parentActivityName="com.socialimprover.saldotuc.ui.DistrictsActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.socialimprover.saldotuc.ui.DistrictsActivity" />
         </activity>
 
         <receiver

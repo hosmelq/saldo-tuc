@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc;
+package com.socialimprover.saldotuc.ui;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,19 +8,20 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.socialimprover.saldotuc.app.R;
+import com.socialimprover.saldotuc.models.Agency;
 
 import java.util.List;
 
-public class AgencyAdapter extends ArrayAdapter<Agencies.Agency> {
+public class AgencyAdapter extends ArrayAdapter<Agency> {
 
     public static final String TAG = AgencyAdapter.class.getSimpleName();
 
     protected Context mContext;
-    protected List<Agencies.Agency> mAgencies;
+    protected List<Agency> mAgencies;
     protected final int VIEW_TYPE_SEPARATOR = 0;
     protected final int VIEW_TYPE_ITEM = 1;
 
-    public AgencyAdapter(Context context, List<Agencies.Agency> agencies) {
+    public AgencyAdapter(Context context, List<Agency> agencies) {
         super(context, R.layout.agency_item, agencies);
         mContext = context;
         mAgencies = agencies;
@@ -42,7 +43,7 @@ public class AgencyAdapter extends ArrayAdapter<Agencies.Agency> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
 
-        Agencies.Agency agency = mAgencies.get(position);
+        Agency agency = mAgencies.get(position);
         int type = getItemViewType(position);
 
         if (convertView == null) {
@@ -72,7 +73,7 @@ public class AgencyAdapter extends ArrayAdapter<Agencies.Agency> {
         return convertView;
     }
 
-    public void refill(List<Agencies.Agency> agencies) {
+    public void refill(List<Agency> agencies) {
         mAgencies.clear();
         mAgencies.addAll(agencies);
         notifyDataSetChanged();

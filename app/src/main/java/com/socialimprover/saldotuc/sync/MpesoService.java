@@ -1,4 +1,7 @@
-package com.socialimprover.saldotuc;
+package com.socialimprover.saldotuc.sync;
+
+import com.socialimprover.saldotuc.models.Card;
+import com.socialimprover.saldotuc.models.MpesoBalance;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;

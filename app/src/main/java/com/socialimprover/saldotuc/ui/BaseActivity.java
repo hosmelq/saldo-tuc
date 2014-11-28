@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc;
+package com.socialimprover.saldotuc.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ProgressBar;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.socialimprover.saldotuc.SaldoTucApplication;
 import com.socialimprover.saldotuc.app.R;
 
 import org.json.JSONObject;

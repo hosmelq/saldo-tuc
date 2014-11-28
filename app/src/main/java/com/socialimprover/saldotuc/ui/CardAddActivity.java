@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc;
+package com.socialimprover.saldotuc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,12 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.socialimprover.saldotuc.SaldoTucApplication;
 import com.socialimprover.saldotuc.app.R;
+import com.socialimprover.saldotuc.models.Card;
+import com.socialimprover.saldotuc.provider.CardDataSource;
+import com.socialimprover.saldotuc.sync.SaldoTucService;
+import com.socialimprover.saldotuc.util.AppUtil;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;

@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc;
+package com.socialimprover.saldotuc.ui;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,17 +8,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.socialimprover.saldotuc.app.R;
+import com.socialimprover.saldotuc.models.District;
 
 import java.util.List;
 
-public class DistrictAdapter extends ArrayAdapter<Districts.District> {
+public class DistrictAdapter extends ArrayAdapter<District> {
 
     public static final String TAG = DistrictAdapter.class.getSimpleName();
 
     protected Context mContext;
-    protected List<Districts.District> mDistricts;
+    protected List<District> mDistricts;
 
-    public DistrictAdapter(Context context, List<Districts.District> districts) {
+    public DistrictAdapter(Context context, List<District> districts) {
         super(context, R.layout.district_item, districts);
         mContext = context;
         mDistricts = districts;
@@ -28,7 +29,7 @@ public class DistrictAdapter extends ArrayAdapter<Districts.District> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
 
-        Districts.District district = mDistricts.get(position);
+        District district = mDistricts.get(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.district_item, null);
@@ -44,7 +45,7 @@ public class DistrictAdapter extends ArrayAdapter<Districts.District> {
         return convertView;
     }
 
-    public void refill(List<Districts.District> districts) {
+    public void refill(List<District> districts) {
         mDistricts.clear();
         mDistricts.addAll(districts);
         notifyDataSetChanged();

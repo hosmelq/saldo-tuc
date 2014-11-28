@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc;
+package com.socialimprover.saldotuc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.socialimprover.saldotuc.app.R;
+import com.socialimprover.saldotuc.models.District;
+import com.socialimprover.saldotuc.sync.SaldoTucService;
+import com.socialimprover.saldotuc.util.AppUtil;
 
 import java.util.List;
 
@@ -19,7 +22,7 @@ public class DistrictsActivity extends BaseActivity {
     public static final String TAG = DistrictsActivity.class.getSimpleName();
 
     protected ListView mListView;
-    protected List<Districts.District> mDistricts;
+    protected List<District> mDistricts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +44,11 @@ public class DistrictsActivity extends BaseActivity {
         return R.layout.activity_districts;
     }
 
-    protected Callback<Districts> mDistrictsCallback = new Callback<Districts>() {
+    protected Callback<List<District>> mDistrictsCallback = new Callback<List<District>>() {
         @Override
-        public void success(Districts districts, Response response) {
+        public void success(List<District> districts, Response response) {
             hideProgressBar();
-            mDistricts = districts.data;
+            mDistricts = districts;
             updateList(mDistricts);
         }
 
@@ -62,15 +65,15 @@ public class DistrictsActivity extends BaseActivity {
     protected AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            Districts.District district = mDistricts.get(position);
+            District district = mDistricts.get(position);
 
-            Intent intent = new Intent(DistrictsActivity.this, AgencyActivity.class);
+            Intent intent = new Intent(DistrictsActivity.this, AgenciesActivity.class);
             intent.putExtra("district", district);
             startActivity(intent);
         }
     };
 
-    protected void updateList(List<Districts.District> districts) {
+    protected void updateList(List<District> districts) {
         if (mListView.getAdapter() == null) {
             DistrictAdapter adapter = new DistrictAdapter(this, districts);
             mListView.setAdapter(adapter);

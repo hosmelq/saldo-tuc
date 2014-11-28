@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc;
+package com.socialimprover.saldotuc.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -24,7 +24,14 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.shamanland.fab.FloatingActionButton;
+import com.socialimprover.saldotuc.SaldoTucApplication;
 import com.socialimprover.saldotuc.app.R;
+import com.socialimprover.saldotuc.models.Card;
+import com.socialimprover.saldotuc.models.MpesoBalance;
+import com.socialimprover.saldotuc.provider.CardDataSource;
+import com.socialimprover.saldotuc.sync.MpesoService;
+import com.socialimprover.saldotuc.sync.SaldoTucService;
+import com.socialimprover.saldotuc.util.AppUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -96,6 +103,15 @@ public class MainActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (checkIfActions()) {
+            hideAllActions();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     protected void setupAddBottom() {
@@ -389,6 +405,23 @@ public class MainActivity extends BaseActivity {
             infoLayout.clearAnimation();
             actionsLayout.setVisibility(LinearLayout.INVISIBLE);
         }
+    }
+
+    public boolean checkIfActions() {
+        int firstVisible = mListView.getFirstVisiblePosition();
+        int lastVisible = mListView.getLastVisiblePosition();
+        boolean someActionsOpen = false;
+
+        for (int i = 0; i <= (lastVisible - firstVisible); i++) {
+            View view = mListView.getChildAt(i);
+
+            if (view.findViewById(R.id.infoLayout).getAnimation() != null) {
+                someActionsOpen = true;
+                break;
+            }
+        }
+
+        return someActionsOpen;
     }
 
     protected void deleteCard(Card card) {

@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc;
+package com.socialimprover.saldotuc.models;
 
 import java.io.Serializable;
 import java.util.List;

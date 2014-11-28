@@ -1,10 +1,12 @@
-package com.socialimprover.saldotuc;
+package com.socialimprover.saldotuc.provider;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+
+import com.socialimprover.saldotuc.models.Card;
 
 public class CardDataSource {
 

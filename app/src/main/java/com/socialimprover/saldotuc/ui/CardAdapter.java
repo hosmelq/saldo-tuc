@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc;
+package com.socialimprover.saldotuc.ui;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.socialimprover.saldotuc.app.R;
+import com.socialimprover.saldotuc.models.Card;
+import com.socialimprover.saldotuc.util.AppUtil;
 
 import java.util.List;
 

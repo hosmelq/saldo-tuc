@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc;
+package com.socialimprover.saldotuc.util;
 
 import android.app.AlertDialog;
 import android.content.Context;

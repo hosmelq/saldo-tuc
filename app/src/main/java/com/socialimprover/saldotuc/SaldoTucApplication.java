@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.socialimprover.saldotuc.provider.CardDataSource;
 
 public class SaldoTucApplication extends Application {
 

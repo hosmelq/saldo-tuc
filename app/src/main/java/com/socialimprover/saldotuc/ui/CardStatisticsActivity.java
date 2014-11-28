@@ -1,4 +1,4 @@
-package com.socialimprover.saldotuc;
+package com.socialimprover.saldotuc.ui;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,7 +12,15 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
+import com.socialimprover.saldotuc.SaldoTucApplication;
 import com.socialimprover.saldotuc.app.R;
+import com.socialimprover.saldotuc.models.Card;
+import com.socialimprover.saldotuc.models.MpesoBalance;
+import com.socialimprover.saldotuc.models.Records;
+import com.socialimprover.saldotuc.provider.CardDataSource;
+import com.socialimprover.saldotuc.sync.MpesoService;
+import com.socialimprover.saldotuc.sync.SaldoTucService;
+import com.socialimprover.saldotuc.util.AppUtil;
 
 import org.joda.time.DateTime;
 import org.json.JSONException;
