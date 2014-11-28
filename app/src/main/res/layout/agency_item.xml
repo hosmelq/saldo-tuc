@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <TextView
+        android:id="@+id/neighborhoodLabel"
+        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/cards_list_horizontal_margin"
+        android:layout_marginStart="@dimen/cards_list_horizontal_margin"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold"
+        android:textColor="#999999"/>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="72dp"
+        android:layout_below="@+id/neighborhoodLabel"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/cards_list_horizontal_padding"
+        android:paddingRight="@dimen/cards_list_horizontal_padding"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/nameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#212121"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/addressLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#7e8894"
+            android:layout_below="@+id/nameLabel"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

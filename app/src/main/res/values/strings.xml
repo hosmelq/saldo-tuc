@@ -6,7 +6,7 @@
     <string name="network_error">No se pudo establecer la conexión</string>
     <string name="app_name">Saldo TUC</string>
     <string name="title_activity_main">Tarjetas</string>
-    <string name="menu_card_add_label">Nueva tarjeta</string>
+    <string name="card_add_label">Nueva tarjeta</string>
     <string name="title_activity_card_add">Nueva tarjeta</string>
     <string name="name_hint">Nombre</string>
     <string name="card_hint">Número TUC</string>
@@ -50,9 +50,13 @@
         <item>p.m.</item>
     </string-array>
 
-    <string name="title_activity_card_update">Actualizar tarjeta</string>
+    <string name="title_activity_card_update">Editar tarjeta</string>
     <string name="content_desc_actions_divider">Divisor</string>
     <string name="title_activity_card_statistics">Grafica</string>
     <string name="no_statistics_data">No logramos obtener datos de esa tarjeta</string>
+    <string name="action_mpeso_agencies">Agencias Mpeso</string>
+    <string name="title_activity_districts">Distritos Managua</string>
+    <string name="districts_info">Basado en los datos del sitio \n https://mpeso.net/agencias.php</string>
+    <string name="title_activity_agency">Agencias - %1$s</string>
 
 </resources>

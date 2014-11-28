@@ -8,7 +8,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -22,7 +23,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.shamanland.fab.FloatingActionButton;
 import com.socialimprover.saldotuc.app.R;
 
@@ -42,8 +42,6 @@ public class MainActivity extends BaseActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
 
     protected CardDataSource mDataSource;
-    protected MixpanelAPI mMixpanel;
-
     protected ListView mListView;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected List<Card> mCards;
@@ -60,7 +58,6 @@ public class MainActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         mDataSource = SaldoTucApplication.getDatabaseHelper();
-        mMixpanel = SaldoTucApplication.getMixpanelInstance(this);
 
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(mOnItemClickListener);
@@ -79,14 +76,26 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        mMixpanel.flush();
-        super.onDestroy();
+    protected int getLayoutResource() {
+        return R.layout.activity_main;
     }
 
     @Override
-    protected int getLayoutResource() {
-        return R.layout.activity_main;
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_mpeso_agencies) {
+            Intent agenciesIntent = new Intent(this, DistrictsActivity.class);
+            startActivity(agenciesIntent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     protected void setupAddBottom() {
@@ -213,7 +222,6 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void failure(RetrofitError error) {
                         hideProgressBar();
-                        Log.e(TAG, "Error: " + error.getMessage());
                     }
                 });
             } else {
@@ -228,7 +236,6 @@ public class MainActivity extends BaseActivity {
             if (error.isNetworkError()) {
                 AppUtil.showToast(MainActivity.this, getString(R.string.network_error));
             }
-            Log.e(TAG, "Error: " + error.getMessage());
         }
     };
 
@@ -251,7 +258,6 @@ public class MainActivity extends BaseActivity {
                         @Override
                         public void failure(RetrofitError error) {
                             hideProgressBar();
-                            Log.e(TAG, "Error: " + error.getMessage());
                         }
                     });
                 } else {
@@ -406,8 +412,7 @@ public class MainActivity extends BaseActivity {
             props.put("balance", Float.parseFloat(balance));
             props.put("tuc", number);
 
-            mMixpanel.identify(number);
-            mMixpanel.track("Consulta Saldo", props);
+            mixpanelTrackEvent("Consulta Saldo", number, props);
         } catch (JSONException e) {}
     }
 
@@ -466,7 +471,6 @@ public class MainActivity extends BaseActivity {
                             @Override
                             public void failure(RetrofitError error) {
                                 checkIfLast(hashMapsSize);
-                                Log.e(TAG, "Error: " + error.getMessage());
                             }
                         });
                     } else {

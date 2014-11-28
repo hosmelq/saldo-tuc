@@ -5,10 +5,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ProgressBar;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.socialimprover.saldotuc.app.R;
+
+import org.json.JSONObject;
 
 public abstract class BaseActivity extends ActionBarActivity {
 
+    private MixpanelAPI mMixpanel;
     private Toolbar mToolbar;
     private ProgressBar mToolbarProgressbar;
 
@@ -28,6 +32,14 @@ public abstract class BaseActivity extends ActionBarActivity {
 
             mToolbarProgressbar = (ProgressBar) findViewById(R.id.toolbar_progress_bar);
         }
+
+        mMixpanel = SaldoTucApplication.getMixpanelInstance(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mMixpanel.flush();
+        super.onDestroy();
     }
 
     protected abstract int getLayoutResource();
@@ -54,6 +66,14 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (mToolbarProgressbar != null) {
             mToolbarProgressbar.setVisibility(ProgressBar.GONE);
         }
+    }
+
+    protected void mixpanelTrackEvent(String event, String identify, JSONObject props) {
+        if (identify != null) {
+            mMixpanel.identify(identify);
+        }
+
+        mMixpanel.track(event, props);
     }
 
 }

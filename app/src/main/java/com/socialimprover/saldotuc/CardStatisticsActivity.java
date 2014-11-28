@@ -2,7 +2,6 @@ package com.socialimprover.saldotuc;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.androidplot.ui.XLayoutStyle;
@@ -13,7 +12,6 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.socialimprover.saldotuc.app.R;
 
 import org.joda.time.DateTime;
@@ -37,8 +35,6 @@ public class CardStatisticsActivity extends BaseActivity {
     public static final String TAG = CardStatisticsActivity.class.getSimpleName();
 
     protected CardDataSource mDataSource;
-    protected MixpanelAPI mMixpanel;
-
     protected Card mCard;
     protected XYPlot mChart;
 
@@ -47,7 +43,6 @@ public class CardStatisticsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         mDataSource = SaldoTucApplication.getDatabaseHelper();
-        mMixpanel = SaldoTucApplication.getMixpanelInstance(this);
 
         mCard = (Card) getIntent().getSerializableExtra("card");
         mChart = (XYPlot) findViewById(R.id.mySimpleXYPlot);
@@ -58,12 +53,6 @@ public class CardStatisticsActivity extends BaseActivity {
 
         MpesoService service = new MpesoService();
         service.loadBalance(mCard, mBalanceCallback);
-    }
-
-    @Override
-    protected void onDestroy() {
-        mMixpanel.flush();
-        super.onDestroy();
     }
 
     @Override
@@ -97,7 +86,6 @@ public class CardStatisticsActivity extends BaseActivity {
             if (error.isNetworkError()) {
                 AppUtil.showToast(CardStatisticsActivity.this, getString(R.string.network_error));
             }
-            Log.e(TAG, "Error: " + error.getMessage());
             finish();
         }
     };
@@ -120,7 +108,6 @@ public class CardStatisticsActivity extends BaseActivity {
         @Override
         public void failure(RetrofitError error) {
             hideProgressBar();
-            Log.e(TAG, "Error: " + error.getMessage());
             finish();
         }
     };
@@ -190,8 +177,7 @@ public class CardStatisticsActivity extends BaseActivity {
             props.put("balance", Float.parseFloat(balance));
             props.put("tuc", number);
 
-            mMixpanel.identify(number);
-            mMixpanel.track("Consulta Saldo", props);
+            mixpanelTrackEvent("Consulta Saldo", number, props);
         } catch (JSONException e) {}
     }
 
@@ -208,7 +194,6 @@ public class CardStatisticsActivity extends BaseActivity {
         @Override
         public Object parseObject(String source, ParsePosition pos) {
             return null;
-
         }
     }
 

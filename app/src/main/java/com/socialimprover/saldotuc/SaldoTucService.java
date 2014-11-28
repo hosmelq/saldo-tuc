@@ -7,6 +7,7 @@ import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
@@ -72,6 +73,17 @@ public class SaldoTucService {
             Callback<Records> callback
         );
 
+        @GET("/districts")
+        public void getDistrictsAsync(
+            Callback<Districts> callback
+        );
+
+        @GET("/districts/{id}/agencies")
+        public void getAgenciesByDistrictAsync(
+            @Path("id") String id,
+            Callback<Agencies> callback
+        );
+
     }
 
     public void storeCard(Card card, Callback<Card> callback) {
@@ -96,6 +108,14 @@ public class SaldoTucService {
 
     public void getBalances(Card card, Callback<Records> callback) {
         mRestAdapter.getBalancesAsync(card.getNumber(), card.getBalance(), callback);
+    }
+
+    public void getDistricts(Callback<Districts> callback) {
+        mRestAdapter.getDistrictsAsync(callback);
+    }
+
+    public void getAgenciesByDistrict(Districts.District district, Callback<Agencies> callback) {
+        mRestAdapter.getAgenciesByDistrictAsync(district.getId(), callback);
     }
 
 }

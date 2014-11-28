@@ -68,7 +68,7 @@
         android:layout_marginBottom="16dp"
         android:src="@drawable/ic_add_white"
         android:elevation="4dp"
-        android:contentDescription="@string/menu_card_add_label"
+        android:contentDescription="@string/card_add_label"
         android:visibility="gone"/>
 
     <com.shamanland.fab.FloatingActionButton

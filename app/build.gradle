@@ -3,13 +3,13 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '21.0.2'
+    buildToolsVersion '21.1.1'
 
     defaultConfig {
         applicationId 'com.socialimprover.saldotuc'
         minSdkVersion 8
         targetSdkVersion 21
-        versionCode 33
+        versionCode 34
         versionName '1.1.0'
     }
     buildTypes {

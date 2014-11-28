@@ -47,8 +47,34 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <activity
+            android:name="com.socialimprover.saldotuc.DistrictsActivity"
+            android:label="@string/title_activity_districts"
+            android:parentActivityName="com.socialimprover.saldotuc.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name="com.socialimprover.saldotuc.AgencyActivity"
+            android:label="@string/title_activity_agency"
+            android:parentActivityName="com.socialimprover.saldotuc.DistrictsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
 
-        <meta-data android:name="com.crashlytics.ApiKey" android:value="0c7eedbdf74b2ac0ca43734647aea9bdbb2db6ad"/>
+        <receiver
+            android:name="com.mixpanel.android.mpmetrics.InstallReferrerReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="0c7eedbdf74b2ac0ca43734647aea9bdbb2db6ad" />
     </application>
 
 </manifest>

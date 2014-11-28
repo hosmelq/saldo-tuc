@@ -3,11 +3,9 @@ package com.socialimprover.saldotuc;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -41,7 +39,6 @@ public class CardAddActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         mDataSource = SaldoTucApplication.getDatabaseHelper();
 
@@ -169,7 +166,6 @@ public class CardAddActivity extends BaseActivity {
                         @Override
                         public void failure(RetrofitError error) {
                             removeProgressBar();
-                            Log.e(TAG, "Error: " + error.getMessage());
                         }
                     });
                 }
