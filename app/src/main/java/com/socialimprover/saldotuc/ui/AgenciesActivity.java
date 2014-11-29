@@ -28,6 +28,7 @@ public class AgenciesActivity extends BaseActivity {
     protected ListView mListView;
     protected List<Agency> mAgencies;
     protected District mDistrict;
+    protected final int REQUEST_CODE_DISTRICT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,15 @@ public class AgenciesActivity extends BaseActivity {
     @Override
     protected int getLayoutResource() {
         return R.layout.activity_agencies;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_DISTRICT) {
+            mDistrict = (District) data.getSerializableExtra("district");
+        }
     }
 
     protected Callback<List<Agency>> mAgenciesCallback = new Callback<List<Agency>>() {
@@ -76,8 +86,9 @@ public class AgenciesActivity extends BaseActivity {
             Agency agency = mAgencies.get(position);
 
             Intent intent = new Intent(AgenciesActivity.this, AgencyActivity.class);
+            intent.putExtra("district", mDistrict);
             intent.putExtra("agency", agency);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_DISTRICT);
         }
     };
 
