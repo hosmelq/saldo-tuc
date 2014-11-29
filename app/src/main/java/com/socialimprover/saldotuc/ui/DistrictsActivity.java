@@ -48,8 +48,8 @@ public class DistrictsActivity extends BaseActivity {
         @Override
         public void success(List<District> districts, Response response) {
             hideProgressBar();
+            updateList(districts);
             mDistricts = districts;
-            updateList(mDistricts);
         }
 
         @Override

@@ -57,6 +57,7 @@
     <string name="action_mpeso_agencies">Agencias Mpeso</string>
     <string name="title_activity_districts">Distritos Managua</string>
     <string name="districts_info">Basado en los datos del sitio \n https://mpeso.net/agencias.php</string>
-    <string name="title_activity_agency">Agencias - %1$s</string>
+    <string name="title_activity_agencies">Agencias - %1$s</string>
+    <string name="title_activity_agency">Agencia</string>
 
 </resources>

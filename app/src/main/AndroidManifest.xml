@@ -58,12 +58,21 @@
         </activity>
         <activity
             android:name="com.socialimprover.saldotuc.ui.AgenciesActivity"
-            android:label="@string/title_activity_agency"
+            android:label="@string/title_activity_agencies"
             android:parentActivityName="com.socialimprover.saldotuc.ui.DistrictsActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.socialimprover.saldotuc.ui.DistrictsActivity" />
+        </activity>
+        <activity
+            android:name="com.socialimprover.saldotuc.ui.AgencyActivity"
+            android:label="@string/title_activity_agencies"
+            android:parentActivityName="com.socialimprover.saldotuc.ui.AgenciesActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.socialimprover.saldotuc.ui.AgenciesActivity" />
         </activity>
 
         <receiver
