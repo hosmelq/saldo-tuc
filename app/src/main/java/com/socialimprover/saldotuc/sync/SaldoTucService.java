@@ -2,7 +2,6 @@ package com.socialimprover.saldotuc.sync;
 
 import com.socialimprover.saldotuc.models.Agency;
 import com.socialimprover.saldotuc.models.Card;
-import com.socialimprover.saldotuc.models.District;
 import com.socialimprover.saldotuc.models.Records;
 
 import java.util.List;
@@ -80,14 +79,8 @@ public class SaldoTucService {
             Callback<Records> callback
         );
 
-        @GET("/districts")
-        public void getDistrictsAsync(
-            Callback<List<District>> callback
-        );
-
-        @GET("/districts/{id}/agencies")
-        public void getAgenciesByDistrictAsync(
-            @Path("id") String id,
+        @GET("/agencies")
+        public void getAgenciesAsync(
             Callback<List<Agency>> callback
         );
 
@@ -117,12 +110,8 @@ public class SaldoTucService {
         mRestAdapter.getBalancesAsync(card.getNumber(), card.getBalance(), callback);
     }
 
-    public void getDistricts(Callback<List<District>> callback) {
-        mRestAdapter.getDistrictsAsync(callback);
-    }
-
-    public void getAgenciesByDistrict(District district, Callback<List<Agency>> callback) {
-        mRestAdapter.getAgenciesByDistrictAsync(district.getId(), callback);
+    public void getAgencies(Callback<List<Agency>> callback) {
+        mRestAdapter.getAgenciesAsync(callback);
     }
 
 }

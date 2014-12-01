@@ -55,9 +55,8 @@
     <string name="title_activity_card_statistics">Grafica</string>
     <string name="no_statistics_data">No logramos obtener datos de esa tarjeta</string>
     <string name="action_mpeso_agencies">Agencias Mpeso</string>
-    <string name="title_activity_districts">Distritos Managua</string>
-    <string name="districts_info">Basado en los datos del sitio \n https://mpeso.net/agencias.php</string>
-    <string name="title_activity_agencies">Agencias - %1$s</string>
+    <string name="agencies_info">Basado en los datos del sitio \n https://mpeso.net/agencias.php</string>
+    <string name="title_activity_agencies">Agencias</string>
     <string name="title_activity_agency">Agencia</string>
 
 </resources>

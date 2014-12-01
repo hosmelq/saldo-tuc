@@ -17,6 +17,19 @@
         android:divider="#dddddd"
         android:dividerHeight="1dp"
         android:listSelector="@color/card_item"
-        android:layout_below="@+id/toolbar"/>
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/footerView"/>
+
+    <TextView
+        android:id="@+id/footerView"
+        android:layout_height="56dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="@string/agencies_info"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:autoLink="web"
+        android:textStyle="bold"
+        android:textColor="#999999"/>
 
 </RelativeLayout>

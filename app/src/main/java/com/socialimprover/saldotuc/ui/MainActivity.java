@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_mpeso_agencies) {
-            Intent agenciesIntent = new Intent(this, DistrictsActivity.class);
+            Intent agenciesIntent = new Intent(this, AgenciesActivity.class);
             startActivity(agenciesIntent);
         }
 

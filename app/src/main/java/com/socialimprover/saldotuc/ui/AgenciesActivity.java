@@ -8,12 +8,8 @@ import android.widget.ListView;
 
 import com.socialimprover.saldotuc.app.R;
 import com.socialimprover.saldotuc.models.Agency;
-import com.socialimprover.saldotuc.models.District;
 import com.socialimprover.saldotuc.sync.SaldoTucService;
 import com.socialimprover.saldotuc.util.AppUtil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -27,38 +23,25 @@ public class AgenciesActivity extends BaseActivity {
 
     protected ListView mListView;
     protected List<Agency> mAgencies;
-    protected District mDistrict;
-    protected final int REQUEST_CODE_DISTRICT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDistrict = (District) getIntent().getSerializableExtra("district");
+        setActionBarTitle(getString(R.string.title_activity_agencies));
 
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(mOnItemClickListener);
 
-        setActionBarTitle(String.format(getString(R.string.title_activity_agencies), mDistrict.getName()));
-
         showProgressBar();
 
         SaldoTucService service = new SaldoTucService();
-        service.getAgenciesByDistrict(mDistrict, mAgenciesCallback);
+        service.getAgencies(mAgenciesCallback);
     }
 
     @Override
     protected int getLayoutResource() {
         return R.layout.activity_agencies;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_DISTRICT) {
-            mDistrict = (District) data.getSerializableExtra("district");
-        }
     }
 
     protected Callback<List<Agency>> mAgenciesCallback = new Callback<List<Agency>>() {
@@ -67,7 +50,6 @@ public class AgenciesActivity extends BaseActivity {
             hideProgressBar();
             updateList(agencies);
             mAgencies = agencies;
-            trackViewDistrict();
         }
 
         @Override
@@ -86,9 +68,8 @@ public class AgenciesActivity extends BaseActivity {
             Agency agency = mAgencies.get(position);
 
             Intent intent = new Intent(AgenciesActivity.this, AgencyActivity.class);
-            intent.putExtra("district", mDistrict);
             intent.putExtra("agency", agency);
-            startActivityForResult(intent, REQUEST_CODE_DISTRICT);
+            startActivity(intent);
         }
     };
 
@@ -99,15 +80,6 @@ public class AgenciesActivity extends BaseActivity {
         } else {
             ( (AgencyAdapter) mListView.getAdapter()).refill(agencies);
         }
-    }
-
-    private void trackViewDistrict() {
-        try {
-            JSONObject props = new JSONObject();
-            props.put("district", mDistrict.getName());
-
-            mixpanelTrackEvent("View District", null, props);
-        } catch (JSONException e) {}
     }
 
 }
