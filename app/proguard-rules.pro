@@ -33,3 +33,5 @@
 
 -keep class com.crashlytics.** { *; }
 -dontwarn com.crashlytics.**
+
+-keep class android.support.v7.widget.SearchView { *; }
