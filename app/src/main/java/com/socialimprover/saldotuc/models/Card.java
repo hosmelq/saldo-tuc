@@ -12,6 +12,25 @@ public class Card implements Serializable {
     private String ampm;
     private String balance;
 
+    public Card() {}
+
+    public Card(Integer id, String name, String number, String balance) {
+        this.id = id;
+        this.name = name;
+        this.number = number;
+        this.balance = balance;
+    }
+
+    public Card(Integer id, String name, String number, String phone, String hour, String ampm, String balance) {
+        this.id = id;
+        this.name = name;
+        this.number = number;
+        this.phone = phone;
+        this.hour = hour;
+        this.ampm = ampm;
+        this.balance = balance;
+    }
+
     public Integer getId() {
         return id;
     }

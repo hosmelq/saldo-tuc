@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
+    <item android:id="@+id/action_refresh_cards"
+        android:title="@string/action_refresh_cards"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
     <item android:id="@+id/action_mpeso_agencies"
         android:title="@string/action_mpeso_agencies"
         android:orderInCategory="100"

@@ -1,55 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="app_name">Saldo TUC</string>
     <string name="error_title">Oops!</string>
     <string name="no_connection_message">Sin conexión</string>
     <string name="network_error">No se pudo establecer la conexión</string>
-    <string name="app_name">Saldo TUC</string>
     <string name="title_activity_main">Tarjetas</string>
     <string name="card_add_label">Nueva tarjeta</string>
     <string name="title_activity_card_add">Nueva tarjeta</string>
     <string name="name_hint">Nombre</string>
     <string name="card_hint">Número TUC</string>
-    <string name="card_checkbox_label">NOTIFICACIONES PUSH</string>
-    <string name="phone_hint">Número de teléfono</string>
-    <string name="hour_label">HORA A NOTIFICAR</string>
-    <string name="verification_hint">Se enviará un único mensaje SMS para verificar este número de móvil.</string>
     <string name="menu_save_label">Guardar</string>
     <string name="menu_update_label">Actualizar</string>
     <string name="card_add_error_message">Por favor, asegúrese de introducir un nombre y un número de tarjeta valido</string>
-    <string name="card_add_sms_no_internet_error_message">Necesitas conexión a internet para activar o desactivar las notificaciones SMS</string>
-    <string name="card_add_phone_error_message">Número de teléfono inválido</string>
     <string name="card_add_duplicate_number_error_message">El número de tarjeta ya esta asociado</string>
-    <string name="card_add_duplicate_phone_error_message">El número de teléfono ya esta asociado</string>
     <string name="card_success_save">Tarjeta guardada</string>
     <string name="card_success_update">Tarjeta actualizada</string>
     <string name="card_success_delete">Tarjeta borrada</string>
     <string name="card_invalid">%1$s no es un número de tarjeta TUC ó está inactivo</string>
-    <string name="title_activity_phone_verification">Tu código</string>
-    <string name="menu_verification_label">Verificar</string>
-    <string name="code_verification_hint">Código</string>
-    <string name="verification_label">Hemos enviado un SMS con un código de activación a tu teléfono</string>
-    <string name="code_verification_error_message">Código inválido</string>
-
-    <string-array name="hours">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>11</item>
-        <item>12</item>
-    </string-array>
-    <string-array name="ampm">
-        <item>a.m.</item>
-        <item>p.m.</item>
-    </string-array>
-
     <string name="title_activity_card_update">Editar tarjeta</string>
     <string name="content_desc_actions_divider">Divisor</string>
     <string name="title_activity_card_statistics">Grafica</string>
@@ -58,5 +26,8 @@
     <string name="agencies_info">Basado en los datos del sitio \n https://mpeso.net/agencias.php</string>
     <string name="title_activity_agencies">Agencias</string>
     <string name="title_activity_agency">Agencia</string>
+    <string name="search">Buscar</string>
+    <string name="action_refresh_cards">Actualizar</string>
+    <string name="title_activity_search">Busqueda</string>
 
 </resources>

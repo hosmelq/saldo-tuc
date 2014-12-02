@@ -1,15 +1,26 @@
 package com.socialimprover.saldotuc.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.socialimprover.saldotuc.app.R;
 import com.socialimprover.saldotuc.models.Agency;
+import com.socialimprover.saldotuc.provider.AgencyDataSource;
 import com.socialimprover.saldotuc.sync.SaldoTucService;
 import com.socialimprover.saldotuc.util.AppUtil;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.List;
 
@@ -21,22 +32,29 @@ public class AgenciesActivity extends BaseActivity {
 
     public static final String TAG = AgenciesActivity.class.getSimpleName();
 
+    protected AgencyDataSource mAgencyDataSource;
     protected ListView mListView;
     protected List<Agency> mAgencies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAgencyDataSource = new AgencyDataSource(this);
 
         setActionBarTitle(getString(R.string.title_activity_agencies));
 
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(mOnItemClickListener);
 
-        showProgressBar();
+        if (needSync()) {
+            showProgressBar();
 
-        SaldoTucService service = new SaldoTucService();
-        service.getAgencies(mAgenciesCallback);
+            SaldoTucService service = new SaldoTucService();
+            service.getAgencies(mAgenciesCallback);
+        } else {
+            mAgencies = mAgencyDataSource.all();
+            updateList(mAgencies);
+        }
     }
 
     @Override
@@ -44,9 +62,28 @@ public class AgenciesActivity extends BaseActivity {
         return R.layout.activity_agencies;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.agencies, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search:
+                startActivity(new Intent(this, SearchActivity.class));
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     protected Callback<List<Agency>> mAgenciesCallback = new Callback<List<Agency>>() {
         @Override
         public void success(List<Agency> agencies, Response response) {
+            mAgencyDataSource.sync(agencies);
+            saveLastSync();
             hideProgressBar();
             updateList(agencies);
             mAgencies = agencies;
@@ -80,6 +117,29 @@ public class AgenciesActivity extends BaseActivity {
         } else {
             ( (AgencyAdapter) mListView.getAdapter()).refill(agencies);
         }
+    }
+
+    protected boolean needSync() {
+        SharedPreferences preferences = getSharedPreferences("agencies", Context.MODE_PRIVATE);
+        String lastsync = preferences.getString("lastsync", null);
+
+        if (lastsync == null) {
+            return true;
+        }
+
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        LocalDate lastTime = formatter.parseDateTime(lastsync).toLocalDate();
+        LocalDate currentTime = new DateTime().toLocalDate();
+
+        int daysDiff = Days.daysBetween(currentTime, lastTime).getDays();
+
+        return daysDiff > 1;
+    }
+
+    protected void saveLastSync() {
+        String lastsync = new DateTime().toLocalDate().toString();
+        SharedPreferences preferences = getSharedPreferences("agencies", Context.MODE_PRIVATE);
+        preferences.edit().putString("lastsync", lastsync).commit();
     }
 
 }

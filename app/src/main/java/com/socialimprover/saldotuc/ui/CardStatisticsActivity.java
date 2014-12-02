@@ -12,7 +12,6 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
-import com.socialimprover.saldotuc.SaldoTucApplication;
 import com.socialimprover.saldotuc.app.R;
 import com.socialimprover.saldotuc.models.Card;
 import com.socialimprover.saldotuc.models.MpesoBalance;
@@ -42,7 +41,7 @@ public class CardStatisticsActivity extends BaseActivity {
 
     public static final String TAG = CardStatisticsActivity.class.getSimpleName();
 
-    protected CardDataSource mDataSource;
+    protected CardDataSource mCardDataSource;
     protected Card mCard;
     protected XYPlot mChart;
 
@@ -50,13 +49,11 @@ public class CardStatisticsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDataSource = SaldoTucApplication.getDatabaseHelper();
-
+        mCardDataSource = new CardDataSource(this);
         mCard = (Card) getIntent().getSerializableExtra("card");
         mChart = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 
         setActionBarTitle(getString(R.string.title_activity_card_statistics) + " - " + AppUtil.formatCard(mCard.getNumber()));
-
         showProgressBar();
 
         MpesoService service = new MpesoService();
@@ -75,7 +72,7 @@ public class CardStatisticsActivity extends BaseActivity {
 
             if ( ! mpesoBalance.Error && balance != null) {
                 mCard.setBalance(balance);
-                mDataSource.update(mCard);
+                mCardDataSource.update(mCard);
 
                 trackBalance(mCard.getBalance(), mCard.getNumber());
 

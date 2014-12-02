@@ -79,6 +79,11 @@ public class AgencyAdapter extends ArrayAdapter<Agency> {
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        mAgencies.clear();
+        notifyDataSetChanged();
+    }
+
     private static class ViewHolder {
         TextView neighborhoodLabel;
         TextView nameLabel;

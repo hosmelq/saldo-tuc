@@ -13,6 +13,8 @@ import org.json.JSONObject;
 
 public abstract class BaseActivity extends ActionBarActivity {
 
+    private static final String TAG = BaseActivity.class.getSimpleName();
+
     private MixpanelAPI mMixpanel;
     private Toolbar mToolbar;
     private ProgressBar mToolbarProgressbar;
@@ -44,6 +46,14 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     protected abstract int getLayoutResource();
+
+    protected Toolbar getToolbar() {
+        if (mToolbar != null) {
+            return mToolbar;
+        }
+
+        return null;
+    }
 
     protected void setActionBarIcon(int iconRes) {
         mToolbar.setNavigationIcon(iconRes);

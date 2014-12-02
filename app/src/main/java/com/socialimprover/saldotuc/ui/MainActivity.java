@@ -3,7 +3,6 @@ package com.socialimprover.saldotuc.ui;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.shamanland.fab.FloatingActionButton;
-import com.socialimprover.saldotuc.SaldoTucApplication;
 import com.socialimprover.saldotuc.app.R;
 import com.socialimprover.saldotuc.models.Card;
 import com.socialimprover.saldotuc.models.MpesoBalance;
@@ -48,7 +46,7 @@ public class MainActivity extends BaseActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    protected CardDataSource mDataSource;
+    protected CardDataSource mCardDataSource;
     protected ListView mListView;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected List<Card> mCards;
@@ -61,10 +59,10 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
 
+        mCardDataSource = new CardDataSource(this);
+
         setActionBarTitle(R.string.title_activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-        mDataSource = SaldoTucApplication.getDatabaseHelper();
 
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(mOnItemClickListener);
@@ -97,9 +95,15 @@ public class MainActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_mpeso_agencies) {
-            Intent agenciesIntent = new Intent(this, AgenciesActivity.class);
-            startActivity(agenciesIntent);
+        switch (id) {
+            case R.id.action_mpeso_agencies:
+                Intent agenciesIntent = new Intent(this, AgenciesActivity.class);
+                startActivity(agenciesIntent);
+                break;
+            case R.id.action_refresh_cards:
+                mSwipeRefreshLayout.setRefreshing(true);
+                refreshCards();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -223,7 +227,7 @@ public class MainActivity extends BaseActivity {
 
             if ( ! mpesoBalance.Error && balance != null) {
                 mCard.setBalance(balance);
-                mDataSource.update(mCard);
+                mCardDataSource.update(mCard);
                 ((TextView) mCardView.findViewById(R.id.cardBalance)).setText("C$ " + balance);
 
                 trackBalance(mCard.getBalance(), mCard.getNumber());
@@ -288,51 +292,12 @@ public class MainActivity extends BaseActivity {
     protected SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            if (mCards.isEmpty() && mSwipeRefreshLayout.isRefreshing()) {
-                mSwipeRefreshLayout.setRefreshing(false);
-            } else {
-                if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                    AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
-                } else {
-                    GetMpesoBalances getMpesoBalance = new GetMpesoBalances(mCards);
-                    getMpesoBalance.execute();
-                }
-            }
+            refreshCards();
         }
     };
 
-    protected List<Card> getCards() {
-        List<Card> cards = new ArrayList<Card>();
-        Cursor cursor = mDataSource.all();
-
-        cursor.moveToFirst();
-
-        while( ! cursor.isAfterLast() ) {
-            Card card = new Card();
-
-            card.setId(cursor.getInt(0));
-            card.setName(cursor.getString(1));
-            card.setNumber(cursor.getString(2));
-            card.setPhone(cursor.getString(3));
-            card.setHour(cursor.getString(4));
-            card.setAmpm(cursor.getString(5));
-
-            if ( ! cursor.isNull(6)) {
-                card.setBalance(cursor.getString(6));
-            }
-
-            cards.add(card);
-
-            cursor.moveToNext();
-        }
-
-        return cards;
-    }
-
     protected void updateList() {
-        List<Card> cards = getCards();
-
+        List<Card> cards = mCardDataSource.all();
         mCards = cards;
 
         if (mListView.getAdapter() == null) {
@@ -425,7 +390,7 @@ public class MainActivity extends BaseActivity {
     }
 
     protected void deleteCard(Card card) {
-        int delete = mDataSource.delete(card);
+        int delete = mCardDataSource.delete(card);
 
         if (delete > 0) {
             updateList();
@@ -447,6 +412,20 @@ public class MainActivity extends BaseActivity {
 
             mixpanelTrackEvent("Consulta Saldo", number, props);
         } catch (JSONException e) {}
+    }
+
+    private void refreshCards() {
+        if (mCards.isEmpty() && mSwipeRefreshLayout.isRefreshing()) {
+            removeSwipe();
+        } else {
+            if ( ! AppUtil.isNetworkAvailable(this)) {
+                removeSwipe();
+                AppUtil.showToast(this, getString(R.string.no_connection_message));
+            } else {
+                GetMpesoBalances getMpesoBalance = new GetMpesoBalances(mCards);
+                getMpesoBalance.execute();
+            }
+        }
     }
 
     private class GetMpesoBalances extends AsyncTask<Object, Void, List<CardBalanceContainer>> {
@@ -490,7 +469,7 @@ public class MainActivity extends BaseActivity {
 
                     if (!mpesoBalance.Error && balance != null) {
                         card.setBalance(balance);
-                        mDataSource.update(card);
+                        mCardDataSource.update(card);
 
                         trackBalance(card.getBalance(), card.getNumber());
 
