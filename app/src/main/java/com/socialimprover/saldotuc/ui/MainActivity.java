@@ -262,30 +262,7 @@ public class MainActivity extends BaseActivity {
     protected DialogInterface.OnClickListener mDeleteCardDialogListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
-            if (mCard.getPhone() != null) {
-                if (AppUtil.isNetworkAvailable(MainActivity.this)) {
-                    setSupportProgressBarIndeterminateVisibility(true);
-
-                    SaldoTucService service = new SaldoTucService();
-
-                    service.deleteCard(mCard, new Callback<Response>() {
-                        @Override
-                        public void success(Response result, Response response) {
-                            hideProgressBar();
-                            deleteCard(mCard);
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            hideProgressBar();
-                        }
-                    });
-                } else {
-                    AppUtil.showDialog(MainActivity.this, getString(R.string.error_title), "Necesitas conexión a internet para eliminar esta tarjeta.");
-                }
-            } else {
-                deleteCard(mCard);
-            }
+            deleteCard(mCard);
         }
     };
 
@@ -411,7 +388,7 @@ public class MainActivity extends BaseActivity {
             props.put("tuc", number);
 
             mixpanelTrackEvent("Consulta Saldo", number, props);
-        } catch (JSONException e) {}
+        } catch (JSONException ignored) {}
     }
 
     private void refreshCards() {

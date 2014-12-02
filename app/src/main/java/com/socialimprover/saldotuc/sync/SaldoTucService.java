@@ -8,16 +8,11 @@ import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
-import retrofit.client.Response;
 import retrofit.http.Body;
-import retrofit.http.DELETE;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
-import retrofit.http.Query;
 
 public class SaldoTucService {
 
@@ -35,35 +30,6 @@ public class SaldoTucService {
     }
 
     public interface SaldoTucServiceInterface {
-
-        @POST("/cards")
-        public void storeCardAsync(
-            @Body Card card,
-            Callback<Card> callback
-        );
-
-        @PUT("/cards/{id}")
-        public void updateCardAsync(
-            @Path("id") Integer id,
-            @Body Card card,
-            Callback<Card> callback
-        );
-
-        @DELETE("/cards/{id}")
-        public void deleteCardAsync(
-            @Path("id") Integer id,
-            @Query("phone") String phone,
-            Callback<Response> callback
-        );
-
-        @FormUrlEncoded
-        @POST("/cards/verify")
-        public void verifyCardAsync(
-            @Field("phone") String phone,
-            @Field("phone_old") String phoneOld,
-            @Field("code") String code,
-            Callback<Card> callback
-        );
 
         @POST("/records")
         public void storeBalanceAsync(
@@ -84,22 +50,6 @@ public class SaldoTucService {
             Callback<List<Agency>> callback
         );
 
-    }
-
-    public void storeCard(Card card, Callback<Card> callback) {
-        mRestAdapter.storeCardAsync(card, callback);
-    }
-
-    public void updateCard(Card card, Callback<Card> callback) {
-        mRestAdapter.updateCardAsync(card.getId(), card, callback);
-    }
-
-    public void deleteCard(Card card, Callback<Response> callback) {
-        mRestAdapter.deleteCardAsync(card.getId(), card.getPhone(), callback);
-    }
-
-    public void verifyCard(String phone, String phoneOld, String code, Callback<Card> callback) {
-        mRestAdapter.verifyCardAsync(phone, phoneOld, code, callback);
     }
 
     public void storeBalance(Card card, Callback<Card> callback) {
