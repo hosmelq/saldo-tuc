@@ -1,6 +1,7 @@
 package com.socialimprover.saldotuc.ui;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.socialimprover.saldotuc.app.R;
@@ -28,4 +29,12 @@ public class AgencyActivity extends BaseActivity {
         return R.layout.activity_agency;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

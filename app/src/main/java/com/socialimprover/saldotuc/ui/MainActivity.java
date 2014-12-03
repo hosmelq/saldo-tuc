@@ -36,6 +36,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.fabric.sdk.android.Fabric;
 import retrofit.Callback;
@@ -53,6 +55,7 @@ public class MainActivity extends BaseActivity {
     protected Card mCard;
     protected View mCardView;
     protected ImageView mAddBottom;
+    protected TimerTask mCurrentTimerTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,7 +181,7 @@ public class MainActivity extends BaseActivity {
                     hideActions(mCardView, true);
 
                     if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
-                        AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
+                        showNoConnectionMessage();
                     } else {
                         showProgressBar();
 
@@ -190,7 +193,7 @@ public class MainActivity extends BaseActivity {
                     hideActions(mCardView, false);
 
                     if ( ! AppUtil.isNetworkAvailable(MainActivity.this)) {
-                        AppUtil.showToast(MainActivity.this, getString(R.string.no_connection_message));
+                        showNoConnectionMessage();
                     } else {
                         Intent statisticsIntent = new Intent(MainActivity.this, CardStatisticsActivity.class);
                         statisticsIntent.putExtra("card", mCard);
@@ -349,7 +352,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    public boolean checkIfActions() {
+    protected boolean checkIfActions() {
         int firstVisible = mListView.getFirstVisiblePosition();
         int lastVisible = mListView.getLastVisiblePosition();
         boolean someActionsOpen = false;
@@ -364,6 +367,44 @@ public class MainActivity extends BaseActivity {
         }
 
         return someActionsOpen;
+    }
+
+    protected void toggleSnackbarView(boolean show, String text) {
+        TextView notificationView = (TextView) findViewById(R.id.snackbar);
+        int from = show ? 0 : AppUtil.dpToPx(this, -47);
+        int to = show ? AppUtil.dpToPx(this, -47) : 0;
+        TranslateAnimation animation = new TranslateAnimation(0, 0, from, to);
+
+        notificationView.setText(text);
+        animation.setFillAfter(true);
+        animation.setDuration(150);
+        notificationView.startAnimation(animation);
+        mAddBottom.startAnimation(animation);
+
+        if (show) {
+            if (mCurrentTimerTask != null) {
+                mCurrentTimerTask.cancel();
+                mCurrentTimerTask = null;
+            }
+
+            mCurrentTimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            toggleSnackbarView(false, "");
+                        }
+                    });
+                }
+            };
+
+            new Timer().schedule(mCurrentTimerTask, 3000);
+        }
+    }
+
+    protected void showNoConnectionMessage() {
+        toggleSnackbarView(true, getString(R.string.no_connection_message));
     }
 
     protected void deleteCard(Card card) {
@@ -397,7 +438,7 @@ public class MainActivity extends BaseActivity {
         } else {
             if ( ! AppUtil.isNetworkAvailable(this)) {
                 removeSwipe();
-                AppUtil.showToast(this, getString(R.string.no_connection_message));
+                showNoConnectionMessage();
             } else {
                 GetMpesoBalances getMpesoBalance = new GetMpesoBalances(mCards);
                 getMpesoBalance.execute();

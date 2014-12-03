@@ -25,6 +25,7 @@ public class CardAddActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getToolbar().setNavigationIcon(R.drawable.ic_close_white);
 
         mCardDataSource = new CardDataSource(this);
         mName = (EditText) findViewById(R.id.nameField);

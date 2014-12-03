@@ -26,6 +26,7 @@ public class CardUpdateActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getToolbar().setNavigationIcon(R.drawable.ic_close_white);
 
         mCardDataSource = new CardDataSource(this);
         mCard = (Card) getIntent().getSerializableExtra("card");

@@ -30,7 +30,6 @@ public abstract class BaseActivity extends ActionBarActivity {
             setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             mToolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
-
             mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
 
             mToolbarProgressbar = (ProgressBar) findViewById(R.id.toolbar_progress_bar);
