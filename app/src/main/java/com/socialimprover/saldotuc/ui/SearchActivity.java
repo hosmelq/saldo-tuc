@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.socialimprover.saldotuc.app.R;
 import com.socialimprover.saldotuc.models.Agency;
@@ -78,6 +79,10 @@ public class SearchActivity extends BaseActivity {
             } else {
                 view.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
                 view.setIconified(false);
+
+                // fix invisible color for 2.3.*
+                TextView searchText = (TextView) view.findViewById(R.id.search_src_text);
+                searchText.setTextColor(Color.BLACK);
 
                 // query text listeners
                 view.setOnQueryTextListener(searchOnQueryTextListener);
