@@ -1,5 +1,6 @@
 package com.socialimprover.saldotuc.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -85,7 +86,9 @@ public class CardAddActivity extends BaseActivity {
 
             mCardDataSource.create(card);
 
-            AppUtil.showToast(this, getString(R.string.card_success_save));
+            Intent intent = new Intent();
+            intent.putExtra("message", getString(R.string.card_success_save));
+            setResult(RESULT_OK, intent);
             finish();
         }
 

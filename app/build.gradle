@@ -9,8 +9,8 @@ android {
         applicationId 'com.socialimprover.saldotuc'
         minSdkVersion 8
         targetSdkVersion 21
-        versionCode 40
-        versionName '1.1.0'
+        versionCode 41
+        versionName '1.2.0'
     }
     buildTypes {
         release {

@@ -1,5 +1,6 @@
 package com.socialimprover.saldotuc.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -79,8 +80,11 @@ public class CardStatisticsActivity extends BaseActivity {
                 SaldoTucService service = new SaldoTucService();
                 service.getBalances(mCard, mStatisticsBalanceCallback);
             } else {
-                AppUtil.showToast(CardStatisticsActivity.this, getString(R.string.card_invalid, AppUtil.formatCard(mCard.getNumber())));
                 hideProgressBar();
+
+                Intent intent = new Intent();
+                intent.putExtra("message", getString(R.string.card_invalid, AppUtil.formatCard(mCard.getNumber())));
+                setResult(RESULT_OK, intent);
                 finish();
             }
         }
@@ -89,7 +93,9 @@ public class CardStatisticsActivity extends BaseActivity {
         public void failure(RetrofitError error) {
             hideProgressBar();
             if (error.isNetworkError()) {
-                AppUtil.showToast(CardStatisticsActivity.this, getString(R.string.network_error));
+                Intent intent = new Intent();
+                intent.putExtra("message", getString(R.string.network_error));
+                setResult(RESULT_OK, intent);
             }
             finish();
         }
@@ -101,7 +107,9 @@ public class CardStatisticsActivity extends BaseActivity {
             hideProgressBar();
 
             if (records.data.size() <= 0) {
-                AppUtil.showToast(CardStatisticsActivity.this, getString(R.string.no_statistics_data));
+                Intent intent = new Intent();
+                intent.putExtra("message", getString(R.string.no_statistics_data));
+                setResult(RESULT_OK, intent);
                 finish();
             } else {
                 mChart.setVisibility(View.VISIBLE);

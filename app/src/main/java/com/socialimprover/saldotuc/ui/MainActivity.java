@@ -48,6 +48,10 @@ public class MainActivity extends BaseActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
+    protected final int REQUEST_CODE_ADD_NEW_CARD = 1;
+    protected final int REQUEST_CODE_UPDATE_CARD = 2;
+    protected final int REQUEST_CODE_SHOW_STATISTICS = 3;
+
     protected CardDataSource mCardDataSource;
     protected ListView mListView;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
@@ -118,6 +122,17 @@ public class MainActivity extends BaseActivity {
             hideAllActions();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (data.hasExtra("message")) {
+                toggleSnackbarView(true, data.getStringExtra("message"));
+            }
         }
     }
 
@@ -197,7 +212,7 @@ public class MainActivity extends BaseActivity {
                     } else {
                         Intent statisticsIntent = new Intent(MainActivity.this, CardStatisticsActivity.class);
                         statisticsIntent.putExtra("card", mCard);
-                        startActivity(statisticsIntent);
+                        startActivityForResult(statisticsIntent, REQUEST_CODE_SHOW_STATISTICS);
                     }
                     break;
                 case R.id.cardActionEdit: // update card
@@ -205,7 +220,7 @@ public class MainActivity extends BaseActivity {
 
                     Intent updateIntent = new Intent(MainActivity.this, CardUpdateActivity.class);
                     updateIntent.putExtra("card", mCard);
-                    startActivity(updateIntent);
+                    startActivityForResult(updateIntent, REQUEST_CODE_UPDATE_CARD);
                     break;
                 case R.id.cardActionDelete: // delete card
                     hideActions(mCardView, true);
@@ -248,7 +263,7 @@ public class MainActivity extends BaseActivity {
                     }
                 });
             } else {
-                AppUtil.showToast(MainActivity.this, String.format(getString(R.string.card_invalid), AppUtil.formatCard(mCard.getNumber())));
+                toggleSnackbarView(true, String.format(getString(R.string.card_invalid), AppUtil.formatCard(mCard.getNumber())));
                 hideProgressBar();
             }
         }
@@ -291,7 +306,7 @@ public class MainActivity extends BaseActivity {
 
     protected void addNewCard() {
         Intent intent = new Intent(this, CardAddActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_ADD_NEW_CARD);
     }
 
     protected void showActions(View view) {
@@ -412,7 +427,7 @@ public class MainActivity extends BaseActivity {
 
         if (delete > 0) {
             updateList();
-            AppUtil.showToast(this, getString(R.string.card_success_delete));
+            toggleSnackbarView(true, getString(R.string.card_success_delete));
         }
     }
 
