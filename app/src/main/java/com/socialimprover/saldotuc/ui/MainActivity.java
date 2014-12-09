@@ -1,5 +1,7 @@
 package com.socialimprover.saldotuc.ui;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -144,6 +146,7 @@ public class MainActivity extends BaseActivity {
         } else {
             mAddBottom = (FloatingActionButton) findViewById(R.id.fab);
             mAddBottom.setVisibility(FloatingActionButton.VISIBLE);
+            findViewById(R.id.footerView).setMinimumHeight(Math.round(AppUtil.dpToPx(this, 76)));
         }
 
         if (mAddBottom != null) {
@@ -340,7 +343,7 @@ public class MainActivity extends BaseActivity {
         final RelativeLayout infoLayout = (RelativeLayout) view.findViewById(R.id.infoLayout);
 
         if (animate) {
-            int actionsWidth = AppUtil.dpToPx(MainActivity.this, 191);
+            float actionsWidth = AppUtil.dpToPx(MainActivity.this, 195);
 
             TranslateAnimation animation = new TranslateAnimation(actionsWidth, 0, 0, 0);
             animation.setAnimationListener(new Animation.AnimationListener() {
@@ -385,16 +388,45 @@ public class MainActivity extends BaseActivity {
     }
 
     protected void toggleSnackbarView(boolean show, String text) {
-        TextView notificationView = (TextView) findViewById(R.id.snackbar);
-        int from = show ? 0 : AppUtil.dpToPx(this, -47);
-        int to = show ? AppUtil.dpToPx(this, -47) : 0;
-        TranslateAnimation animation = new TranslateAnimation(0, 0, from, to);
+        RelativeLayout footerView = (RelativeLayout) findViewById(R.id.footerView);
+        final TextView snackbarView = (TextView) findViewById(R.id.snackbarView);
+        final int visibility = show ? View.VISIBLE: View.GONE;
 
-        notificationView.setText(text);
-        animation.setFillAfter(true);
-        animation.setDuration(150);
-        notificationView.startAnimation(animation);
-        mAddBottom.startAnimation(animation);
+        snackbarView.setText(text);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            float modifier = show ? AppUtil.dpToPx(this, -48) : 0;
+            RelativeLayout.LayoutParams footerViewLayoutParams = (RelativeLayout.LayoutParams) footerView.getLayoutParams();
+            footerViewLayoutParams.bottomMargin = show ? Math.round(modifier) : 0;
+            ObjectAnimator animator = ObjectAnimator.ofFloat(footerView, "translationY", modifier);
+            animator.setDuration(200);
+
+            if ( ! show) {
+                animator.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        snackbarView.setVisibility(visibility);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {}
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+                    }
+                });
+            } else {
+                snackbarView.setVisibility(visibility);
+            }
+
+            animator.start();
+        } else {
+            snackbarView.setVisibility(visibility);
+        }
 
         if (show) {
             if (mCurrentTimerTask != null) {
