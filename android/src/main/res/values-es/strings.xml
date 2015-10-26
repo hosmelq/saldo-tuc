@@ -1,0 +1,44 @@
+<resources>
+    <string name="back">Atras</string>
+    <string name="favorite">Favorito</string>
+
+    <string name="title_activity_cards">Tarjetas</string>
+    <string name="title_activity_add_card">Añadir tarjeta</string>
+    <string name="title_activity_card_edit">Editar tarjeta</string>
+    <string name="title_activity_chart">%1$s (%2$s)</string>
+    <string name="title_activity_agencies">Agencias</string>
+
+    <string name="title_menu_card_add">Añadir tarjeta</string>
+    <string name="title_menu_card_update">Editar tarjeta</string>
+
+    <string name="refresh">Actualizar</string>
+    <string name="mpeso_agencies">Agencias Mpeso</string>
+    <string name="search">Buscar</string>
+    <string name="undo">Deshacer</string>
+
+    <string name="push_alert">Saldo bajo</string>
+    <string name="push_title">El saldo de la tarjeta %1$s es bajo (C$ %2$s)</string>
+
+    <string name="cards_empty">No tienes tarjetas</string>
+    <string name="card_check_balance">Consultar Saldo</string>
+    <string name="card_graph">Gráfica</string>
+    <string name="card_edit">Editar</string>
+    <string name="card_delete">Eliminar</string>
+    <string name="card_deleted">%1$s eliminada</string>
+    <string name="card_name_hint">Nombre</string>
+    <string name="card_number_hint">Número</string>
+    <string name="card_enable_to_notifications">Activar notificaciones de saldo</string>
+    <string name="card_enable_to_notifications_help">Tus notificaciones se enviarán a través de notificaciones push, por lo que necesitas internet para recibirlas.</string>
+    <string name="card_add_error_title">No se puede guardar la tarjeta</string>
+    <string name="card_already_exist_error">La tarjeta insertada ya está asociado</string>
+    <string name="card_invalid_error">Número de tarjeta no válido o inactivo</string>
+    <string name="card_name_error">El nombre es requerido</string>
+    <string name="card_number_error">El número es requerido</string>
+    <string name="card_number_length_error">El número debe ser de 8 dígitos</string>
+
+    <string name="no_connection">Sin conexión</string>
+    <string name="will_subscribe_when_online">Sin conexión. Se suscribirá cuando haya coneccion.</string>
+    <string name="will_unsubscribe_when_online">Sin conexión. Se eliminará la suscripción cuando haya coneccion.</string>
+
+    <string name="your_neighborhood">Tu barrio</string>
+</resources>

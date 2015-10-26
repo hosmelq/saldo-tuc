@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<config linePaint.strokeWidth="@dimen/chart_line_paint_stroke_width"
-    linePaint.color="#f08080"
-    vertexPaint.color="#f08080"
-    vertexPaint.strokeWidth="@dimen/chart_vertex_paint_stroke_width"
-    fillPaint.color="#00000000"
-    pointLabelFormatter.textPaint.color="#555555"/>

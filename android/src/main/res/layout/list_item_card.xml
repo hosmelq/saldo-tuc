@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/keyline_1_minus_8dp"
+    android:layout_marginLeft="@dimen/keyline_1_minus_8dp"
+    android:layout_marginRight="@dimen/keyline_1_minus_8dp"
+    app:pressedTranslationZ="@dimen/keyline_1_minus_8dp"
+    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardCornerRadius="2dp"
+    card_view:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:background="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="48dp"
+                android:layout_marginRight="48dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/favoriteView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/favorite"
+                        android:src="@drawable/ic_favorite_black_16dp"
+                        android:tint="#EE2637"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/nameView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_notifications_black_16dp"
+                        android:drawableStart="@drawable/ic_notifications_black_16dp"
+                        android:drawableTint="#4c4c4c"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="Hosmel"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/numberView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        tools:text="0073-1964"/>
+
+                    <TextView
+                        android:id="@+id/balanceView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text=" • C$ 15.00"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp">
+
+                <ImageButton
+                    android:id="@+id/checkBalanceButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/card_check_balance_gb"
+                    android:contentDescription="@string/card_check_balance"
+                    android:src="@drawable/ic_attach_money_black_24dp"
+                    android:tint="#636363"/>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="bottom"
+                    android:visibility="gone"/>
+            </FrameLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/actionControls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_divider_border"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/showGraphButton"
+                style="@style/CardAction"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:drawableLeft="@drawable/ic_insert_chart_black_24dp"
+                android:drawableStart="@drawable/ic_insert_chart_black_24dp"
+                android:text="@string/card_graph"
+                tools:text="Graph"/>
+
+            <Button
+                android:id="@+id/editButton"
+                style="@style/CardAction"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:drawableLeft="@drawable/ic_mode_edit_black_24dp"
+                android:drawableStart="@drawable/ic_mode_edit_black_24dp"
+                android:text="@string/card_edit"
+                tools:text="Edit"/>
+
+            <Button
+                android:id="@+id/deleteButton"
+                style="@style/CardAction"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:drawableLeft="@drawable/ic_delete_black_24dp"
+                android:drawableStart="@drawable/ic_delete_black_24dp"
+                android:text="@string/card_delete"
+                tools:text="Delete"/>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

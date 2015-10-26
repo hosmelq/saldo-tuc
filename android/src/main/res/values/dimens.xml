@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Headerbar -->
+    <dimen name="headerbar_elevation">2dp</dimen>
+
+    <!-- Body content -->
+    <dimen name="content_padding_normal">16dp</dimen>
+    <dimen name="text_size_xsmall">11sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_xlarge">20sp</dimen>
+    <dimen name="text_size_diff_large_small">6sp</dimen>
+    <dimen name="user_avatar_size">40dp</dimen>
+
+    <!-- Keylines -->
+    <dimen name="keyline_1">16dp</dimen>
+    <dimen name="keyline_1_minus_8dp">8dp</dimen>
+    <dimen name="keyline_2">72dp</dimen>
+    <dimen name="keyline_2_minus_16dp">56dp</dimen>
+
+    <!-- Typographic scale & basic styles and Line height -->
+    <dimen name="keyline_display_1">34sp</dimen>
+    <dimen name="keyline_headline">24sp</dimen>
+    <dimen name="keyline_title">20sp</dimen>
+    <dimen name="keyline_subhead">16sp</dimen>
+    <dimen name="keyline_body_1">14sp</dimen>
+    <dimen name="keyline_caption">12sp</dimen>
+</resources>

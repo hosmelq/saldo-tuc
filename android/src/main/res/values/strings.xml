@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name" translatable="false">Saldo TUC</string>
+
+    <string name="back">Back</string>
+    <string name="favorite">Favorite</string>
+
+    <string name="title_activity_cards">Cards</string>
+    <string name="title_activity_add_card">Add Card</string>
+    <string name="title_activity_card_edit">Edit Card</string>
+    <string name="title_activity_chart">%1$s (%2$s)</string>
+    <string name="title_activity_agencies">Agencies</string>
+
+    <string name="title_menu_card_add">Add Card</string>
+    <string name="title_menu_card_update">Edit Card</string>
+
+    <string name="refresh">Refresh</string>
+    <string name="mpeso_agencies">Mpeso agencies</string>
+    <string name="search">Search</string>
+    <string name="undo">Undo</string>
+
+    <string name="push_alert">Low balance</string>
+    <string name="push_title">The balance of the card %1$s is low (C$ %2$s)</string>
+
+    <string name="cards_empty">You have no cards</string>
+    <string name="card_check_balance">Check balance</string>
+    <string name="card_graph">Graph</string>
+    <string name="card_edit">Edit</string>
+    <string name="card_delete">Delete</string>
+    <string name="card_deleted">%1$s deleted</string>
+    <string name="card_name_hint">Name</string>
+    <string name="card_number_hint">Number</string>
+    <string name="card_enable_to_notifications">Enable balance notifications</string>
+    <string name="card_enable_to_notifications_help">Your notifications will be sent via push notifications, so you need internet to receive them.</string>
+    <string name="card_add_error_title">Cannot save card</string>
+    <string name="card_already_exist_error">The card inserted is already associated</string>
+    <string name="card_invalid_error">Card number invalid or inactive</string>
+    <string name="card_name_error">Name is required</string>
+    <string name="card_number_error">Number is required</string>
+    <string name="card_number_length_error">Number must be 8 digits</string>
+
+    <string name="no_connection">No connection</string>
+    <string name="will_subscribe_when_online">Offline. Will subscribe when online.</string>
+    <string name="will_unsubscribe_when_online">Offline. Will unsubscribe when online.</string>
+
+    <string name="your_neighborhood">Your neighborhood</string>
+</resources>

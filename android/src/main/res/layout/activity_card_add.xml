@@ -1,0 +1,65 @@
+<LinearLayout
+    android:id="@+id/content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.CardAddActivity">
+
+    <include layout="@layout/toolbar"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/cardNameInputLayout"
+        style="@style/InputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/cardNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/card_name_hint"
+            android:inputType="textPersonName">
+
+            <requestFocus/>
+        </EditText>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/cardNumberInputLayout"
+        style="@style/InputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:counterEnabled="true">
+
+        <EditText
+            android:id="@+id/cardNumberInput"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/card_number_hint"
+            android:inputType="number"
+            android:maxLength="8"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        style="@style/InputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/cardSubscribe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/card_enable_to_notifications"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/card_enable_to_notifications_help"
+            android:textSize="@dimen/text_size_small"
+            tools:text="Your notifications will be sent via push notifications, so you need internet to receive them."/>
+    </LinearLayout>
+</LinearLayout>
