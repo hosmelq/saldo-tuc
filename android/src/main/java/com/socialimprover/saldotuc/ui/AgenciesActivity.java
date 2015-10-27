@@ -65,7 +65,7 @@ public class AgenciesActivity extends BaseActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 List<Neighborhood> filterList = new ArrayList<>();
 
-                if (s.length() > 0) {
+                if (s.length() > 0 && mNeighborhoods != null) {
                     for (Neighborhood neighborhood : mNeighborhoods) {
                         if (neighborhood.name != null && neighborhood.name.toLowerCase().contains(s.toString().trim().toLowerCase())) {
                             filterList.add(neighborhood);
