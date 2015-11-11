@@ -36,7 +36,7 @@ import static com.socialimprover.saldotuc.util.LogUtils.makeLogTag;
 public class AgenciesActivity extends BaseActivity {
     public static final String TAG = makeLogTag("AgenciesActivity");
     Toolbar mToolbar;
-    List<Neighborhood> mNeighborhoods;
+    List<Neighborhood> mNeighborhoods = new ArrayList<>();
 
     @Bind(R.id.searchBar) LinearLayout mSearchBar;
     @Bind(R.id.searchInput) EditText mSearchInput;
@@ -65,7 +65,7 @@ public class AgenciesActivity extends BaseActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 List<Neighborhood> filterList = new ArrayList<>();
 
-                if (s.length() > 0 && mNeighborhoods != null) {
+                if (s.length() > 0) {
                     for (Neighborhood neighborhood : mNeighborhoods) {
                         if (neighborhood.name != null && neighborhood.name.toLowerCase().contains(s.toString().trim().toLowerCase())) {
                             filterList.add(neighborhood);

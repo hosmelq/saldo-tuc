@@ -185,19 +185,16 @@ public class ChartActivity extends BaseActivity {
 
         Paint gridPaint = new Paint();
         gridPaint.setColor(Color.parseColor("#308E9196"));
-//        gridPaint.setStyle(Paint.Style.STROKE);
         gridPaint.setAntiAlias(true);
         gridPaint.setStrokeWidth(Tools.fromDpToPx(1f));
 
         chart.setBorderSpacing(1)
-//            .setAxisBorderValues(0, 10, 1)
             .setXLabels(AxisController.LabelPosition.OUTSIDE)
             .setYLabels(AxisController.LabelPosition.OUTSIDE)
             .setLabelsColor(Color.parseColor("#FF8E9196"))
             .setXAxis(false)
             .setYAxis(false)
             .setStep(5)
-//            .setBorderSpacing(Tools.fromDpToPx(5))
             .setGrid(ChartView.GridType.VERTICAL, gridPaint);
 
         chart.show(anim);
