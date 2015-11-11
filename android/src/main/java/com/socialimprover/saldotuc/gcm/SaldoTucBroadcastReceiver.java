@@ -61,8 +61,10 @@ public class SaldoTucBroadcastReceiver extends ParsePushBroadcastReceiver {
             .fromLocalDatastore()
             .whereEqualTo(CardColumns.COLUMN_NUMBER, number)
             .getFirstInBackground((card, e) -> {
-                card.setBalance(balance);
-                card.pinInBackground();
+                if (e == null) {
+                    card.setBalance(balance);
+                    card.pinInBackground();
+                }
             });
     }
 
