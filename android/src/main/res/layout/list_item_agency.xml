@@ -16,7 +16,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="88dp"
+        android:layout_height="72dp"
         android:background="?attr/selectableItemBackground">
 
         <LinearLayout
@@ -29,6 +29,10 @@
                 android:id="@+id/nameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_place_black_16dp"
+                android:drawableStart="@drawable/ic_place_black_16dp"
+                android:drawableTint="#4c4c4c"
+                android:ellipsize="end"
                 android:maxLines="1"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -38,7 +42,8 @@
                 android:id="@+id/addressView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textSize="14sp"
                 tools:text="Sub-Title"/>
         </LinearLayout>

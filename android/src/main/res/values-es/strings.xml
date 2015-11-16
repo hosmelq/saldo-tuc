@@ -7,6 +7,7 @@
     <string name="title_activity_card_edit">Editar tarjeta</string>
     <string name="title_activity_chart">%1$s (%2$s)</string>
     <string name="title_activity_agencies">Agencias</string>
+    <string name="title_activity_agency">Agencia</string>
 
     <string name="title_menu_card_add">Añadir tarjeta</string>
     <string name="title_menu_card_update">Editar tarjeta</string>
@@ -14,6 +15,8 @@
     <string name="refresh">Actualizar</string>
     <string name="mpeso_agencies">Agencias Mpeso</string>
     <string name="search">Buscar</string>
+    <string name="nearby_agencies">Agencias cercanas</string>
+    <string name="enable">Activar</string>
     <string name="undo">Deshacer</string>
 
     <string name="push_alert">Saldo bajo</string>
@@ -37,6 +40,7 @@
     <string name="card_number_length_error">El número debe ser de 8 dígitos</string>
 
     <string name="no_connection">Sin conexión</string>
+    <string name="no_gps_enable">GPS desactivado</string>
     <string name="will_subscribe_when_online">Sin conexión. Se suscribirá cuando haya coneccion.</string>
     <string name="will_unsubscribe_when_online">Sin conexión. Se eliminará la suscripción cuando haya coneccion.</string>
 

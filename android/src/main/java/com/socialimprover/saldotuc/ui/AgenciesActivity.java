@@ -1,7 +1,17 @@
 package com.socialimprover.saldotuc.ui;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +25,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
+import com.socialimprover.saldotuc.Config;
 import com.socialimprover.saldotuc.R;
 import com.socialimprover.saldotuc.api.SaldoTucService;
 import com.socialimprover.saldotuc.api.ServiceFactory;
@@ -22,6 +38,7 @@ import com.socialimprover.saldotuc.api.model.Agency;
 import com.socialimprover.saldotuc.api.model.Neighborhood;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -33,10 +50,16 @@ import rx.schedulers.Schedulers;
 import static com.socialimprover.saldotuc.util.LogUtils.LOGD;
 import static com.socialimprover.saldotuc.util.LogUtils.makeLogTag;
 
-public class AgenciesActivity extends BaseActivity {
+public class AgenciesActivity extends BaseActivity
+    implements AgencyAdapter.Callbacks, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     public static final String TAG = makeLogTag("AgenciesActivity");
-    Toolbar mToolbar;
-    List<Neighborhood> mNeighborhoods = new ArrayList<>();
+    public static final int REQUEST_ACCESS_FINE_LOCATION = 1;
+    private Toolbar mToolbar;
+    private MenuItem mNearbyAgenciesMenuItem;
+    private MenuItem mSearchMenuItem;
+    private GoogleApiClient mGoogleApiClient;
+    private List<Neighborhood> mNeighborhoods = new ArrayList<>();
+    private Location mLocation;
 
     @Bind(R.id.searchBar) LinearLayout mSearchBar;
     @Bind(R.id.searchInput) EditText mSearchInput;
@@ -84,6 +107,28 @@ public class AgenciesActivity extends BaseActivity {
         });
 
         fetchAgencies();
+
+        if (hasGps()) {
+            requestForPermissions();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
     @Override
@@ -98,6 +143,13 @@ public class AgenciesActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.agencies, menu);
+        mNearbyAgenciesMenuItem = menu.findItem(R.id.action_nearby_agencies);
+        mSearchMenuItem = menu.findItem(R.id.action_search);
+
+        if (!checkIfWeHavePermissions()) {
+            mNearbyAgenciesMenuItem.setVisible(false);
+        }
+
         return true;
     }
 
@@ -105,17 +157,118 @@ public class AgenciesActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_search) {
-            showSearchBar();
-            return true;
+        switch (id) {
+            case R.id.action_nearby_agencies:
+                showNearbyAgencies();
+                return true;
+
+            case R.id.action_search:
+                showSearchBar();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case REQUEST_ACCESS_FINE_LOCATION:
+                if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    setGoogleClient();
+                    mNearbyAgenciesMenuItem.setVisible(true);
+                } else {
+                    LOGD(TAG, "boo! no showMap");
+                }
+
+                break;
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if (location == null) {
+            LOGD(TAG, "location null");
+        } else {
+            LOGD(TAG, "location not null");
+            mLocation = location;
+            LOGD(TAG, mLocation.toString());
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        LOGD(TAG, connectionResult.toString());
+        LOGD(TAG, connectionResult.getErrorMessage());
+        LOGD(TAG, String.valueOf(connectionResult.getErrorCode()));
+    }
+
+    @Override
+    public void onShowAgency(Agency agency) {
+        Intent intent = new Intent(this, AgencyActivity.class);
+        intent.putExtra("agency", agency);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.arrowBack)
     protected void onArrowBackClick() {
         hideSearchBar();
+    }
+
+    private void requestForPermissions() {
+        if (!checkIfWeHavePermissions()) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_ACCESS_FINE_LOCATION);
+            }
+        } else {
+            setGoogleClient();
+        }
+    }
+
+    private boolean checkIfWeHavePermissions() {
+        return ContextCompat.checkSelfPermission(this,
+            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean hasGps() {
+        return getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+    }
+
+    private boolean hasGpsEnable() {
+        LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    private void setGoogleClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+            .addConnectionCallbacks(this)
+            .addOnConnectionFailedListener(this)
+            .addApi(LocationServices.API)
+            .build();
+    }
+
+    private void hideLoading() {
+        mProgressBar.setVisibility(View.GONE);
+        mProgressBar.setIndeterminate(false);
+    }
+
+    private void showLoading() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mProgressBar.setIndeterminate(true);
     }
 
     private void hideSearchBar() {
@@ -126,7 +279,6 @@ public class AgenciesActivity extends BaseActivity {
         if (imm != null && imm.isAcceptingText()) {
             imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
-        //check
         updateAdapter(mNeighborhoods);
     }
 
@@ -141,14 +293,30 @@ public class AgenciesActivity extends BaseActivity {
         updateAdapter(new ArrayList<>());
     }
 
-    private void hideLoading() {
-        mProgressBar.setVisibility(View.GONE);
-        mProgressBar.setIndeterminate(false);
-    }
+    private void showNearbyAgencies() {
+        if (!hasGpsEnable()) {
+            //noinspection ResourceType
+            Snackbar.make(findViewById(R.id.container), getString(R.string.no_gps_enable), Config.SNACKBAR_LONG_DURATION_MS)
+                .setAction(R.string.enable, v -> {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                })
+                .show();
+            return;
+        }
 
-    private void showLoading() {
-        mProgressBar.setVisibility(View.VISIBLE);
-        mProgressBar.setIndeterminate(true);
+        LatLng currentLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+        List<Agency> agencies = getAgenciesWithLatLng();
+
+        Collections.sort(agencies, (lhs, rhs) -> {
+            double lDistance = SphericalUtil.computeDistanceBetween(currentLatLng, new LatLng(lhs.lat, lhs.lng));
+            double rDistance = SphericalUtil.computeDistanceBetween(currentLatLng, new LatLng(rhs.lat, rhs.lng));
+
+            return (lDistance > rDistance) ? 1 : -1;
+        });
+
+        setupNearbyAgenciesToolbar();
+        swapAdapter(agencies);
     }
 
     private void fetchAgencies() {
@@ -171,8 +339,12 @@ public class AgenciesActivity extends BaseActivity {
 
     private void updateAdapter(List<Neighborhood> neighborhoods) {
         List<Agency> agencies = flatAgencies(neighborhoods);
-        AgencyAdapter cardAdapter = new AgencyAdapter(agencies);
-        mRecyclerView.swapAdapter(cardAdapter, true);
+
+        swapAdapter(agencies);
+    }
+
+    private void swapAdapter(List<Agency> agencies) {
+        mRecyclerView.swapAdapter(new AgencyAdapter(this, agencies), true);
     }
 
     public List<Agency> flatAgencies(List<Neighborhood> neighborhoods) {
@@ -186,5 +358,41 @@ public class AgenciesActivity extends BaseActivity {
         }
 
         return agencies;
+    }
+
+    public List<Agency> getAgenciesWithLatLng() {
+        List<Agency> agencies = new ArrayList<>();
+
+        for (Neighborhood neighborhood : mNeighborhoods) {
+            //noinspection Convert2streamapi
+            for (Agency agency : neighborhood.agencies) {
+                if (agency.lat != 0 && agency.lng != 0) {
+                    agencies.add(agency);
+                }
+            }
+        }
+
+        return agencies;
+    }
+
+    private void setupAllAgenciesToolbar() {
+        mToolbar.setTitle(getString(R.string.title_activity_agencies));
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        mToolbar.setNavigationOnClickListener(view -> finish());
+        mNearbyAgenciesMenuItem.setVisible(true);
+        mSearchMenuItem.setVisible(true);
+    }
+
+    private void setupNearbyAgenciesToolbar() {
+        mToolbar.setTitle(getString(R.string.nearby_agencies));
+        mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+        mToolbar.setNavigationOnClickListener(view -> removeNearbyAgenciesToolbar());
+        mNearbyAgenciesMenuItem.setVisible(false);
+        mSearchMenuItem.setVisible(false);
+    }
+
+    private void removeNearbyAgenciesToolbar() {
+        setupAllAgenciesToolbar();
+        updateAdapter(mNeighborhoods);
     }
 }

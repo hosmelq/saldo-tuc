@@ -9,6 +9,7 @@
     <string name="title_activity_card_edit">Edit Card</string>
     <string name="title_activity_chart">%1$s (%2$s)</string>
     <string name="title_activity_agencies">Agencies</string>
+    <string name="title_activity_agency">Agency</string>
 
     <string name="title_menu_card_add">Add Card</string>
     <string name="title_menu_card_update">Edit Card</string>
@@ -16,6 +17,8 @@
     <string name="refresh">Refresh</string>
     <string name="mpeso_agencies">Mpeso agencies</string>
     <string name="search">Search</string>
+    <string name="nearby_agencies">Nearby agencies</string>
+    <string name="enable">Enable</string>
     <string name="undo">Undo</string>
 
     <string name="push_alert">Low balance</string>
@@ -39,6 +42,7 @@
     <string name="card_number_length_error">Number must be 8 digits</string>
 
     <string name="no_connection">No connection</string>
+    <string name="no_gps_enable">GPS disabled</string>
     <string name="will_subscribe_when_online">Offline. Will subscribe when online.</string>
     <string name="will_unsubscribe_when_online">Offline. Will unsubscribe when online.</string>
 

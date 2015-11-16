@@ -22,9 +22,15 @@ public class AgencyAdapter extends RecyclerView.Adapter<ViewHolder> {
     public static final String TAG = makeLogTag("AgencyAdapter");
     private static final int ITEM_TYPE_ITEM = 1;
     private static final int ITEM_TYPE_GROUP = 2;
+    private Callbacks mCallbacks;
     private List<Agency> mAgencies;
 
-    public AgencyAdapter(List<Agency> agencies) {
+    public interface Callbacks {
+        void onShowAgency(Agency agency);
+    }
+
+    public AgencyAdapter(Callbacks activity, List<Agency> agencies) {
+        mCallbacks = activity;
         mAgencies = agencies;
     }
 
@@ -94,9 +100,10 @@ public class AgencyAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    public class AgencyHolder extends RecyclerView.ViewHolder {
+    public class AgencyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final String TAG = makeLogTag("AgencyHolder");
+        private Agency mAgency;
 
         @Bind(R.id.nameView) TextView mNameView;
         @Bind(R.id.addressView) TextView mAddressView;
@@ -104,9 +111,23 @@ public class AgencyAdapter extends RecyclerView.Adapter<ViewHolder> {
         public AgencyHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mCallbacks.onShowAgency(mAgency);
         }
 
         public void bindAgency(Agency agency) {
+            mAgency = agency;
+
+            if (agency.lat != 0 && agency.lng != 0) {
+                mNameView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_place_black_16dp, 0, 0, 0);
+            } else {
+                mNameView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+
             mNameView.setText(agency.name);
             mAddressView.setText(agency.address);
         }

@@ -5,6 +5,12 @@
     tools:context=".ui.AgenciesActivity">
 
     <item
+        android:id="@+id/action_nearby_agencies"
+        android:icon="@drawable/ic_my_location_white_24dp"
+        android:title="@string/nearby_agencies"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search_white_24dp"
         android:title="@string/search"

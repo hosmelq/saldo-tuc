@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.AddCardActivity">
 
-      <item
-          android:id="@+id/action_save"
-          android:icon="@drawable/ic_done_white_24dp"
-          android:orderInCategory="100"
-          android:title="@string/title_menu_card_update"
-          app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_done_white_24dp"
+        android:title="@string/title_menu_card_update"
+        app:showAsAction="ifRoom"/>
 </menu>

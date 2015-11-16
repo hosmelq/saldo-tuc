@@ -3,6 +3,8 @@
     package="com.socialimprover.saldotuc"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
@@ -16,7 +18,6 @@
     <permission
         android:name="com.socialimprover.saldotuc.permission.C2D_MESSAGE"
         android:protectionLevel="signature"/>
-
 
     <application
         android:name=".SaldoTuc"
@@ -65,10 +66,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.socialimprover.saldotuc.ui.CardsActivity"/>
         </activity>
+        <activity
+            android:name=".ui.AgencyActivity"
+            android:label="@string/title_activity_agency"
+            android:parentActivityName=".ui.AgenciesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.socialimprover.saldotuc.ui.AgenciesActivity"/>
+        </activity>
 
         <activity
             android:name="com.mixpanel.android.surveys.SurveyActivity"
             android:theme="@style/com_mixpanel_android_SurveyActivityTheme"/>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
