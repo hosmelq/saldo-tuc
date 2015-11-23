@@ -20,13 +20,13 @@ buildscript {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "com.socialimprover.saldotuc"
         minSdkVersion 9
         targetSdkVersion 23
-        versionCode 50
+        versionCode 51
         versionName "2.1.0"
     }
     buildTypes {

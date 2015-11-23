@@ -60,6 +60,7 @@ public class AgenciesActivity extends BaseActivity
     private GoogleApiClient mGoogleApiClient;
     private List<Neighborhood> mNeighborhoods = new ArrayList<>();
     private Location mLocation;
+    private boolean mWaitingForLocation = false;
 
     @Bind(R.id.searchBar) LinearLayout mSearchBar;
     @Bind(R.id.searchInput) EditText mSearchInput;
@@ -135,6 +136,8 @@ public class AgenciesActivity extends BaseActivity
     public void onBackPressed() {
         if (mSearchBar.getVisibility() == View.VISIBLE) {
             hideSearchBar();
+        } else if (mToolbar.getTitle().equals(getString(R.string.nearby_agencies))) {
+            removeNearbyAgenciesToolbar();
         } else {
             super.onBackPressed();
         }
@@ -192,12 +195,13 @@ public class AgenciesActivity extends BaseActivity
     public void onConnected(Bundle bundle) {
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-        if (location == null) {
-            LOGD(TAG, "location null");
-        } else {
-            LOGD(TAG, "location not null");
+        if (location != null) {
             mLocation = location;
-            LOGD(TAG, mLocation.toString());
+
+            if (mWaitingForLocation) {
+                mWaitingForLocation = false;
+                showNearbyAgencies();
+            }
         }
     }
 
@@ -207,9 +211,6 @@ public class AgenciesActivity extends BaseActivity
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        LOGD(TAG, connectionResult.toString());
-        LOGD(TAG, connectionResult.getErrorMessage());
-        LOGD(TAG, String.valueOf(connectionResult.getErrorCode()));
     }
 
     @Override
@@ -254,11 +255,16 @@ public class AgenciesActivity extends BaseActivity
     }
 
     private void setGoogleClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-            .addConnectionCallbacks(this)
-            .addOnConnectionFailedListener(this)
-            .addApi(LocationServices.API)
-            .build();
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+            mGoogleApiClient.connect();
+        } else {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        }
     }
 
     private void hideLoading() {
@@ -302,6 +308,12 @@ public class AgenciesActivity extends BaseActivity
                     startActivity(intent);
                 })
                 .show();
+            return;
+        }
+
+        if (mLocation == null) {
+            mWaitingForLocation = true;
+            setGoogleClient();
             return;
         }
 
