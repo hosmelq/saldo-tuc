@@ -149,6 +149,8 @@ public class AgenciesActivity extends BaseActivity
         mNearbyAgenciesMenuItem = menu.findItem(R.id.action_nearby_agencies);
         mSearchMenuItem = menu.findItem(R.id.action_search);
 
+        mNearbyAgenciesMenuItem.setEnabled(false);
+
         if (!checkIfWeHavePermissions()) {
             mNearbyAgenciesMenuItem.setVisible(false);
         }
@@ -363,6 +365,7 @@ public class AgenciesActivity extends BaseActivity
             .subscribe(neighborhoods -> {
                 hideLoading();
                 mNeighborhoods = neighborhoods;
+                mNearbyAgenciesMenuItem.setEnabled(true);
                 updateAdapter(neighborhoods);
             }, throwable -> {
                 hideLoading();
