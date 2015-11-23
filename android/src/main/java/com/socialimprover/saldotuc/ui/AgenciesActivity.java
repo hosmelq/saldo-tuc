@@ -317,6 +317,7 @@ public class AgenciesActivity extends BaseActivity
             return;
         }
 
+        long lastAdded = 0;
         LatLng currentLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
         List<Agency> agencies = getAgenciesWithLatLng();
 
@@ -326,6 +327,26 @@ public class AgenciesActivity extends BaseActivity
 
             return (lDistance > rDistance) ? 1 : -1;
         });
+
+        for (int i = 0, agenciesSize = agencies.size(); i < agenciesSize; i++) {
+            Agency agency = agencies.get(i);
+            double distance = SphericalUtil.computeDistanceBetween(currentLatLng, new LatLng(agency.lat, agency.lng));
+
+            if (distance > 1000) {
+                long newDistance = Math.round(distance / 1000);
+
+                if (newDistance != lastAdded) {
+                    Agency fakeAgency = new Agency();
+                    fakeAgency.name = getString(R.string.agency_nearby_title, newDistance);
+                    agencies.add(i, fakeAgency);
+                    lastAdded = newDistance;
+                }
+            }
+        }
+
+        Agency fakeAgency = new Agency();
+        fakeAgency.name = getString(R.string.agency_nearby_init_title);
+        agencies.add(0, fakeAgency);
 
         setupNearbyAgenciesToolbar();
         swapAdapter(agencies);

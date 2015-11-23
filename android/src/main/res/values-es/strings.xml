@@ -45,4 +45,7 @@
     <string name="will_unsubscribe_when_online">Sin conexión. Se eliminará la suscripción cuando haya coneccion.</string>
 
     <string name="your_neighborhood">Tu barrio</string>
+
+    <string name="agency_nearby_init_title">Menos de 1 KM</string>
+    <string name="agency_nearby_title">Más de %1$d KMs</string>
 </resources>

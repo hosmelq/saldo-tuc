@@ -47,4 +47,7 @@
     <string name="will_unsubscribe_when_online">Offline. Will unsubscribe when online.</string>
 
     <string name="your_neighborhood">Your neighborhood</string>
+
+    <string name="agency_nearby_init_title">Less than 1 KM</string>
+    <string name="agency_nearby_title">More than %1$d KMs</string>
 </resources>
