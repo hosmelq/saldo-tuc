@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,7 +26,6 @@ import com.socialimprover.saldotuc.util.AppUtil;
 import com.socialimprover.saldotuc.util.SyncHelper;
 
 import java.util.List;
-import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -85,12 +83,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardHolder> im
 
         public final String TAG = makeLogTag("CardHolder");
         private final static String SCREEN_LABEL = "Cards";
-        private final String[] mColors = {"#b4517a", "#349ac0", "#96ab37", "#d19d1d", "#673fae", "#ee2637"};
         private Context mContext;
         private Card mCard;
         private boolean isFetching;
 
-        @Bind(R.id.favoriteView) ImageView mFavoriteView;
         @Bind(R.id.nameView) TextView mNameView;
         @Bind(R.id.numberView) TextView mNumberView;
         @Bind(R.id.balanceView) TextView mBalanceView;
@@ -137,17 +133,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardHolder> im
 
         private void bindCard(Card card) {
             mCard = card;
-
-            if ("bynel112".equalsIgnoreCase(card.getName())) {
-                mFavoriteView.setVisibility(View.VISIBLE);
-
-                try {
-                    int index = new Random().nextInt(mColors.length);
-                    mFavoriteView.setColorFilter(Color.parseColor(mColors[index]));
-                } catch (Exception ignored) {}
-            } else {
-                mFavoriteView.setVisibility(View.GONE);
-            }
 
             if (card.getNotifications()) {
                 mNameView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notifications_black_16dp, 0, 0, 0);

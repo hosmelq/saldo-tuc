@@ -37,15 +37,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/favoriteView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/favorite"
-                        android:src="@drawable/ic_favorite_black_16dp"
-                        android:tint="#EE2637"
-                        android:visibility="gone"/>
-
                     <TextView
                         android:id="@+id/nameView"
                         android:layout_width="wrap_content"
