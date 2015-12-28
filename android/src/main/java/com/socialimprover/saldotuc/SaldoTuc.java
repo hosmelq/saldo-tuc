@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
 import com.parse.Parse;
+import com.parse.ParseConfig;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.socialimprover.saldotuc.model.Card;
@@ -30,6 +31,7 @@ public class SaldoTuc extends Application {
             "NeTnXlLHuQj0BQ7iTzfnhxytwjAKUpYnoNmaeNS0",
             "GnH9qJsASiOCLs6g57I4Ts7kWI95F02Rzry4GchL");
         ParseInstallation.getCurrentInstallation().saveInBackground();
+        ParseConfig.getInBackground();
         checkIfNeedSyncNotificationSettings();
     }
 
