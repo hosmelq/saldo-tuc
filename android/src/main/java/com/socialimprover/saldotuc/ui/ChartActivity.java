@@ -16,7 +16,6 @@ import com.db.chart.view.AxisController;
 import com.db.chart.view.ChartView;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.Tooltip;
-import com.db.chart.view.animation.Animation;
 import com.socialimprover.saldotuc.Config;
 import com.socialimprover.saldotuc.R;
 import com.socialimprover.saldotuc.api.MpesoService;
@@ -35,7 +34,7 @@ import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit.HttpException;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -154,7 +153,6 @@ public class ChartActivity extends BaseActivity {
     }
 
     private void produceThree(LineChartView chart) {
-        Animation anim = new Animation();
         Tooltip tip = new Tooltip(this, R.layout.linechart_three_tooltip, R.id.value);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -197,6 +195,6 @@ public class ChartActivity extends BaseActivity {
             .setStep(5)
             .setGrid(ChartView.GridType.VERTICAL, gridPaint);
 
-        chart.show(anim);
+        chart.show();
     }
 }
