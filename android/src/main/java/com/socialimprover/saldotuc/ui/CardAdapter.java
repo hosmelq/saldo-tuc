@@ -19,20 +19,16 @@ import com.socialimprover.saldotuc.R;
 import com.socialimprover.saldotuc.api.MpesoService;
 import com.socialimprover.saldotuc.api.SaldoTucService;
 import com.socialimprover.saldotuc.api.ServiceFactory;
-import com.socialimprover.saldotuc.exceptions.InvalidCardException;
 import com.socialimprover.saldotuc.model.Card;
 import com.socialimprover.saldotuc.util.AnalyticsManager;
-import com.socialimprover.saldotuc.util.AppUtil;
 import com.socialimprover.saldotuc.util.SyncHelper;
-
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observable;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -199,19 +195,15 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardHolder> im
                 return;
             }
 
-            String captcha = RandomStringUtils.randomAlphanumeric(6);
             MpesoService mpesoService = ServiceFactory.createRetrofitService(MpesoService.class, MpesoService.SERVICE_ENDPOINT);
             SaldoTucService saldoTucService = ServiceFactory.createRetrofitService(SaldoTucService.class, SaldoTucService.SERVICE_ENDPOINT);
 
             showLoading();
             AnalyticsManager.timeEvent(Config.MIXPANEL_REQUEST_BALANCE_EVENT);
-            mpesoService.getBalance(captcha, captcha, "1", mCard.getNumber())
+            mpesoService.getBalance(mCard.getNumber())
                 .flatMap(mpesoCard -> {
-                    String balance = AppUtil.parseBalance(mpesoCard.Mensaje);
+                    String balance = String.valueOf(mpesoCard.balance);
 
-                    if (balance == null) {
-                        return Observable.error(new InvalidCardException("Not a TUC card number or inactive"));
-                    }
 
                     /* [ANALYTICS:EVENT]
                     * TRIGGER:  Request card's balance.
@@ -235,9 +227,23 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardHolder> im
                 }, throwable -> {
                     hideLoading();
 
-                    if (throwable instanceof InvalidCardException) {
-                        //noinspection ResourceType
-                        Snackbar.make(itemView, mContext.getString(R.string.card_invalid_error), Config.SNACKBAR_LONG_DURATION_MS).show();
+                    if (throwable instanceof HttpException) {
+                        HttpException httpException = (HttpException) throwable;
+
+                        switch (httpException.code()) {
+                            case 404:
+                                //noinspection ResourceType
+                                Snackbar.make(itemView, mContext.getString(R.string.card_invalid_error), Config.SNACKBAR_LONG_DURATION_MS).show();
+                                break;
+
+                            case 503:
+                                //noinspection ResourceType
+                                Snackbar.make(itemView, mContext.getString(R.string.mpeso_connection_error), Config.SNACKBAR_LONG_DURATION_MS)
+                                    .setAction(R.string.retry, v -> {
+                                        getBalance(position);
+                                    });
+                                break;
+                        }
                     } else {
                         notifyItemChanged(position);
                     }

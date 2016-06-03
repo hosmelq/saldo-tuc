@@ -20,10 +20,7 @@ import com.socialimprover.saldotuc.api.SaldoTucService;
 import com.socialimprover.saldotuc.api.ServiceFactory;
 import com.socialimprover.saldotuc.model.Card;
 import com.socialimprover.saldotuc.util.AnalyticsManager;
-import com.socialimprover.saldotuc.util.AppUtil;
 import com.socialimprover.saldotuc.util.SyncHelper;
-
-import org.apache.commons.lang3.RandomStringUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,6 +40,7 @@ public class CardsActivity extends BaseActivity implements CardAdapter.Callbacks
     public static final String WILL_UNSUBSCRIBE_WHEN_ONLINE = "WILL_UNSUBSCRIBE_WHEN_ONLINE";
     public static final int SHOW_CHART_REQUEST = 103;
     public static final String NOT_A_VALID_CARD = "NOT_A_VALID_CARD";
+    public static final String MPESO_CONNECTION_ERROR = "MPESO_CONNECTION_ERROR";
     private CardAdapter mCardsAdapter;
     private Handler mHandler = new Handler();
 
@@ -167,32 +165,25 @@ public class CardsActivity extends BaseActivity implements CardAdapter.Callbacks
     }
 
     private void refreshCards() {
-        String captcha = RandomStringUtils.randomAlphanumeric(6);
         MpesoService mpesoService = ServiceFactory.createRetrofitService(MpesoService.class, MpesoService.SERVICE_ENDPOINT);
         SaldoTucService saldoTucService = ServiceFactory.createRetrofitService(SaldoTucService.class, SaldoTucService.SERVICE_ENDPOINT);
 
         Card.getQuery()
             .fromLocalDatastore()
             .findInBackground((objects, exception) -> Observable.from(objects)
-                .flatMap(card -> mpesoService.getBalance(captcha, captcha, "1", card.getNumber()).flatMap(mpesoCard -> {
-                    String balance = AppUtil.parseBalance(mpesoCard.Mensaje);
+                .flatMap(card -> mpesoService.getBalance(card.getNumber()).flatMap(mpesoCard -> {
+                    String balance = String.valueOf(mpesoCard.balance);
 
-                    if (balance == null) {
-                        card.setBalance("");
-                        card.pinInBackground();
-                        return null;
-                    } else {
-                        /* [ANALYTICS:EVENT]
-                        * TRIGGER:  Request card's balance.
-                        * CATEGORY: 'Cards'
-                        * ACTION:   'Request Balance'
-                        * LABEL:    card balance
-                        * [/ANALYTICS]
-                        */
-                        AnalyticsManager.sendEvent(SCREEN_LABEL, Config.MIXPANEL_REQUEST_BALANCE_EVENT, balance);
-                        card.setBalance(balance);
-                        card.pinInBackground();
-                    }
+                    /* [ANALYTICS:EVENT]
+                    * TRIGGER:  Request card's balance.
+                    * CATEGORY: 'Cards'
+                    * ACTION:   'Request Balance'
+                    * LABEL:    card balance
+                    * [/ANALYTICS]
+                    */
+                    AnalyticsManager.sendEvent(SCREEN_LABEL, Config.MIXPANEL_REQUEST_BALANCE_EVENT, balance);
+                    card.setBalance(balance);
+                    card.pinInBackground();
 
                     return saldoTucService.storeBalance(card.getNumber(), balance);
                 }))
@@ -228,6 +219,8 @@ public class CardsActivity extends BaseActivity implements CardAdapter.Callbacks
         if (resultCode == RESULT_CANCELED && data != null) {
             if (data.hasExtra(NOT_A_VALID_CARD)) {
                 quickSnackbar(getString(R.string.card_invalid_error));
+            } else if (data.hasExtra(MPESO_CONNECTION_ERROR)) {
+                quickSnackbar(getString(R.string.mpeso_connection_error));
             }
         }
     }

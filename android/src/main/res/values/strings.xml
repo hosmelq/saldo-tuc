@@ -3,6 +3,7 @@
 
     <string name="back">Back</string>
     <string name="favorite">Favorite</string>
+    <string name="retry">Retry</string>
 
     <string name="title_activity_cards">Cards</string>
     <string name="title_activity_add_card">Add Card</string>
@@ -41,6 +42,7 @@
     <string name="card_number_error">Number is required</string>
     <string name="card_number_length_error">Number must be 8 digits</string>
 
+    <string name="mpeso_connection_error">Could not connect to the site www.mpeso.net</string>
     <string name="no_connection">No connection</string>
     <string name="no_gps_enable">GPS disabled</string>
     <string name="will_subscribe_when_online">Offline. Will subscribe when online.</string>

@@ -1,6 +1,7 @@
 <resources>
     <string name="back">Atras</string>
     <string name="favorite">Favorito</string>
+    <string name="retry">Reintentar</string>
 
     <string name="title_activity_cards">Tarjetas</string>
     <string name="title_activity_add_card">Añadir tarjeta</string>
@@ -39,6 +40,7 @@
     <string name="card_number_error">El número es requerido</string>
     <string name="card_number_length_error">El número debe ser de 8 dígitos</string>
 
+    <string name="mpeso_connection_error">No se pudo conectar con el sitio www.mpeso.net</string>
     <string name="no_connection">Sin conexión</string>
     <string name="no_gps_enable">GPS desactivado</string>
     <string name="will_subscribe_when_online">Sin conexión. Se suscribirá cuando haya coneccion.</string>

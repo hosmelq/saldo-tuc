@@ -23,12 +23,8 @@ import com.socialimprover.saldotuc.api.SaldoTucContract.CardColumns;
 import com.socialimprover.saldotuc.api.SaldoTucService;
 import com.socialimprover.saldotuc.api.ServiceFactory;
 import com.socialimprover.saldotuc.api.model.Balance;
-import com.socialimprover.saldotuc.exceptions.InvalidCardException;
 import com.socialimprover.saldotuc.model.Card;
 import com.socialimprover.saldotuc.util.AnalyticsManager;
-import com.socialimprover.saldotuc.util.AppUtil;
-
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -37,7 +33,6 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit2.adapter.rxjava.HttpException;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -90,19 +85,14 @@ public class ChartActivity extends BaseActivity {
     }
 
     private void getBalances(Card card) {
-        String captcha = RandomStringUtils.randomAlphanumeric(6);
         MpesoService mpesoService = ServiceFactory.createRetrofitService(MpesoService.class, MpesoService.SERVICE_ENDPOINT);
         SaldoTucService saldoTucService = ServiceFactory.createRetrofitService(SaldoTucService.class, SaldoTucService.SERVICE_ENDPOINT);
 
         showLoading();
         AnalyticsManager.timeEvent(Config.MIXPANEL_REQUEST_BALANCE_EVENT);
-        mpesoService.getBalance(captcha, captcha, "1", card.getNumber())
+        mpesoService.getBalance(card.getNumber())
             .flatMap(cardResponse -> {
-                String balance = AppUtil.parseBalance(cardResponse.Mensaje);
-
-                if (balance == null) {
-                    return Observable.error(new InvalidCardException("Not a TUC card number or inactive"));
-                }
+                String balance = String.valueOf(cardResponse.balance);
 
                 /* [ANALYTICS:EVENT]
                 * TRIGGER:  Request card's balance.
@@ -128,10 +118,18 @@ public class ChartActivity extends BaseActivity {
                 hideLoading();
                 Intent intent = new Intent();
 
-                if (throwable instanceof InvalidCardException) {
-                    intent.putExtra(CardsActivity.NOT_A_VALID_CARD, true);
-                } else if (throwable instanceof HttpException) {
-                    HttpException exception = (HttpException) throwable;
+                if (throwable instanceof HttpException) {
+                    HttpException httpException = (HttpException) throwable;
+
+                    switch (httpException.code()) {
+                        case 404:
+                            intent.putExtra(CardsActivity.NOT_A_VALID_CARD, true);
+                            break;
+
+                        case 503:
+                            intent.putExtra(CardsActivity.MPESO_CONNECTION_ERROR, true);
+                            break;
+                    }
                 }
 
                 setResult(RESULT_CANCELED, intent);
