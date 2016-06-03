@@ -241,7 +241,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardHolder> im
                                 Snackbar.make(itemView, mContext.getString(R.string.mpeso_connection_error), Config.SNACKBAR_LONG_DURATION_MS)
                                     .setAction(R.string.retry, v -> {
                                         getBalance(position);
-                                    });
+                                    }).show();
                                 break;
                         }
                     } else {

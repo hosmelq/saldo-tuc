@@ -45,6 +45,7 @@ android {
             proguardFiles 'proguard-retrolambda.pro'
             proguardFiles 'proguard-rx-android.pro'
             proguardFiles 'proguard-rx-java.pro'
+            proguardFiles 'proguard-square-okio.pro'
             proguardFiles 'proguard-square-retrofit.pro'
             proguardFiles 'proguard-support-design.pro'
             proguardFiles 'proguard-support-v7-appcompat.pro'
