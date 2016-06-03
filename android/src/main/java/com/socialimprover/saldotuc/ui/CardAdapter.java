@@ -25,6 +25,8 @@ import com.socialimprover.saldotuc.util.AnalyticsManager;
 import com.socialimprover.saldotuc.util.AppUtil;
 import com.socialimprover.saldotuc.util.SyncHelper;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.util.List;
 
 import butterknife.Bind;
@@ -197,12 +199,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardHolder> im
                 return;
             }
 
+            String captcha = RandomStringUtils.randomAlphanumeric(6);
             MpesoService mpesoService = ServiceFactory.createRetrofitService(MpesoService.class, MpesoService.SERVICE_ENDPOINT);
             SaldoTucService saldoTucService = ServiceFactory.createRetrofitService(SaldoTucService.class, SaldoTucService.SERVICE_ENDPOINT);
 
             showLoading();
             AnalyticsManager.timeEvent(Config.MIXPANEL_REQUEST_BALANCE_EVENT);
-            mpesoService.getBalance("1", mCard.getNumber())
+            mpesoService.getBalance(captcha, captcha, "1", mCard.getNumber())
                 .flatMap(mpesoCard -> {
                     String balance = AppUtil.parseBalance(mpesoCard.Mensaje);
 

@@ -28,6 +28,8 @@ import com.socialimprover.saldotuc.model.Card;
 import com.socialimprover.saldotuc.util.AnalyticsManager;
 import com.socialimprover.saldotuc.util.AppUtil;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -88,12 +90,13 @@ public class ChartActivity extends BaseActivity {
     }
 
     private void getBalances(Card card) {
+        String captcha = RandomStringUtils.randomAlphanumeric(6);
         MpesoService mpesoService = ServiceFactory.createRetrofitService(MpesoService.class, MpesoService.SERVICE_ENDPOINT);
         SaldoTucService saldoTucService = ServiceFactory.createRetrofitService(SaldoTucService.class, SaldoTucService.SERVICE_ENDPOINT);
 
         showLoading();
         AnalyticsManager.timeEvent(Config.MIXPANEL_REQUEST_BALANCE_EVENT);
-        mpesoService.getBalance("1", card.getNumber())
+        mpesoService.getBalance(captcha, captcha, "1", card.getNumber())
             .flatMap(cardResponse -> {
                 String balance = AppUtil.parseBalance(cardResponse.Mensaje);
 
@@ -121,7 +124,6 @@ public class ChartActivity extends BaseActivity {
             .subscribe(balances -> {
                 hideLoading();
                 buildChartValues(balances);
-                produceThree(mChart);
             }, throwable -> {
                 hideLoading();
                 Intent intent = new Intent();
@@ -150,6 +152,8 @@ public class ChartActivity extends BaseActivity {
             mBalanceValues[i] = balance.balance;
             mSpendingValues[i] = balance.spending;
         }
+
+        produceThree(mChart);
     }
 
     private void produceThree(LineChartView chart) {

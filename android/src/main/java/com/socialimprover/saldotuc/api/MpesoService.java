@@ -12,5 +12,10 @@ public interface MpesoService {
 
     @FormUrlEncoded
     @POST("datos/consulta.php")
-    Observable<MpesoCard> getBalance(@Field("_funcion") String function, @Field("_terminal") String terminal);
+    Observable<MpesoCard> getBalance(
+        @Field("_captcha") String captcha,
+        @Field("_codigo") String codigo,
+        @Field("_funcion") String function,
+        @Field("_terminal") String terminal
+    );
 }

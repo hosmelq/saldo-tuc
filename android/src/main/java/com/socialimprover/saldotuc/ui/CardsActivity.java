@@ -23,6 +23,8 @@ import com.socialimprover.saldotuc.util.AnalyticsManager;
 import com.socialimprover.saldotuc.util.AppUtil;
 import com.socialimprover.saldotuc.util.SyncHelper;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -165,13 +167,14 @@ public class CardsActivity extends BaseActivity implements CardAdapter.Callbacks
     }
 
     private void refreshCards() {
+        String captcha = RandomStringUtils.randomAlphanumeric(6);
         MpesoService mpesoService = ServiceFactory.createRetrofitService(MpesoService.class, MpesoService.SERVICE_ENDPOINT);
         SaldoTucService saldoTucService = ServiceFactory.createRetrofitService(SaldoTucService.class, SaldoTucService.SERVICE_ENDPOINT);
 
         Card.getQuery()
             .fromLocalDatastore()
             .findInBackground((objects, exception) -> Observable.from(objects)
-                .flatMap(card -> mpesoService.getBalance("1", card.getNumber()).flatMap(mpesoCard -> {
+                .flatMap(card -> mpesoService.getBalance(captcha, captcha, "1", card.getNumber()).flatMap(mpesoCard -> {
                     String balance = AppUtil.parseBalance(mpesoCard.Mensaje);
 
                     if (balance == null) {
