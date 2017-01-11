@@ -1,6 +1,5 @@
 package com.socialimprover.saldotuc.api;
 
-import com.parse.ParseConfig;
 import com.socialimprover.saldotuc.api.model.Balance;
 import com.socialimprover.saldotuc.api.model.Neighborhood;
 import com.socialimprover.saldotuc.api.model.Notification;
@@ -16,7 +15,7 @@ import retrofit2.http.Path;
 import rx.Observable;
 
 public interface SaldoTucService {
-    String SERVICE_ENDPOINT = (ParseConfig.getCurrentConfig().getBoolean("sslEnable") ? "https" : "http") + "://api.saldotuc.com/v1/";
+    String SERVICE_ENDPOINT = "https://api.saldotuc.com/v1/";
 
     @FormUrlEncoded
     @POST("cards/{number}/balances")

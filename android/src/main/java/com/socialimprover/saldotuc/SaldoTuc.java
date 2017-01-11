@@ -27,9 +27,15 @@ public class SaldoTuc extends Application {
         Parse.enableLocalDatastore(this);
         ParseObject.registerSubclass(Card.class);
 
-        Parse.initialize(this,
-            "NeTnXlLHuQj0BQ7iTzfnhxytwjAKUpYnoNmaeNS0",
-            "GnH9qJsASiOCLs6g57I4Ts7kWI95F02Rzry4GchL");
+        Parse.initialize(
+            new Parse.Configuration.Builder(getApplicationContext())
+                .enableLocalDataStore()
+                .applicationId("NeTnXlLHuQj0BQ7iTzfnhxytwjAKUpYnoNmaeNS0")
+                .clientKey("GnH9qJsASiOCLs6g57I4Ts7kWI95F02Rzry4GchL")
+                .server("https://parse.saldotuc.com/api/")
+                .build()
+        );
+
         ParseInstallation.getCurrentInstallation().saveInBackground();
         ParseConfig.getInBackground();
         checkIfNeedSyncNotificationSettings();

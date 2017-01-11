@@ -80,6 +80,7 @@ public class Card extends ParseObject {
 
     public static String getIdFromUri(Uri uri) {
         List<String> path = uri.getPathSegments();
+
         if (path.size() != 2 || !uriPath.equals(path.get(0))) {
             throw new RuntimeException("Invalid URI for card: " + uri);
         }
