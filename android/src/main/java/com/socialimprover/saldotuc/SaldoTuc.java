@@ -32,7 +32,7 @@ public class SaldoTuc extends Application {
                 .enableLocalDataStore()
                 .applicationId("NeTnXlLHuQj0BQ7iTzfnhxytwjAKUpYnoNmaeNS0")
                 .clientKey("GnH9qJsASiOCLs6g57I4Ts7kWI95F02Rzry4GchL")
-                .server("https://parse.saldotuc.com/api/")
+                .server("https://pg-app-r0r04s7s4snyibcxh8kdja1qd4tdb6.scalabl.cloud/1/")
                 .build()
         );
 
