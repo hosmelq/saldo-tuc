@@ -51,14 +51,6 @@
                 android:value="com.socialimprover.saldotuc.ui.CardsActivity"/>
         </activity>
         <activity
-            android:name=".ui.ChartActivity"
-            android:label="@string/title_activity_chart"
-            android:parentActivityName=".ui.CardsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.socialimprover.saldotuc.ui.CardsActivity"/>
-        </activity>
-        <activity
             android:name=".ui.AgenciesActivity"
             android:label="@string/title_activity_agencies"
             android:parentActivityName=".ui.CardsActivity">

@@ -7,8 +7,8 @@ import retrofit2.http.Path;
 import rx.Observable;
 
 public interface MpesoService {
-    String SERVICE_ENDPOINT = "http://mpeso.saldotuc.com/";
+    String SERVICE_ENDPOINT = "http://balance.saldotuc.com/";
 
-    @GET("cards/{number}/balance")
+    @GET("{number}")
     Observable<Balance> getBalance(@Path("number") String number);
 }

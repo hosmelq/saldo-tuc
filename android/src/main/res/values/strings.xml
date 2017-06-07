@@ -8,7 +8,6 @@
     <string name="title_activity_cards">Cards</string>
     <string name="title_activity_add_card">Add Card</string>
     <string name="title_activity_card_edit">Edit Card</string>
-    <string name="title_activity_chart">%1$s (%2$s)</string>
     <string name="title_activity_agencies">Agencies</string>
     <string name="title_activity_agency">Agency</string>
 
@@ -27,7 +26,6 @@
 
     <string name="cards_empty">You have no cards</string>
     <string name="card_check_balance">Check balance</string>
-    <string name="card_graph">Graph</string>
     <string name="card_edit">Edit</string>
     <string name="card_delete">Delete</string>
     <string name="card_deleted">%1$s deleted</string>

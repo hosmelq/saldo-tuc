@@ -6,7 +6,6 @@
     <string name="title_activity_cards">Tarjetas</string>
     <string name="title_activity_add_card">Añadir tarjeta</string>
     <string name="title_activity_card_edit">Editar tarjeta</string>
-    <string name="title_activity_chart">%1$s (%2$s)</string>
     <string name="title_activity_agencies">Agencias</string>
     <string name="title_activity_agency">Agencia</string>
 
@@ -25,7 +24,6 @@
 
     <string name="cards_empty">No tienes tarjetas</string>
     <string name="card_check_balance">Consultar Saldo</string>
-    <string name="card_graph">Gráfica</string>
     <string name="card_edit">Editar</string>
     <string name="card_delete">Eliminar</string>
     <string name="card_deleted">%1$s eliminada</string>

@@ -43,8 +43,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardHolder> im
 
     public interface Callbacks {
         void onCardEdit(Card card);
-
-        void onShowChart(Card card);
     }
 
     public CardAdapter(Callbacks activity) {
@@ -112,11 +110,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardHolder> im
                 //noinspection ResourceType
                 Snackbar.make(itemView, mContext.getString(R.string.no_connection), Config.SNACKBAR_LONG_DURATION_MS).show();
             }
-        }
-
-        @OnClick(R.id.showGraphButton)
-        protected void onShowGraphItemClick(View v) {
-            showChart();
         }
 
         @OnClick(R.id.editButton)
@@ -248,10 +241,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardHolder> im
                         notifyItemChanged(position);
                     }
                 });
-        }
-
-        private void showChart() {
-            mCallbacks.onShowChart(mCard);
         }
 
         private void editCard() {

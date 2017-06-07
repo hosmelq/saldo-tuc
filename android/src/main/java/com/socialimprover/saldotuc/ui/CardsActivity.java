@@ -38,9 +38,6 @@ public class CardsActivity extends BaseActivity implements CardAdapter.Callbacks
     public static final String WILL_SUBSCRIBE_WHEN_ONLINE = "WILL_SUBSCRIBE_WHEN_ONLINE";
     public static final int UPDATE_CARD_REQUEST = 102;
     public static final String WILL_UNSUBSCRIBE_WHEN_ONLINE = "WILL_UNSUBSCRIBE_WHEN_ONLINE";
-    public static final int SHOW_CHART_REQUEST = 103;
-    public static final String NOT_A_VALID_CARD = "NOT_A_VALID_CARD";
-    public static final String MPESO_CONNECTION_ERROR = "MPESO_CONNECTION_ERROR";
     private CardAdapter mCardsAdapter;
     private Handler mHandler = new Handler();
 
@@ -93,10 +90,6 @@ public class CardsActivity extends BaseActivity implements CardAdapter.Callbacks
         if (requestCode == UPDATE_CARD_REQUEST) {
             onUpdateCardResult(resultCode, data);
         }
-
-        if (requestCode == SHOW_CHART_REQUEST) {
-            onShowChartResult(resultCode, data);
-        }
     }
 
     @Override
@@ -129,17 +122,6 @@ public class CardsActivity extends BaseActivity implements CardAdapter.Callbacks
         Intent intent = new Intent(this, CardUpdateActivity.class);
         intent.setData(card.getUri());
         startActivityForResult(intent, UPDATE_CARD_REQUEST);
-    }
-
-    @Override
-    public void onShowChart(Card card) {
-        if (SyncHelper.isOnline(this)) {
-            Intent intent = new Intent(this, ChartActivity.class);
-            intent.setData(card.getUri());
-            startActivityForResult(intent, SHOW_CHART_REQUEST);
-        } else {
-            quickSnackbar(getString(R.string.no_connection));
-        }
     }
 
     @OnClick(R.id.addCardButton)
@@ -211,16 +193,6 @@ public class CardsActivity extends BaseActivity implements CardAdapter.Callbacks
                 quickSnackbar(getString(R.string.will_subscribe_when_online));
             } else if (data.hasExtra(WILL_UNSUBSCRIBE_WHEN_ONLINE)) {
                 quickSnackbar(getString(R.string.will_unsubscribe_when_online));
-            }
-        }
-    }
-
-    private void onShowChartResult(int resultCode, Intent data) {
-        if (resultCode == RESULT_CANCELED && data != null) {
-            if (data.hasExtra(NOT_A_VALID_CARD)) {
-                quickSnackbar(getString(R.string.card_invalid_error));
-            } else if (data.hasExtra(MPESO_CONNECTION_ERROR)) {
-                quickSnackbar(getString(R.string.mpeso_connection_error));
             }
         }
     }

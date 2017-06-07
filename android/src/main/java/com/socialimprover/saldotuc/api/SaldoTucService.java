@@ -21,9 +21,6 @@ public interface SaldoTucService {
     @POST("cards/{number}/balances")
     Observable<Balance> storeBalance(@Path("number") String number, @Field("balance") String balance);
 
-    @GET("cards/{number}/balances")
-    Observable<List<Balance>> balances(@Path("number") String number);
-
     @PUT("cards/{number}/notifications/{id}")
     Observable<Notification> notificationReceived(@Path("number") String number, @Path("id") int id);
 

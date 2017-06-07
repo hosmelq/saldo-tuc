@@ -104,16 +104,6 @@
             android:visibility="gone">
 
             <Button
-                android:id="@+id/showGraphButton"
-                style="@style/CardAction"
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:drawableLeft="@drawable/ic_insert_chart_black_24dp"
-                android:drawableStart="@drawable/ic_insert_chart_black_24dp"
-                android:text="@string/card_graph"
-                tools:text="Graph"/>
-
-            <Button
                 android:id="@+id/editButton"
                 style="@style/CardAction"
                 android:layout_width="match_parent"
